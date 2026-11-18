@@ -58,11 +58,11 @@ export class Art {
     const heroes=level.bosses.map(b=>'characters/heroes/'+b.type+'/parts/');
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
       k.startsWith('backgrounds/')||k.startsWith('buildings/')||k.startsWith('props/')
-      ||k.startsWith(this.rexAnimations?'characters/rex/animations/':'characters/rex/parts/')
+      ||k.startsWith('characters/rex/animations/')
       ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net'].includes(k));
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
-    if(this.rexAnimations)await(this.rexFramesReady??=this.prepareRexFrames());
+    await(this.rexFramesReady??=this.prepareRexFrames());
   }
   async prepareRexFrames(){
     for(const [atlas,definition] of Object.entries(this.rexAnimations.atlases)){
@@ -117,41 +117,14 @@ export class Art {
 }
 
 function rexRig(c,a,p,t,reduced){
-  if(a.rexAnimations){
-    const pose=rexPose(p,a.rexAnimations),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
-    c.save();c.translate(p.x,reduced||p.attack?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
-    a.blend(c,pose.from,pose.to,pose.mix,0,0,a.rexAnimations.width);
-    if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
-    if(roar>.2){
-      c.strokeStyle='#ffe69f';c.lineWidth=4;c.globalAlpha=roar*.8;
-      for(let i=0;i<3;i++){c.beginPath();c.arc(270,-280,75+i*44+p.attack.age/p.attack.duration*65,-.75,.75);c.stroke()}
-    }
-    c.restore();return;
-  }
-  const action=p.attack,progress=action?clamp(action.age/action.duration,0,1):0;
-  const swing=attackPose(action),bite=action?.key==='bite'?swing:0,tail=action?.key==='tail'?swing:0,
-    stomp=action?.key==='stomp'?swing:0,roar=action?.key==='roar'?swing:0;
-  const step=Math.sin(p.walk)*p.stride;
-  const lift=stomp&&action.age<action.impact?Math.sin(Math.PI*action.age/action.impact)**2*12:0;
-  const idle=reduced?0:Math.sin(t*2)*2,bob=Math.sin(p.walk)**2*p.stride*5;
-  c.save();c.translate(p.x,0);c.scale(p.dir,1);c.translate(0,-idle-bob-lift);
-  const part=(name,x,y,w,r=0)=>a.part(c,'characters/rex/parts/'+name,x,y,w,r);
-  function leg(side,x,phase){
-    c.save();c.translate(x,-146);c.rotate(phase*.23);
-    part(side+'-leg',0,0,side==='far'?136:163);
-    part(side+'-foot',-5,101-Math.max(0,phase)**2*10,side==='far'?113:125,-phase*.18);c.restore();
-  }
-  leg('far',45,-step);part('far-arm',101,-226,77,-bite*.2);
-  c.save();c.translate(-90,-165);c.rotate(.11+(reduced?0:Math.sin(t*2.5)*.04)+tail*.62);
-  c.save();c.translate(-137,16);c.rotate(.025+(reduced?0:Math.sin(t*2.5-.6)*.025)+tail*.12);
-  part('tail-tip',-95,7,131,.025);part('tail-middle',0,0,151);c.restore();part('tail-base',0,0,214);c.restore();
-  part('torso',0,-177,318,-roar*.08+bite*.045);leg('near',-37,step);
-  part('near-arm',87,-218,86,step*.12-bite*.4);
-  c.save();c.translate(125+bite*34,-287+20*bite-27*roar);c.rotate(.03+bite*.18-roar*.2);
-  part('lower-jaw',24,11,207,.07+.42*bite+.55*roar);part('upper-skull',0,0,311,-.13*bite-.12*roar);c.restore();
+  const pose=rexPose(p,a.rexAnimations),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
+  c.save();c.translate(p.x,reduced||p.attack?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
+  a.blend(c,pose.from,pose.to,pose.mix,0,0,a.rexAnimations.width);
   if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
-  if(roar>.2){c.strokeStyle='#ffe69f';c.lineWidth=4;c.globalAlpha=swing*.8;
-    for(let i=0;i<3;i++){c.beginPath();c.arc(270,-280,75+i*44+progress*65,-.75,.75);c.stroke()}}
+  if(roar>.2){
+    c.strokeStyle='#ffe69f';c.lineWidth=4;c.globalAlpha=roar*.8;
+    for(let i=0;i<3;i++){c.beginPath();c.arc(270,-280,75+i*44+p.attack.age/p.attack.duration*65,-.75,.75);c.stroke()}
+  }
   c.restore();
 }
 function heroRig(c,a,e){
