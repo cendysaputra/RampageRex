@@ -1,4 +1,5 @@
 // World coordinates use the road surface as y = 0. Negative y is above ground.
+import { damp as ease, spritePose } from './motion.js';
 export const clamp = (n, low, high) => Math.max(low, Math.min(n, high));
 export const people = ['office-worker','shopper','schoolkid','elder','bakso-vendor'];
 export const heroNames = {perisai:'Perisai',rajawali:'Rajawali',jaring:'Jaring'};
@@ -23,8 +24,6 @@ function box(x,y,w,h){return {l:x-w/2,r:x+w/2,t:y-h,b:y}}
 function range(a,b){return a+Math.random()*(b-a)}
 // Filters in place so the per-frame cleanup does not allocate new arrays.
 function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
-// Frame-rate independent easing factor for a given response rate.
-const ease=(rate,dt)=>1-Math.exp(-rate*dt);
 const groundRise={ground:433,upper:337,roof:269};
 export class World {
   constructor(level,index){
@@ -61,7 +60,7 @@ export class World {
       b.evacuated=true;this.sound('panic');
       for(let n=0;n<2+Math.floor(this.percent/22);n++){
         const x=b.x+range(-b.width*.35,b.width*.35);
-        this.civilians.push({type:people[(this.buildings.indexOf(b)+n)%people.length],x,dir:x>=this.rex.x?1:-1,speed:range(250,350),phase:Math.random()*2,lane:range(6,28)});
+        this.civilians.push({type:people[(this.buildings.indexOf(b)+n)%people.length],x,dir:x>=this.rex.x?1:-1,speed:range(250,350),phase:Math.random()*5,walk:0,lane:range(6,28)});
       }
     }
     if(before!==moduleState(m)){
@@ -75,7 +74,7 @@ export class World {
     const hero=type in heroNames;
     const max={perisai:540,rajawali:440,jaring:410,infantry:75,bazooka:100,jeep:150,helicopter:90,turret:75}[type];
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
-      mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),owner:null};
+      mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
   }
   startAttack(key){
@@ -89,7 +88,7 @@ export class World {
     if(a.key==='roar'){
       for(const e of this.enemies.filter(e=>e.x>=this.camera-40&&e.x<=this.camera+this.view+40)){
         if(!e.hero)e.stun=2.6;
-        if(e.type==='rajawali'){e.mode='ground';e.timer=3.4;e.y=0}
+        if(e.type==='rajawali'){e.mode='ground';e.timer=3.4}
       }
       for(const c of this.civilians)c.speed=Math.min(500,c.speed+80);
       return;
@@ -136,11 +135,11 @@ export class World {
       else if(e.mode==='recover'&&e.timer<=0){e.mode='approach';e.timer=1.5}
     }else if(e.type==='rajawali'){
       e.dir=dir;
-      if(e.mode==='ground'){e.y=0;if(e.timer<=0){e.mode='approach';e.timer=3.6}}
-      else if(e.mode==='dive'){e.y+=(-40-e.y)*dt*5;e.x+=dir*360*dt;
+      if(e.mode==='ground'){e.y+=(0-e.y)*ease(10,dt);if(e.timer<=0){e.mode='approach';e.timer=3.6}}
+      else if(e.mode==='dive'){e.y+=(-40-e.y)*ease(5,dt);e.x+=dir*360*dt;
         if(dist<105&&!e.connected){this.hurt(21);e.connected=true}
         if(e.timer<=0){e.mode='approach';e.timer=4}}
-      else{e.y+=(-465+Math.sin(this.time*2)*32-e.y)*dt*3;e.x+=dir*clamp(dist-390,-170,245)*dt;
+      else{e.y+=(-465+Math.sin(this.time*2)*32-e.y)*ease(3,dt);e.x+=dir*clamp(dist-390,-170,245)*dt;
         if(e.shot<=0){this.shoot(e,'laser');e.shot=2.2}
         if(e.timer<=0){e.mode='dive';e.timer=1.4;e.connected=false}}
     }else{
@@ -151,8 +150,18 @@ export class World {
       }
     }
   }
+  animateEnemy(e,dt,previousX){
+    const distance=Math.abs(e.x-previousX),speed=distance/dt;
+    e.walk+=distance/(e.hero?38:23);
+    e.stride+=(clamp(speed/(e.hero?420:185),0,1)-e.stride)*ease(12,dt);
+    const lean=e.mode==='charge'?.18:e.mode==='recover'?-.14:e.mode==='dive'?.45:0;
+    e.lean+=(lean-e.lean)*ease(14,dt);e.guard+=((e.mode==='recover'?1:0)-e.guard)*ease(12,dt);
+    const frame=e.stun>0?'knockback':e.stride<.12?(e.type==='bazooka'?'kneeling-fire':'aim'):
+      Math.sin(e.walk+e.phase)>=0?'run-a':'run-b';
+    spritePose(e,frame,dt);
+  }
   update(dt,input){
-    if(this.status!=='playing')return;
+    if(this.status!=='playing'||dt<=0)return;
     this.time+=dt;const p=this.rex;
     for(const k of ['stun','slow','fury','hit'])p[k]=Math.max(0,p[k]-dt);
     if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say('RAGE MODE · Damage ×2 selama 8 detik!',2.4);this.sound('roar')}
@@ -167,7 +176,7 @@ export class World {
       const pace=Math.abs(p.vx)/365;p.walk+=dt*8*pace;this.stepTime+=dt*pace;
       if(this.stepTime>.44){this.stepTime=0;this.shake=Math.max(this.shake,2);this.sound('step')}
     }
-    p.stride=clamp(Math.abs(p.vx)/150,0,1);
+    p.stride+=(clamp(Math.abs(p.vx)/240,0,1)-p.stride)*ease(12,dt);
     // An attack pressed slightly early is held briefly and fires as soon as Rex is free.
     for(const key of ['bite','tail','stomp','roar'])if(input.has(key)){p.queued=key;p.queuedUntil=this.time+.25;break}
     if(p.queued){
@@ -189,10 +198,10 @@ export class World {
       this.spawnTime=Math.max(2.3,4.4-this.percent*.017);
     }
     for(const e of this.enemies){
-      if(e.hp<=0)continue;e.shot-=dt;e.hit=Math.max(0,e.hit-dt);
+      if(e.hp<=0)continue;const previousX=e.x;e.shot-=dt;e.hit=Math.max(0,e.hit-dt);
       e.x+=e.vx*dt;e.vx*=Math.pow(.05,dt);
       if(e.lift>0){e.lift=Math.max(0,e.lift+e.vy*dt);e.vy-=850*dt}
-      if(e.stun>0){e.stun-=dt;continue}
+      if(e.stun>0){e.stun=Math.max(0,e.stun-dt);this.animateEnemy(e,dt,previousX);continue}
       const dist=Math.abs(p.x-e.x),dir=p.x>=e.x?1:-1;
       if(e.hero)this.tickHero(e,dt,dist,dir);
       else if(e.type==='turret'){if(!e.owner||e.owner.hp<=0){e.hp=0;continue}if(dist<900&&e.shot<=0){this.shoot(e,'bullet');e.shot=1.7}}
@@ -204,13 +213,18 @@ export class World {
           this.shoot(e,rocket?'rocket':'bullet');e.shot=rocket?3.8:e.type==='infantry'&&++e.burst%3?.19:2.5}
       }
       if(e.hero)e.x=clamp(e.x,60,this.level.length-60);
+      this.animateEnemy(e,dt,previousX);
     }
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
       if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:2,rocket:13,laser:9,net:4}[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0);
-    for(const c of this.civilians)c.x+=c.dir*c.speed*dt;
+    for(const c of this.civilians){
+      c.x+=c.dir*c.speed*dt;c.walk+=c.speed*dt/28;
+      const glance=(this.time+c.phase)%5>4.6,stumble=(this.time+c.phase)%8>7.8;
+      spritePose(c,stumble?'stumble':glance?'look-back':Math.sin(c.walk)>=0?'run-a':'run-b',dt);
+    }
     keep(this.civilians,c=>c.x>this.camera-170&&c.x<this.camera+this.view+170);
     for(const f of this.effects){f.life-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.kind==='debris'||f.kind==='decor')f.vy+=880*dt}
     keep(this.effects,f=>f.life>0);this.shake=Math.max(0,this.shake-dt*25);
