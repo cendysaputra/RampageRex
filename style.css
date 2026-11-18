@@ -5,3 +5,10 @@
 
 .pause-icon{display:inline-block;width:11px;height:14px;border-left:3px solid currentColor;border-right:3px solid currentColor;vertical-align:middle}
 .cover-rex{height:auto}
+[data-skill]{position:relative;overflow:hidden}
+[data-skill]::after{content:'';position:absolute;inset:0;background:#06100f99;transform-origin:top;transform:scaleY(var(--cd,0));pointer-events:none}
+[data-skill][data-cooling]{color:#fff0ce99}
+.key-strip span{display:inline-flex;align-items:center;gap:6px;padding:3px 7px;border-radius:4px}
+.key-strip .ulti,.pad .ulti{border:1px solid var(--orange)}
+.key-strip .ulti:not([data-cooling]),.pad .ulti:not([data-cooling]){background:var(--orange);color:var(--ink)}
+.key-strip .ulti:not([data-cooling]) kbd{color:var(--ink)}

@@ -1,9 +1,9 @@
-import {World,heroNames} from './world.js';
+import {World,heroNames,cooldowns} from './world.js';
 import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Attacks sit around A/D so one hand covers everything. J/K/L remain as the older bindings.
-const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',
+const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',
   KeyJ:'bite',KeyK:'tail',KeyL:'roar'};
 const mouseButtons=['bite',null,'tail'];
 const controls=new Map(),taps=new Set(),input=new Set(),shown=new Map(),snd=new Sound(),panel=el('panel');
@@ -30,7 +30,7 @@ function menu(){
   close();clearInput();screen='menu';world=null;el('hud').hidden=true;el('menu').hidden=false;el('start').focus();
 }
 function help(){screen='help';modal('KONTROL','Cara main',
-  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung · perlu 25 Rage</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
+  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung · membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex · mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya jeda (cooldown) sebelum bisa dipakai lagi; Ulti jedanya paling lama. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
   [['Kembali',menu]]);
 }
 async function start(index=0,carried=0){
@@ -59,6 +59,7 @@ function finish(){
     [[more?'Lanjut ke distrik '+(levelIndex+2):win?'Main dari awal':'Coba lagi',()=>more?start(levelIndex+1,score):win?start():start(levelIndex,previousScore)],['Menu utama',menu]]);
 }
 let bossKey='';
+const skillNodes=document.querySelectorAll('[data-skill]');
 // The HUD is refreshed every frame, so only touch the DOM when a value really changed.
 function text(id,value){value=String(value);if(shown.get(id)!==value){shown.set(id,value);el(id).textContent=value}}
 function fill(id,ratio){const value='scaleX('+ratio.toFixed(3)+')';if(shown.get(id)!==value){shown.set(id,value);el(id).style.transform=value}}
@@ -74,6 +75,11 @@ function updateHud(){
     const card=document.createElement('div');card.innerHTML='<strong>'+heroNames[e.type]+'</strong><div class="meter"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
   }))}
   text('notice',world.time<world.messageUntil?world.message:'');
+  // Skill chips and touch buttons darken from the top while their skill cools down.
+  for(const node of skillNodes){
+    const key=node.dataset.skill,left=p.cd[key],value=(Math.ceil(left/cooldowns[key]*50)/50).toFixed(2);
+    if(shown.get(node)!==value){shown.set(node,value);node.style.setProperty('--cd',value);node.toggleAttribute('data-cooling',left>0)}
+  }
 }
 function frame(now){
   if(screen==='playing'){
