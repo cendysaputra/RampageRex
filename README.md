@@ -41,6 +41,8 @@ Tujuan tiap distrik: **capai target destruksi** dan **kalahkan semua pahlawannya
 - Petunjuk tombol di layar menggelap selama cooldown berjalan. Ulti baru bisa dipakai 15 detik setelah distrik dimulai.
 - Serangan yang ditekan sedikit terlalu cepat tetap keluar begitu Rex bebas.
 - Meruntuhkan lantai dasar menjatuhkan semua lantai di atasnya.
+- Rex punya 400 darah. Mengalahkan tentara memulihkan sedikit, mengalahkan pahlawan memulihkan lebih banyak.
+- Tiap pahlawan punya bar darah di atas kepalanya dan di pojok kanan atas layar.
 - Saat **Rage** penuh, damage Rex dua kali lipat selama 8 detik.
 - Di layar sentuh, pakai tombol arah dan tombol aksi di bagian bawah. Rekor skor tersimpan di browser.
 
