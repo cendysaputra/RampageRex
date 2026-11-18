@@ -28,6 +28,7 @@ try {
   const cover = await page.locator('.cover-rex').evaluate(image => ({ width: image.clientWidth, height: image.clientHeight, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight }));
   assert.ok(Math.abs(cover.width / cover.height - cover.naturalWidth / cover.naturalHeight) < .02);
   await page.locator('#start').click();
+  await page.locator('#opening button').click();
   await page.locator('#hud').waitFor({ state: 'visible' });
   await page.screenshot({ path: join(output, 'desktop.png') });
   await page.keyboard.down('d');await page.waitForTimeout(650);await page.keyboard.up('d');
@@ -170,6 +171,7 @@ try {
     await page.setViewportSize(viewport);
     await page.reload();
     await page.locator('#start').click();
+    await page.locator('#opening button').click();
     await page.locator('#hud').waitFor({ state: 'visible' });
     for (const action of ['left', 'right', 'bite', 'tail', 'stomp', 'roar']) {
       const button = page.locator(`[data-action="${action}"]`), box = await button.boundingBox();
