@@ -1,0 +1,211 @@
+{
+  "name": "Pusat Kota",
+  "setting": "office",
+  "target": 70,
+  "bosses": [
+    {
+      "at": 50,
+      "type": "rajawali"
+    },
+    {
+      "at": 90,
+      "type": "perisai"
+    }
+  ],
+  "length": 14090,
+  "start": 380,
+  "buildings": [
+    {
+      "x": 760,
+      "width": 430,
+      "upper": 2,
+      "color": "mint"
+    },
+    {
+      "x": 1450,
+      "width": 540,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 2470,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 3025,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 3825,
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 4515,
+      "width": 540,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 5535,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 6090,
+      "width": 500,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 6890,
+      "width": 430,
+      "upper": 2,
+      "color": "mint"
+    },
+    {
+      "x": 7580,
+      "width": 540,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 8600,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 9155,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 9955,
+      "width": 430,
+      "upper": 2,
+      "color": "mint"
+    },
+    {
+      "x": 10645,
+      "width": 540,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 11665,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 12220,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 13020,
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
+    }
+  ],
+  "props": [
+    {
+      "x": 523.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 1153.0,
+      "type": "tree"
+    },
+    {
+      "x": 2211.5,
+      "type": "tent-stall"
+    },
+    {
+      "x": 2750.0,
+      "type": "food-cart"
+    },
+    {
+      "x": 3588.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 4218.0,
+      "type": "billboard"
+    },
+    {
+      "x": 5276.5,
+      "type": "angkot"
+    },
+    {
+      "x": 5815.0,
+      "type": "electric-pole"
+    },
+    {
+      "x": 6653.5,
+      "type": "tree"
+    },
+    {
+      "x": 7283.0,
+      "type": "tent-stall"
+    },
+    {
+      "x": 8341.5,
+      "type": "food-cart"
+    },
+    {
+      "x": 8880.0,
+      "type": "electric-pole"
+    },
+    {
+      "x": 9718.5,
+      "type": "billboard"
+    },
+    {
+      "x": 10348.0,
+      "type": "angkot"
+    },
+    {
+      "x": 11406.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 11945.0,
+      "type": "tree"
+    },
+    {
+      "x": 12783.5,
+      "type": "tent-stall"
+    }
+  ],
+  "spawns": [
+    1040,
+    1210,
+    2230,
+    2785,
+    3585,
+    4275,
+    5295,
+    5850,
+    6650,
+    7340,
+    8360,
+    8915,
+    9715,
+    10405,
+    11425,
+    11980,
+    12780,
+    13470
+  ]
+}
