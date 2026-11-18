@@ -2,7 +2,7 @@
 
 Tanggal: 18 November 2026. Cakupan: render gambar dan animasi gameplay.
 
-Arah visual mengikuti Ruko Senja di `plan.md`: ilustrasi kota Indonesia saat senja, Rex sebagai fokus, dan gerakan arcade untuk menunjukkan langkah, serangan, serta kerusakan. Tingkat ENERGY 3 / RHYTHM 2 / MOTION 3 mengikuti permainan yang sudah ada. Transisi pose membantu membaca perubahan gerakan; gradasi aspal menyambungkan jalan ke bagian bawah layar portrait.
+Arah visual mengikuti Ruko Senja di `image-prompts.md`: ilustrasi kota Indonesia saat senja, Rex sebagai fokus, dan gerakan arcade untuk menunjukkan langkah, serangan, serta kerusakan. Tingkat ENERGY 3 / RHYTHM 2 / MOTION 3 mengikuti permainan yang sudah ada. Transisi pose membantu membaca perubahan gerakan; gradasi aspal menyambungkan jalan ke bagian bawah layar portrait.
 
 ## Hasil
 
