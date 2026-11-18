@@ -25,8 +25,8 @@ try {
   assert.notEqual(await audio.getAttribute('aria-pressed'), previousSound);
   await audio.click();
   interactions.push('Sound toggles off and on');
-  const cover = await page.locator('.cover-rex').evaluate(image => ({ width: image.clientWidth, height: image.clientHeight }));
-  assert.ok(Math.abs(cover.width / cover.height - 1100 / 576) < .02);
+  const cover = await page.locator('.cover-rex').evaluate(image => ({ width: image.clientWidth, height: image.clientHeight, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight }));
+  assert.ok(Math.abs(cover.width / cover.height - cover.naturalWidth / cover.naturalHeight) < .02);
   await page.locator('#start').click();
   await page.locator('#hud').waitFor({ state: 'visible' });
   await page.screenshot({ path: join(output, 'desktop.png') });
@@ -63,15 +63,18 @@ try {
     try {
       window.createImageBitmap = undefined;
       const alternate = new Art(manifest);
-      await alternate.load('characters/rex/parts/upper-skull');
-      const image = alternate.images.get('characters/rex/parts/upper-skull');
-      fallback = image instanceof HTMLCanvasElement && image.width > 0;
+      for (const atlas of Object.values(manifest.rexAnimations.atlases)) await alternate.load(atlas.path);
+      await alternate.prepareRexFrames();
+      const frames = [...alternate.images.entries()].filter(([path]) => path.startsWith('characters/rex/animation-frames/'));
+      fallback = frames.length === 24 && frames.every(([, image]) => image instanceof HTMLCanvasElement && image.width > 0);
     } finally { window.createImageBitmap = nativeBitmap; }
     const count = art.images.size;
+    const generatedFrames = [...art.images.keys()].filter(path => path.startsWith('characters/rex/animation-frames/')).length;
     window.previewArt = art;
-    return { count, decodedPixels, originalPixels, fallback };
+    return { count, generatedFrames, decodedPixels, originalPixels, fallback };
   });
   assert.equal(assets.fallback, true);
+  assert.equal(assets.generatedFrames, 24);
   // Exercise every district and sprite family, including partial pose blends.
   const scenes = [];
   for (let district = 1; district <= 4; district++) {
@@ -112,6 +115,25 @@ try {
     return window.previewRenderer.motionPreference.matches;
   });
   assert.equal(reduced, true);
+  await page.evaluate(async () => {
+    const { World } = await import('./src/world.js');
+    const { rexPose } = await import('./src/rex-animation.js');
+    const art = window.previewArt, canvas = document.createElement('canvas');
+    canvas.id = 'sprite-review';canvas.width = 1440;canvas.height = 760;
+    canvas.style.cssText = 'position:fixed;inset:0;z-index:10;width:1440px;height:760px';
+    document.body.append(canvas);
+    const c = canvas.getContext('2d');c.fillStyle = '#d28865';c.fillRect(0, 0, 1440, 760);
+    for (const [index, key] of ['idle', 'walk', 'bite', 'tail', 'stomp', 'roar'].entries()) {
+      const world = new World(window.previewWorld.level, 0);
+      if (key === 'walk') { world.rex.walk = Math.PI * .8;world.rex.stride = 1; }
+      else if (key !== 'idle') { world.startAttack(key);world.rex.attack.age = world.rex.attack.impact; }
+      const pose = rexPose(world.rex, art.rexAnimations), x = (index % 3) * 480, y = Math.floor(index / 3) * 380;
+      c.fillStyle = '#102321';c.font = 'bold 22px Arial';c.fillText(key.toUpperCase(), x + 24, y + 38);
+      art.blend(c, pose.from, pose.to, pose.mix, x + 270, y + 325, 470);
+    }
+  });
+  await page.locator('#sprite-review').screenshot({ path: join(output, 'rex-generated-poses.png') });
+  await page.locator('#sprite-review').evaluate(canvas => canvas.remove());
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const touch = await page.context().newCDPSession(page);
   await touch.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 2 });
