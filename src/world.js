@@ -17,6 +17,10 @@ const abilities = {
   // Ulti
   ulti: {duration:1.9, impact:1.05, damage:150}
 };
+// Darah Rex
+const rexHp=400;
+// Pulih darah
+const HEAL={soldier:6,vehicle:10,hero:60};
 // Jeda serangan
 export const cooldowns = {bite:.7, tail:2.2, stomp:3.5, roar:9, ulti:40};
 // Status modul
@@ -38,7 +42,7 @@ const groundRise={ground:433,upper:337,roof:269};
 export class World {
   constructor(level,index){
     this.level=level;this.index=index;this.time=0;this.score=0;this.lost=0;this.total=0;
-    this.rex={x:level.start,dir:1,hp:1000,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,
+    this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,ulti:15}};
     this.buildings=level.buildings.map(b=>{
       let y=-65;
@@ -89,7 +93,7 @@ export class World {
   // Munculkan musuh
   spawn(type,x){
     const hero=type in heroNames;
-    const max={perisai:540,rajawali:440,jaring:410,infantry:75,bazooka:100,jeep:150,helicopter:90,turret:75}[type];
+    const max={perisai:620,rajawali:500,jaring:470,infantry:75,bazooka:100,jeep:150,helicopter:90,turret:75}[type];
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
       mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
@@ -133,8 +137,7 @@ export class World {
       const counter=(e.type==='perisai'&&a.key==='tail'&&e.mode==='recover')||(e.type==='jaring'&&a.key==='stomp')||(e.type==='rajawali'&&e.mode==='ground'&&a.key==='bite');
       e.hp-=damage*(counter?2:1);e.hit=.2;
       if(a.key==='tail'&&!e.hero){e.vx=-p.dir*(e.type==='jeep'?920:420);e.stun=.65;if(e.type==='jeep'){e.lift=1;e.vy=370}}
-      if(e.hp<=0){this.score+=e.hero?1200:100;p.rage=Math.min(100,p.rage+(e.hero?20:6));this.fx('explosion',e.x,e.y-45);
-        if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);}
+      if(e.hp<=0)this.defeat(e);
     }
     if(a.key==='stomp')this.fx('dust',p.x,0,3);
   }
@@ -151,11 +154,17 @@ export class World {
       if(e.hp<=0||e.x<left||e.x>right)continue;
       if(e.type==='rajawali'){e.mode='ground';e.timer=3.4}
       e.hp-=e.hero?damage*.8:damage*2;e.hit=.2;e.stun=Math.max(e.stun,e.hero?1.6:2.6);
-      if(e.hp<=0){this.score+=e.hero?1200:100;p.rage=Math.min(100,p.rage+(e.hero?20:6));this.fx('explosion',e.x,e.y-45);
-        if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5)}
+      if(e.hp<=0)this.defeat(e);
     }
     this.shots.length=0;for(const c of this.civilians)c.speed=Math.min(500,c.speed+120);
     this.fx('dust',p.x,0,4);
+  }
+  // Musuh tumbang
+  defeat(e){
+    const p=this.rex,big=e.type==='jeep'||e.type==='helicopter';
+    this.score+=e.hero?1200:100;p.rage=Math.min(100,p.rage+(e.hero?20:6));
+    p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
+    this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
   // Lukai Rex
   hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti')return;p.hp=Math.max(0,p.hp-amount);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
@@ -173,14 +182,14 @@ export class World {
       if(e.mode==='approach'){e.dir=dir;if(dist>205)e.x+=dir*240*dt;
         if(e.timer<=0&&dist<730){e.mode='aim';e.timer=.85;e.dir=dir;e.connected=false}}
       else if(e.mode==='aim'&&e.timer<=0){e.mode='charge';e.timer=.62}
-      else if(e.mode==='charge'){e.x+=e.dir*840*dt;if(Math.abs(e.x-p.x)<94&&!e.connected){this.hurt(22,.4);e.connected=true}
+      else if(e.mode==='charge'){e.x+=e.dir*840*dt;if(Math.abs(e.x-p.x)<94&&!e.connected){this.hurt(26,.4);e.connected=true}
         if(e.timer<=0){e.mode='recover';e.timer=1.9}}
       else if(e.mode==='recover'&&e.timer<=0){e.mode='approach';e.timer=1.5}
     }else if(e.type==='rajawali'){
       e.dir=dir;
       if(e.mode==='ground'){e.y+=(0-e.y)*ease(10,dt);if(e.timer<=0){e.mode='approach';e.timer=3.6}}
       else if(e.mode==='dive'){e.y+=(-40-e.y)*ease(5,dt);e.x+=dir*360*dt;
-        if(dist<105&&!e.connected){this.hurt(21);e.connected=true}
+        if(dist<105&&!e.connected){this.hurt(24);e.connected=true}
         if(e.timer<=0){e.mode='approach';e.timer=4}}
       else{e.y+=(-465+Math.sin(this.time*2)*32-e.y)*ease(3,dt);e.x+=dir*clamp(dist-390,-170,245)*dt;
         if(e.shot<=0){this.shoot(e,'laser');e.shot=2.2}
@@ -240,12 +249,12 @@ export class World {
     }
     // Tentara baru
     this.spawnTime-=dt;
-    if(this.spawnTime<=0&&this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0)<7){
+    if(this.spawnTime<=0&&this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0)<8){
       const pool=['infantry'];if(this.percent>=30)pool.push('bazooka');if(this.percent>=50)pool.push('jeep');if(this.percent>=70)pool.push('helicopter');
       const side=(this.enemyCount%3===2?-1:1);const target=p.x+side*(this.view*.49);
       const spawn=this.level.spawns.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a);
       const e=this.spawn(pool[this.enemyCount++%pool.length],spawn);e.dir=e.x>p.x?-1:1;
-      this.spawnTime=Math.max(2.3,4.4-this.percent*.017);
+      this.spawnTime=Math.max(1.9,3.8-this.percent*.017);
     }
     // Musuh
     for(const e of this.enemies){
@@ -257,7 +266,7 @@ export class World {
       if(e.hero)this.tickHero(e,dt,dist,dir);
       else if(e.type==='turret'){if(!e.owner||e.owner.hp<=0){e.hp=0;continue}if(dist<900&&e.shot<=0){this.shoot(e,'bullet');e.shot=1.7}}
       else{
-        if(e.type==='jeep'){e.x+=e.dir*445*dt;if(dist<85&&e.shot<=0)this.hurt(9)}
+        if(e.type==='jeep'){e.x+=e.dir*445*dt;if(dist<85&&e.shot<=0)this.hurt(12)}
         else{e.dir=dir;e.x+=dir*clamp(dist-(e.type==='bazooka'?510:350),-130,185)*dt}
         if(e.type==='helicopter')e.y=-420+Math.sin(this.time*1.5+e.phase)*135;
         if(dist<940&&e.shot<=0){const rocket=e.type==='bazooka'||e.type==='helicopter';
@@ -269,7 +278,7 @@ export class World {
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     // Proyektil
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:2,rocket:13,laser:9,net:4}[s.type]);
+      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:3,rocket:16,laser:10,net:5}[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0);
     // Warga
