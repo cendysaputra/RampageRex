@@ -282,7 +282,7 @@ export class Renderer {
     if(action&&action.age<action.impact){
       const age=action.age,left=action.impact-age,show=smooth(age/.16)*smooth(left/.14);
       c.fillStyle='rgba(14,8,26,'+.5*show+')';c.fillRect(0,0,view,logicalH);
-      const width=Math.min(view*.52,820),height=Math.min(logicalH*.5,470),top=logicalH*.2,lean=height*.22;
+      const width=Math.min(view*.52,820),height=Math.min(logicalH*.5,470,width*.58),top=logicalH*.2,lean=height*.22;
       const slide=reduced?0:(1-smooth(age/.2))*-(width+lean)+(1-smooth(left/.14))*-(width+lean);
       c.save();c.translate(slide,top);c.globalAlpha=reduced?show:1;
       c.beginPath();c.moveTo(0,0);c.lineTo(width+lean,0);c.lineTo(width,height);c.lineTo(0,height);c.closePath();
@@ -299,6 +299,7 @@ export class Renderer {
       else{const pose=rexPose({...g.rex,attack:{...action,age:action.impact*.55}},art.rexAnimations);
         c.translate(width*.12,height*1.42);c.scale(1.9,1.9);art.sprite(c,pose.to,0,0,art.rexAnimations.width)}
       c.restore();
+      c.beginPath();c.moveTo(0,0);c.lineTo(width+lean,0);c.lineTo(width,height);c.lineTo(0,height);c.closePath();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font='italic 900 '+Math.round(height*.19)+'px Arial,sans-serif';c.textBaseline='bottom';
       c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';c.strokeText('AMUKAN REX!',28,height-18);
