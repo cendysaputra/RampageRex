@@ -12,8 +12,12 @@ const abilities = {
   bite: {duration:.48, impact:.18, damage:100, range:[36,365], height:[-565,-36]},
   tail: {duration:.62, impact:.26, damage:88, range:[-530,18], height:[-240,0]},
   stomp:{duration:.72, impact:.31, damage:84, range:[-245,245], height:[-115,5]},
-  roar: {duration:.9, impact:.23, damage:0}
+  roar: {duration:.9, impact:.23, damage:0},
+  // The ultimate: a long wind-up, then a quake that hits everything on screen.
+  ulti: {duration:1.9, impact:1.05, damage:150}
 };
+// Seconds before each skill can be used again, counted from the moment it starts.
+export const cooldowns = {bite:.7, tail:2.2, stomp:3.5, roar:9, ulti:40};
 export function moduleState(m){
   if (m.hp<=0) return 'rubble';
   if (m.hp<=m.max*.36) return 'broken';
@@ -28,7 +32,8 @@ const groundRise={ground:433,upper:337,roof:269};
 export class World {
   constructor(level,index){
     this.level=level;this.index=index;this.time=0;this.score=0;this.lost=0;this.total=0;
-    this.rex={x:level.start,dir:1,hp:1000,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0};
+    this.rex={x:level.start,dir:1,hp:1000,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,
+      cd:{bite:0,tail:0,stomp:0,roar:0,ulti:15}};
     this.buildings=level.buildings.map(b=>{
       let y=-65;
       const modules=['ground',...Array(b.upper).fill('upper'),'roof'].map(type=>{
@@ -39,7 +44,7 @@ export class World {
       return {...b,modules,evacuated:false};
     });
     this.enemies=[];this.civilians=[];this.shots=[];this.effects=[];this.events=[];
-    this.triggered=new Set();this.spawnTime=1;this.enemyCount=0;this.camera=0;this.look=1;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
+    this.triggered=new Set();this.spawnTime=1;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
   }
   get percent(){return 100*this.lost/this.total}
@@ -79,12 +84,14 @@ export class World {
   }
   startAttack(key){
     const p=this.rex;if(!abilities[key]||p.attack||p.stun>0||this.status!=='playing')return;
-    if(key==='roar'&&p.rage<25&&p.fury<=0){this.say('Raung butuh 25 Rage.',1.2);return}
-    if(key==='roar'&&p.fury<=0)p.rage-=25;
+    if(p.cd[key]>0){if(key==='ulti'||key==='roar')this.say((key==='ulti'?'Ulti':'Raung')+' siap dalam '+Math.ceil(p.cd[key])+' dtk.',.9);return}
+    p.cd[key]=cooldowns[key];
     p.attack={key,age:0,...abilities[key],done:false};
+    if(key==='ulti')this.sound('ulti');
   }
   strike(a){
     const p=this.rex;this.sound(a.key);this.shake=Math.max(this.shake,a.key==='bite'?4:9);
+    if(a.key==='ulti'){this.quake(a.damage*(p.fury>0?2:1));return}
     if(a.key==='roar'){
       for(const e of this.enemies.filter(e=>e.x>=this.camera-40&&e.x<=this.camera+this.view+40)){
         if(!e.hero)e.stun=2.6;
@@ -117,7 +124,27 @@ export class World {
     }
     if(a.key==='stomp')this.fx('dust',p.x,0,3);
   }
-  hurt(amount,stun=0){const p=this.rex;p.hp=Math.max(0,p.hp-amount);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
+  // Everything on screen is hit: storeys are damaged from the roof down, soldiers are
+  // wiped out, heroes are hurt and stunned, and projectiles in flight are cleared.
+  quake(damage){
+    const p=this.rex,left=this.camera-60,right=this.camera+this.view+60;
+    this.shake=24;this.sound('collapse');this.quakeAt=this.time;
+    for(const b of this.buildings){
+      if(b.x+b.width/2<left||b.x-b.width/2>right)continue;
+      for(let i=b.modules.length-1;i>=0;i--)this.damageModule(b,i,damage);
+      this.fx('dust',b.x,0,2);
+    }
+    for(const e of this.enemies){
+      if(e.hp<=0||e.x<left||e.x>right)continue;
+      if(e.type==='rajawali'){e.mode='ground';e.timer=3.4}
+      e.hp-=e.hero?damage*.8:damage*2;e.hit=.2;e.stun=Math.max(e.stun,e.hero?1.6:2.6);
+      if(e.hp<=0){this.score+=e.hero?1200:100;p.rage=Math.min(100,p.rage+(e.hero?20:6));this.fx('explosion',e.x,e.y-45);
+        if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5)}
+    }
+    this.shots.length=0;for(const c of this.civilians)c.speed=Math.min(500,c.speed+120);
+    this.fx('dust',p.x,0,4);
+  }
+  hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti')return;p.hp=Math.max(0,p.hp-amount);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
   shoot(e,type){
     const x=e.x, y=e.y-(e.hero?105:e.type==='turret'?48:68), dx=this.rex.x-x,dy=-145-y;
     const dist=Math.hypot(dx,dy)||1;const speed={bullet:760,rocket:380,laser:860,net:470}[type];
@@ -164,6 +191,7 @@ export class World {
     if(this.status!=='playing'||dt<=0)return;
     this.time+=dt;const p=this.rex;
     for(const k of ['stun','slow','fury','hit'])p[k]=Math.max(0,p[k]-dt);
+    for(const k in p.cd){const before=p.cd[k];p.cd[k]=Math.max(0,before-dt);if(k==='ulti'&&before>0&&!p.cd[k]){this.say('Ulti siap! Tekan R.',2);this.sound('alarm')}}
     if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say('RAGE MODE · Damage ×2 selama 8 detik!',2.4);this.sound('roar')}
     const move=Number(input.has('right'))-Number(input.has('left'));
     p.moving=!!move&&p.stun<=0&&(!p.attack||p.attack.key==='bite');
@@ -178,7 +206,7 @@ export class World {
     }
     p.stride+=(clamp(Math.abs(p.vx)/240,0,1)-p.stride)*ease(12,dt);
     // An attack pressed slightly early is held briefly and fires as soon as Rex is free.
-    for(const key of ['bite','tail','stomp','roar'])if(input.has(key)){p.queued=key;p.queuedUntil=this.time+.25;break}
+    for(const key of ['ulti','bite','tail','stomp','roar'])if(input.has(key)){p.queued=key;p.queuedUntil=this.time+.25;break}
     if(p.queued){
       if(this.time>p.queuedUntil)p.queued=null;
       else if(!p.attack&&p.stun<=0){this.startAttack(p.queued);p.queued=null}

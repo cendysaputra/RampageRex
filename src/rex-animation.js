@@ -14,10 +14,24 @@ export function rexPose(rex, animation) {
   const idle = frame('idle', 0), action = rex.attack;
   if (action) {
     const { key, age, impact, duration } = action, recovery = duration - impact;
-    const times = key === 'tail'
-      ? [0, impact * .5, impact, impact + recovery * .28, impact + recovery * .7, duration]
-      : [0, impact * .22, impact * .65, impact, impact + recovery * .65, duration];
-    const poses = [idle, ...animation.clips[key].frames.map((_, index) => frame(key, index)), idle];
+    let times, poses;
+    if (key === 'ulti') {
+      // Uses the dedicated clip when the manifest has one; until then it borrows roar and stomp poses.
+      const clip = animation.clips.ulti;
+      const paths = clip
+        ? clip.frames.map((_, index) => frame('ulti', index))
+        : [frame('roar', 0), frame('roar', 1), frame('roar', 2), frame('stomp', 1), frame('stomp', 2), frame('stomp', 3)];
+      const contact = clip ? clip.contact ?? paths.length - 3 : 4, after = paths.length - contact;
+      times = [0, ...paths.map((_, index) => index <= contact
+        ? impact * (index + 1) / (contact + 1)
+        : impact + recovery * (index - contact) / after), duration];
+      poses = [idle, ...paths, idle];
+    } else {
+      times = key === 'tail'
+        ? [0, impact * .5, impact, impact + recovery * .28, impact + recovery * .7, duration]
+        : [0, impact * .22, impact * .65, impact, impact + recovery * .65, duration];
+      poses = [idle, ...animation.clips[key].frames.map((_, index) => frame(key, index)), idle];
+    }
     const next = times.findIndex(time => time > age);
     if (next < 1) return { from: idle, to: idle, mix: 0 };
     const end = times[next], fade = Math.min(FADE, end - times[next - 1]);
