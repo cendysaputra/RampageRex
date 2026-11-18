@@ -44,7 +44,7 @@ h1,h2,.district-card b,.hud-heading strong{font-family:var(--shout);font-weight:
 h1{font-size:clamp(72px,min(11.5vw,19vh),200px);line-height:.8;letter-spacing:.01em;margin:0 0 .14em;text-shadow:.035em .045em var(--ink)}
 h1 em{font:inherit;display:block;color:var(--orange);font-size:1.5em;transform:rotate(-4deg);transform-origin:left bottom}
 .intro{max-width:380px;font-size:clamp(16px,1.35vw,20px);line-height:1.4;color:#f1e6d0;margin:22px 0}
-.menu-bottom{justify-content:space-between;gap:16px;font-size:15px;color:#e8ddbf}
+.menu-bottom{font-size:15px}
 #record{font-weight:700;color:var(--cream);white-space:nowrap}
 #load-status{min-height:1.35em;margin:12px 0 0;font-size:15px}
 
@@ -113,7 +113,7 @@ h2{font-size:clamp(40px,6vw,60px);line-height:1;letter-spacing:.03em;margin:0 0 
   .cover{height:78%;object-position:center top}
   .poster-shade{background:linear-gradient(0deg,#0e2231 0%,#0e2231 23%,#0e2231d9 34%,transparent 50%)}
   .menu-body{margin-top:auto}
-  .menu-bottom{margin-top:18px;flex-direction:column;align-items:flex-start;gap:2px}
+  .menu-bottom{margin-top:18px}
   .intro{max-width:310px;margin:12px 0 18px;font-size:16px}
   h1{font-size:clamp(54px,8.6vh,84px)}
   .player-card,.district-card{padding:4px 8px 8px}
