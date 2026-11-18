@@ -4,14 +4,17 @@ import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Two samples per logical pixel cover the renderer's capped backing store.
-const drawnWidths=[['buildings/',560],['characters/civilians/bakso-vendor/',150],['characters/civilians/',85],
-  ['characters/soldiers/jeep',240],['characters/soldiers/helicopter',285],['characters/soldiers/',97],
+// Sprite widths are chosen so every adult stands about 88 logical pixels tall, the height the
+// civilians already had. Soldiers are a touch taller with their helmets, heroes about 1.3x.
+const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64;
+const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
+  ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
 function bitmapWidth(path,source){
-  if(path.startsWith('characters/heroes/'))return Math.min(source,2*(heroWidths[path.split('/').pop()]||source));
+  if(path.startsWith('characters/heroes/'))return Math.min(source,Math.ceil(2*heroScale*(heroWidths[path.split('/').pop()]||source)));
   const match=drawnWidths.find(([prefix])=>path.startsWith(prefix));
   return match?Math.min(source,Math.ceil(match[1]*2)):source;
 }
@@ -128,7 +131,7 @@ function rexRig(c,a,p,t,reduced){
   c.restore();
 }
 function heroRig(c,a,e){
-  c.save();c.translate(e.x,e.y);c.scale(e.dir,1);
+  c.save();c.translate(e.x,e.y);c.scale(e.dir*heroScale,heroScale);
   const stride=Math.sin(e.walk)*e.stride;
   const part=(name,x,y,w,r=0)=>a.part(c,'characters/heroes/'+e.type+'/parts/'+name,x,y,w,r);
   c.rotate(e.lean);
@@ -226,20 +229,20 @@ export class Renderer {
     for(const prop of g.level.props){if(visible(prop.x))a.sprite(c,'props/'+prop.type,prop.x,-46,propWidths[prop.type])}
     const shadow=(x,y,w)=>{c.fillStyle='#0c211e51';c.beginPath();c.ellipse(x,y,w,Math.max(5,w*.07),0,0,Math.PI*2);c.fill()};
     for(const e of g.enemies){if(!visible(e.x))continue;
-      shadow(e.x,0,e.hero?67:50);c.save();
+      shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:40);c.save();
       if(e.hit>0&&!reduced)c.translate(-e.dir*Math.sin(clamp(e.hit/.2,0,1)*Math.PI)*4,0);
       if(e.hero)heroRig(c,a,e);
       else if(e.type==='turret'){
-        c.save();c.translate(e.x,0);c.fillStyle='#172d2a';c.beginPath();c.moveTo(-38,0);c.lineTo(0,-54);c.lineTo(38,0);c.fill();
-        a.sprite(c,'characters/heroes/jaring/parts/net-launcher',0,-39,87,e.dir);c.restore();
+        c.save();c.translate(e.x,0);c.fillStyle='#172d2a';c.beginPath();c.moveTo(-27,0);c.lineTo(0,-38);c.lineTo(27,0);c.fill();
+        a.sprite(c,'characters/heroes/jaring/parts/net-launcher',0,-27,61,e.dir);c.restore();
       }else if(e.type==='jeep'||e.type==='helicopter'){
-        a.sprite(c,'characters/soldiers/'+e.type,e.x,e.y-e.lift,e.type==='jeep'?240:285,e.dir,e.lift*.003);
+        a.sprite(c,'characters/soldiers/'+e.type,e.x,e.y-e.lift,vehicles[e.type],e.dir,e.lift*.003);
       }else{
         const base='characters/soldiers/'+e.type+'/frames/',frame=e.frame||(e.type==='infantry'?'aim':'kneeling-fire');
         const bob=Math.sin(e.walk)**2*e.stride*2;
-        a.blend(c,base+(e.fromFrame||frame),base+frame,e.frameMix??1,e.x,-e.lift-bob,97,e.dir);
+        a.blend(c,base+(e.fromFrame||frame),base+frame,e.frameMix??1,e.x,-e.lift-bob,people[e.type],e.dir);
       }c.restore();
-      if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='bold 26px monospace';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-180)}
+      if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='bold 26px monospace';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-128)}
     }
     shadow(g.rex.x-15,2,212);c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
@@ -247,7 +250,7 @@ export class Renderer {
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;
       const base='characters/civilians/'+civ.type+'/frames/',frame=civ.frame||'run-a';
-      a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x,civ.lane-Math.sin(civ.walk)**2*3,civ.type==='bakso-vendor'?150:85,civ.dir);
+      a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x,civ.lane-Math.sin(civ.walk)**2*3,people.civilian,civ.dir);
     }
     for(const s of g.shots){const path=s.type==='net'?'net-capsule':s.type;a.sprite(c,'fx/projectiles/frames/'+path,s.x,s.y,s.type==='bullet'?37:72,1,Math.atan2(s.vy,s.vx))}
     for(const f of g.effects){

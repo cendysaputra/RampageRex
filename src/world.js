@@ -111,7 +111,7 @@ export class World {
       if(i!==undefined)this.damageModule(b,i,damage);
     }
     for(const e of this.enemies){
-      if(e.hp<=0||!overlap(hitbox,box(e.x,e.y-e.lift,e.hero?116:e.type==='jeep'?220:94,e.hero?168:100)))continue;
+      if(e.hp<=0||!overlap(hitbox,box(e.x,e.y-e.lift,e.hero?80:e.type==='jeep'?170:e.type==='turret'?60:84,e.hero?112:e.type==='turret'?60:96)))continue;
       if(e.type==='helicopter'&&(a.key!=='bite'||e.y< -395))continue;
       if(e.type==='rajawali'&&e.mode!=='ground'&&e.mode!=='dive')continue;
       if(e.type==='perisai'&&a.key==='bite'&&e.mode!=='recover'&&Math.sign(p.x-e.x)===e.dir){this.say('Perisai memblokir gigitan.',1);continue}
@@ -146,7 +146,7 @@ export class World {
   }
   hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti')return;p.hp=Math.max(0,p.hp-amount);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
   shoot(e,type){
-    const x=e.x, y=e.y-(e.hero?105:e.type==='turret'?48:68), dx=this.rex.x-x,dy=-145-y;
+    const x=e.x, y=e.y-(e.hero?68:e.type==='turret'?34:62), dx=this.rex.x-x,dy=-145-y;
     const dist=Math.hypot(dx,dy)||1;const speed={bullet:760,rocket:380,laser:860,net:470}[type];
     this.shots.push({x,y,type,vx:dx/dist*speed,vy:dy/dist*speed,life:3.2});
     this.sound(type==='bullet'?'shot':'launch');
@@ -179,7 +179,7 @@ export class World {
   }
   animateEnemy(e,dt,previousX){
     const distance=Math.abs(e.x-previousX),speed=distance/dt;
-    e.walk+=distance/(e.hero?38:23);
+    e.walk+=distance/(e.hero?26:21);
     e.stride+=(clamp(speed/(e.hero?420:185),0,1)-e.stride)*ease(12,dt);
     const lean=e.mode==='charge'?.18:e.mode==='recover'?-.14:e.mode==='dive'?.45:0;
     e.lean+=(lean-e.lean)*ease(14,dt);e.guard+=((e.mode==='recover'?1:0)-e.guard)*ease(12,dt);
