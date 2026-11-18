@@ -6,17 +6,17 @@ const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-
 // Two samples per logical pixel cover the renderer's capped backing store.
 // Sprite widths are chosen so every adult stands about 88 logical pixels tall, the height the
 // civilians already had. Soldiers are a touch taller with their helmets, heroes about 1.3x.
-const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64;
+const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64,samples=1.6;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/',people.bazooka],
-  ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],
+  ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
 function bitmapWidth(path,source){
-  if(path.startsWith('characters/heroes/'))return Math.min(source,Math.ceil(2*heroScale*(heroWidths[path.split('/').pop()]||source)));
+  if(path.startsWith('characters/heroes/'))return Math.min(source,Math.ceil(samples*heroScale*(heroWidths[path.split('/').pop()]||source)));
   const match=drawnWidths.find(([prefix])=>path.startsWith(prefix));
-  return match?Math.min(source,Math.ceil(match[1]*2)):source;
+  return match?Math.min(source,Math.ceil(match[1]*samples)):source;
 }
 function cropRect(meta,path){
   if(path.startsWith('backgrounds/')||!meta.alpha||!meta.bounds)return {x:0,y:0,width:meta.width,height:meta.height};
@@ -100,7 +100,7 @@ export class Art {
     if(from===to||mix<=0){this.sprite(c,from,x,y,width,dir,angle);return}
     if(mix>=1){this.sprite(c,to,x,y,width,dir,angle);return}
     const rect=path=>{
-      const m=this.meta[path+'.png'],b=this.crops.get(path),scale=2*width/m.width*(m.scale||1);
+      const m=this.meta[path+'.png'],b=this.crops.get(path),scale=samples*width/m.width*(m.scale||1);
       return {x:(b.x-m.pivot[0])*scale,y:(b.y-m.pivot[1])*scale,w:b.width*scale,h:b.height*scale};
     };
     const a=rect(from),b=rect(to),left=Math.floor(Math.min(a.x,b.x))-1,top=Math.floor(Math.min(a.y,b.y))-1;
@@ -115,7 +115,7 @@ export class Art {
     buffer.globalCompositeOperation='lighter';buffer.globalAlpha=mix;
     buffer.drawImage(this.images.get(to),b.x-left,b.y-top,b.w,b.h);
     c.save();c.translate(x,y);c.scale(dir,1);c.rotate(angle);
-    c.drawImage(canvas,0,0,w,h,left/2,top/2,w/2,h/2);c.restore();
+    c.drawImage(canvas,0,0,w,h,left/samples,top/samples,w/samples,h/samples);c.restore();
   }
 }
 
@@ -288,21 +288,17 @@ export class Renderer {
       const width=Math.min(view*.52,820),height=Math.min(logicalH*.5,470,width*.58),top=logicalH*.2,lean=height*.22;
       const slide=reduced?0:(1-smooth(age/.2))*-(width+lean)+(1-smooth(left/.14))*-(width+lean);
       c.save();c.translate(slide,top);c.globalAlpha=reduced?show:1;
-      c.beginPath();c.moveTo(0,0);c.lineTo(width+lean,0);c.lineTo(width,height);c.lineTo(0,height);c.closePath();
-      c.save();c.clip();
+      const outline=()=>{c.beginPath();c.moveTo(0,0);c.lineTo(width+lean,0);c.lineTo(width,height);c.lineTo(0,height);c.closePath()};
+      outline();c.save();c.clip();
       const paint=c.createLinearGradient(0,0,width,height);paint.addColorStop(0,'#ff9b40');paint.addColorStop(1,'#c2314f');
       c.fillStyle=paint;c.fillRect(0,0,width+lean,height);
       // Speed lines drift left so the banner feels in motion while it holds.
       c.strokeStyle='#fff0ce55';c.lineWidth=5;
       for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173-(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
         c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
-      const art=this.art,cutin=art.images.get('fx/ulti-cutin');
-      if(cutin){const m=art.meta['fx/ulti-cutin.png'],scale=Math.max((width+lean)/m.width,height/m.height),bump=reduced?0:(1-smooth(age/.3))*40;
-        c.drawImage(cutin,(width+lean-m.width*scale)/2-bump,(height-m.height*scale)/2,m.width*scale,m.height*scale)}
-      else{const pose=rexPose({...g.rex,attack:{...action,age:action.impact*.55}},art.rexAnimations);
-        c.translate(width*.12,height*1.42);c.scale(1.9,1.9);art.sprite(c,pose.to,0,0,art.rexAnimations.width)}
-      c.restore();
-      c.beginPath();c.moveTo(0,0);c.lineTo(width+lean,0);c.lineTo(width,height);c.lineTo(0,height);c.closePath();
+      const m=this.art.meta['fx/ulti-cutin.png'],scale=Math.max((width+lean)/m.width,height/m.height),bump=reduced?0:(1-smooth(age/.3))*40;
+      c.drawImage(this.art.images.get('fx/ulti-cutin'),(width+lean-m.width*scale)/2-bump,(height-m.height*scale)/2,m.width*scale,m.height*scale);
+      c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font='italic 900 '+Math.round(height*.19)+'px Arial,sans-serif';c.textBaseline='bottom';
       c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';c.strokeText('AMUKAN REX!',28,height-18);
