@@ -57,7 +57,7 @@ for (const key of ['bite', 'tail', 'stomp', 'roar', 'ulti']) {
 const distances = [];
 for (const hz of [30, 60, 120, 144]) {
   const world = makeWorld(), start = world.rex.x;
-  // Match the browser loop's maximum 1/60 s simulation steps.
+  // Langkah simulasi
   const steps = Math.ceil(60 / hz), dt = 1 / hz / steps;
   for (let i = 0; i < hz * steps * 2; i++) world.update(dt, new Set(['right']));
   for (let i = 0; i < hz * steps; i++) world.update(dt, empty);
