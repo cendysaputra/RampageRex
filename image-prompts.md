@@ -414,7 +414,7 @@ No text, no letters, no numbers, no logos, no signage lettering (signs show only
 
 1. Simpan salinan WebP di sebelahnya (`menu-wide.webp`, `menu-tall.webp`), kualitas 90. Kedua gambar ini tidak perlu masuk manifest karena tidak digambar di canvas.
 2. Periksa di tiga ukuran layar: 1440×900, 390×844, dan 844×390. Judul "Rampage Rex", dua tombol, dan baris bawah harus tetap terbaca di atas gambar tanpa menutupi wajah Rex atau para warga.
-3. Pemasangan di `index.html` dan `style.css` (mengganti lapisan `.skyline`, `.shops`, dan `.cover-rex`) dikerjakan setelah gambarnya disetujui.
+3. Kedua gambar sudah terpasang: `index.html` memilihnya lewat `<picture>` menurut orientasi layar, dan posisinya diatur `.cover` di `style.css`. Gambar pengganti cukup ditaruh dengan nama file yang sama.
 
 ---
 
