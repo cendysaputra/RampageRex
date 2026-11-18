@@ -368,6 +368,56 @@ Thick confident antialiased outlines, clean silhouette, rich saturated colour. N
 
 ---
 
+## 10. Latar menu — Rex mengejar warga
+
+Gambar utama halaman sebelum main. Menggantikan susunan sekarang (langit, siluet kota, dan ilustrasi Rex tampak samping). Ini gambar penuh **tanpa** latar transparan, dan **tanpa teks apa pun**: judul, tombol, dan label digambar oleh halaman di atasnya.
+
+Referensi identitas: `assets/characters/rex/master.webp`, `assets/fx/ulti-cutin.webp` (wajah Rex tampak tiga perempat), lima `master.png` warga di `assets/characters/civilians/`, serta `assets/buildings/ruko-01/colors/` untuk gaya ruko.
+
+Dibuat dua versi karena tata letak menu berbeda: di layar lebar teks ada di kiri, di layar tegak teks ada di bawah.
+
+### 10.1 Versi lebar (desktop dan ponsel mendatar)
+
+Simpan sebagai `assets/backgrounds/menu-wide.png`.
+
+```
+Full-bleed key art illustration for a video game title screen, wide 16:9 landscape, high resolution, opaque (no transparency). Same polished 2D cartoon style as the references: thick confident dark teal outlines, rich cel shading, saturated colour, warm orange rim light from a low sunset, deep teal shadows.
+
+Scene: a narrow Indonesian shophouse street (ruko) at sunset, seen from street level looking straight down the road. Rex, the exact green dinosaur from the references (dark teal spots, cream segmented belly and jaw, orange dorsal plates, yellow eyes, three red scars on his cheek, small clawed arms, long tail), is charging directly TOWARD the camera, front-facing with a slight three-quarter turn, mid-stride with one huge foot lifted and the other cracking the asphalt. Low camera angle with strong foreshortening so his head and open roaring jaws loom large, teeth and pink tongue visible, eyes locked on the people below. His tail whips behind him, clipping a shop sign.
+
+In the foreground, five terrified civilians from the references run toward the viewer, away from Rex, small in the frame so his scale reads as enormous: a schoolchild with a backpack, an office worker clutching a bag, a woman in a hijab with shopping bags, an elderly man with a cane, and a bakso vendor carrying his shoulder pole. Arms up, mouths open, clearly cartoon panic, no injuries and no gore. A green angkot minivan is swerving at the side of the road and a food cart is tipping over.
+
+Both sides of the street are lined with two-storey ruko in mustard, mint, pink and blue with roll-up shutters, laundry on balconies, water tanks, satellite dishes and tangled power lines on leaning poles. Dust and small chunks of rubble fly up around Rex's feet. Behind him, a magenta-to-orange sunset sky with a large low sun and the purple silhouette of a city skyline, a mosque dome and a crane.
+
+Composition for interface overlay: place Rex in the RIGHT half of the frame, his head in the upper right. Keep the LEFT 45 percent of the image calmer and darker (shadowed shopfronts in deep teal, fewer details, no faces and no bright highlights) because the game title and buttons sit there. Keep the bottom 12 percent as plain dark road for a footer line. The civilians run in the lower centre and lower right, not in the left 40 percent.
+
+No text, no letters, no numbers, no logos, no signage lettering (shop signs and billboards show only abstract shapes), no watermark, no frame, no border, no interface elements.
+```
+
+### 10.2 Versi tegak (ponsel berdiri)
+
+Simpan sebagai `assets/backgrounds/menu-tall.png`.
+
+```
+Full-bleed key art illustration for a video game title screen, tall 9:16 portrait, high resolution, opaque (no transparency). The same scene, characters, palette and polished cartoon style as the wide version in reference 1; match it precisely so the two read as one artwork.
+
+Rex, the exact green dinosaur from the references, charges directly TOWARD the camera down a narrow Indonesian shophouse street at sunset, front-facing with a slight three-quarter turn, low camera angle with strong foreshortening, jaws open in a roar, one foot lifted mid-stride, the other cracking the asphalt, dust and rubble flying. Ruko in mustard, mint, pink and blue rise on both sides with shutters, laundry, water tanks and tangled power lines; a magenta-to-orange sunset sky with a large low sun and a purple skyline sits behind him.
+
+The five civilians from the references (schoolchild with backpack, office worker, woman in a hijab with shopping bags, elderly man with a cane, bakso vendor with shoulder pole) run toward the viewer in clear cartoon panic, small in the frame, no injuries and no gore.
+
+Composition for interface overlay: Rex's head and body fill the UPPER 55 percent of the frame, centred. The civilians run across the middle band, between 50 and 65 percent of the height. The LOWER 38 percent is calm dark asphalt in deep teal shadow with only faint road markings and no characters, because the game title and buttons sit there. Leave a little sky above Rex's head for a small button in the top right corner.
+
+No text, no letters, no numbers, no logos, no signage lettering (signs show only abstract shapes), no watermark, no frame, no border, no interface elements.
+```
+
+### 10.3 Setelah gambar jadi
+
+1. Simpan salinan WebP di sebelahnya (`menu-wide.webp`, `menu-tall.webp`), kualitas 90. Kedua gambar ini tidak perlu masuk manifest karena tidak digambar di canvas.
+2. Periksa di tiga ukuran layar: 1440×900, 390×844, dan 844×390. Judul "Rampage Rex", dua tombol, dan baris bawah harus tetap terbaca di atas gambar tanpa menutupi wajah Rex atau para warga.
+3. Pemasangan di `index.html` dan `style.css` (mengganti lapisan `.skyline`, `.shops`, dan `.cover-rex`) dikerjakan setelah gambarnya disetujui.
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).

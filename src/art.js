@@ -257,7 +257,7 @@ export class Renderer {
         const bob=Math.sin(e.walk)**2*e.stride*2;
         a.blend(c,base+(e.fromFrame||frame),base+frame,e.frameMix??1,e.x,-e.lift-bob,people[e.type],e.dir);
       }c.restore();
-      if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='bold 26px monospace';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-128)}
+      if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='30px Bangers,Impact,sans-serif';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-128)}
     }
     shadow(g.rex.x-15,2,212);c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
@@ -317,7 +317,7 @@ export class Renderer {
       c.drawImage(this.art.images.get('fx/ulti-cutin'),(width+lean-m.width*scale)/2-bump,(height-m.height*scale)/2,m.width*scale,m.height*scale);
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
-      c.font='italic 900 '+Math.round(height*.19)+'px Arial,sans-serif';c.textBaseline='bottom';
+      c.font=Math.round(height*.22)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';
       c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';c.strokeText('AMUKAN REX!',28,height-18);
       c.fillStyle='#fff0ce';c.fillText('AMUKAN REX!',28,height-18);
       c.restore();

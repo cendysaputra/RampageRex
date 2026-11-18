@@ -100,7 +100,7 @@ export class World {
     if(p.cd[key]>0){if(key==='ulti'||key==='roar')this.say((key==='ulti'?'Ulti':'Raung')+' siap dalam '+Math.ceil(p.cd[key])+' dtk.',.9);return}
     p.cd[key]=cooldowns[key];
     p.attack={key,age:0,...abilities[key],done:false};
-    if(key==='ulti')this.sound('ulti');
+    if(key==='ulti'){this.messageUntil=0;this.sound('ulti')}
   }
   // Hantam target
   strike(a){
@@ -211,7 +211,7 @@ export class World {
     // Pewaktu
     for(const k of ['stun','slow','fury','hit'])p[k]=Math.max(0,p[k]-dt);
     for(const k in p.cd){const before=p.cd[k];p.cd[k]=Math.max(0,before-dt);if(k==='ulti'&&before>0&&!p.cd[k]){this.say('Ulti siap! Tekan R.',2);this.sound('alarm')}}
-    if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say('RAGE MODE · Damage ×2 selama 8 detik!',2.4);this.sound('roar')}
+    if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say('Rage penuh! Damage 2× selama 8 detik.',2.4);this.sound('roar')}
     const move=Number(input.has('right'))-Number(input.has('left'));
     p.moving=!!move&&p.stun<=0&&(!p.attack||p.attack.key==='bite');
     if(p.moving)p.dir=move;
