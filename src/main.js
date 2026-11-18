@@ -2,7 +2,10 @@ import {World,heroNames} from './world.js';
 import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
-const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyJ:'bite',KeyK:'tail',KeyS:'stomp',KeyL:'roar'};
+// Attacks sit around A/D so one hand covers everything. J/K/L remain as the older bindings.
+const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',
+  KeyJ:'bite',KeyK:'tail',KeyL:'roar'};
+const mouseButtons=['bite',null,'tail'];
 const controls=new Map(),taps=new Set(),input=new Set(),shown=new Map(),snd=new Sound(),panel=el('panel');
 let world=null,art=null,renderer=null,screen='menu',prior=0,previousScore=0,levelIndex=0,boot;
 function getSaved(key,def){try{return localStorage.getItem(key)??def}catch{return def}}
@@ -27,7 +30,7 @@ function menu(){
   close();clearInput();screen='menu';world=null;el('hud').hidden=true;el('menu').hidden=false;el('start').focus();
 }
 function help(){screen='help';modal('KONTROL','Cara main',
-  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>J</dt><dd>Gigit di depan Rex</dd><dt>K</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>L</dt><dd>Raung · perlu 25 Rage</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
+  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung · perlu 25 Rage</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
   [['Kembali',menu]]);
 }
 async function start(index=0,carried=0){
@@ -94,6 +97,15 @@ document.addEventListener('keydown',e=>{
   if(screen==='playing'&&keys[e.code]){e.preventDefault();if(!e.repeat)press(e.code,keys[e.code])}
 });
 document.addEventListener('keyup',e=>controls.delete(e.code));
+// Mouse: left button bites, right button swings the tail. Buttons on the HUD keep their own clicks.
+const game=el('game');
+game.addEventListener('pointerdown',e=>{
+  const action=mouseButtons[e.button];
+  if(e.pointerType!=='mouse'||screen!=='playing'||!action||e.target.closest('button'))return;
+  e.preventDefault();press('mouse'+e.button,action);
+});
+for(const type of ['pointerup','pointercancel'])addEventListener(type,e=>{if(e.pointerType==='mouse')controls.delete('mouse'+e.button)});
+game.addEventListener('contextmenu',e=>{if(screen==='playing')e.preventDefault()});
 document.querySelectorAll('[data-action]').forEach(b=>{
   b.addEventListener('pointerdown',e=>{if(screen!=='playing')return;e.preventDefault();b.setPointerCapture(e.pointerId);press(e.pointerId,b.dataset.action)});
   for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,e=>controls.delete(e.pointerId));
