@@ -9,12 +9,15 @@ const scenes = [
 ];
 
 export function playOpening(section, sound) {
-  const image = section.querySelector('img');
-  const caption = section.querySelector('figcaption');
+  const page = section.querySelector('.comic-page');
+  let image;
+  const caption = section.querySelector('.comic-caption');
   const skip = section.querySelector('button');
   const timers = [];
   let index = 0;
   let ended = false;
+  page.replaceChildren();
+  caption.textContent = '';
   section.hidden = false;
   skip.focus();
   return new Promise(resolve => {
@@ -34,8 +37,14 @@ export function playOpening(section, sound) {
     function next() {
       if (index === scenes.length) return finish();
       const [line, cues] = scenes[index++];
+      image = new Image();
+      image.alt = line;
+      const frame = document.createElement('figure');
+      frame.dataset.scene = index;
+      frame.append(image);
       image.onload = () => {
-        section.dataset.scene = index;
+        if (index === 4) page.replaceChildren();
+        page.append(frame);
         caption.textContent = line;
         cues.forEach((cue, i) => timers.push(setTimeout(() => sound.play(cue), i * 520)));
         timers.push(setTimeout(next, 3600));
