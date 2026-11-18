@@ -12,8 +12,11 @@ Dari root repo, jalankan `python -m http.server 8000`, lalu buka `http://localho
 | W atau klik kiri | Gigit di depan |
 | Q atau klik kanan | Sabet dengan ekor di belakang |
 | S | Injak |
-| E | Raung (25 Rage) |
+| E | Raung |
+| R | Ulti: Amukan Rex |
 | Esc atau P | Jeda |
+
+Setiap serangan punya cooldown: gigit 0,7 detik, ekor 2,2 detik, injak 3,5 detik, raung 9 detik, dan Ulti 40 detik. Petunjuk tombol di layar menggelap selama cooldown berjalan.
 
 Di layar sentuh, gunakan tombol arah dan aksi. Rekor tersimpan di browser. Pengaturan empat distrik ada di `data/levels/`.
 
