@@ -34,7 +34,8 @@ export function rexPose(rex, animation) {
     }
     const next = times.findIndex(time => time > age);
     if (next < 1) return { from: idle, to: idle, mix: 0 };
-    const end = times[next], fade = Math.min(FADE, end - times[next - 1]);
+    // The ultimate's poses change the whole silhouette, so its blend is kept even shorter.
+    const end = times[next], fade = Math.min(key === 'ulti' ? FADE * .6 : FADE, end - times[next - 1]);
     return { from: poses[next - 1], to: poses[next], mix: smooth((age - (end - fade)) / fade) };
   }
   if (rex.stride < .005) return { from: idle, to: idle, mix: 0 };
