@@ -258,6 +258,6 @@ export class World {
     keep(this.effects,f=>f.life>0);this.shake=Math.max(0,this.shake-dt*25);
     for(const b of this.buildings)for(const m of b.modules)m.fall=Math.max(0,m.fall-dt);
     if(p.hp<=0)this.status='lost';
-    else if(this.percent+.0001>=this.level.target&&this.triggered.size>0&&!this.enemies.some(e=>e.hero))this.status='won';
+    else if(this.percent+.0001>=this.level.target&&this.triggered.size===this.level.bosses.length&&!this.enemies.some(e=>e.hero))this.status='won';
   }
 }
