@@ -99,4 +99,17 @@ for (const [index, level] of levels.entries()) {
   }
 }
 
+// Pahlawan selalu bertiga
+for (const [index, level] of levels.entries()) {
+  assert.deepEqual(level.bosses.map(b => b.type).sort(), ['jaring', 'perisai', 'rajawali']);
+  const world = new World(level, index);
+  world.spawnTime = Infinity;
+  world.rex.x = level.length / 2;
+  world.lost = world.total * level.bosses[0].at / 100;
+  world.update(1 / 60, empty);
+  const heroes = world.enemies.filter(e => e.hero);
+  assert.equal(heroes.length, 3, `district ${index + 1}: heroes must arrive together`);
+  assert.ok(heroes.some(e => e.x < world.rex.x) && heroes.some(e => e.x > world.rex.x), 'heroes must flank Rex');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

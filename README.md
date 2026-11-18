@@ -86,12 +86,14 @@ Warga sipil hanya berlarian panik. Mereka tidak menyerang dan tidak bisa dilukai
 
 ## 🏙️ Empat distrik
 
-| | Distrik | Target destruksi | Pahlawan |
-| :-: | --- | :-: | --- |
-| 1 | Jalan Ruko | 60% | Perisai |
-| 2 | Pusat Kota | 70% | Rajawali, lalu Perisai |
-| 3 | Pelabuhan | 75% | Jaring |
-| 4 | Alun-Alun | 80% | Ketiganya sekaligus |
+| | Distrik | Target destruksi | Para penjaga datang di |
+| :-: | --- | :-: | :-: |
+| 1 | Jalan Ruko | 60% | 25% |
+| 2 | Pusat Kota | 70% | 35% |
+| 3 | Pelabuhan | 75% | 45% |
+| 4 | Alun-Alun | 80% | 50% |
+
+Di setiap distrik, Perisai, Rajawali, dan Jaring selalu datang bertiga dan mengepung Rex: Perisai menghadang di depan, Rajawali menyerang dari udara, Jaring memotong jalan mundur. Darah mereka makin tebal di distrik berikutnya.
 
 <p align="center">
   <img src="assets/props/angkot.webp" alt="Angkot" height="84">

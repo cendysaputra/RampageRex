@@ -38,6 +38,9 @@ function range(a,b){return a+Math.random()*(b-a)}
 // Saring daftar
 function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
 const groundRise={ground:433,upper:337,roof:269};
+// Formasi pahlawan: Perisai di depan, Rajawali di udara, Jaring memotong jalan mundur
+const flank={perisai:520,rajawali:780,jaring:-600};
+const delays={perisai:0,rajawali:.9,jaring:1.8};
 // Dunia permainan
 export class World {
   constructor(level,index){
@@ -93,7 +96,8 @@ export class World {
   // Munculkan musuh
   spawn(type,x){
     const hero=type in heroNames;
-    const max={perisai:620,rajawali:500,jaring:470,infantry:75,bazooka:100,jeep:150,helicopter:90,turret:75}[type];
+    // Pahlawan lebih tipis di distrik awal karena selalu datang bertiga
+    const max={perisai:620,rajawali:500,jaring:470,infantry:75,bazooka:100,jeep:150,helicopter:90,turret:75}[type]*(hero?.7+this.index*.1:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
       mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
@@ -244,8 +248,18 @@ export class World {
     this.look+=(p.dir-this.look)*ease(1.6,dt);
     this.camera+=(clamp(p.x-this.view*(.5-.06*this.look),0,Math.max(0,this.level.length-this.view))-this.camera)*ease(6,dt);
     // Jadwal bos
+    const arrivals=[];
     for(const [i,w] of this.level.bosses.entries())if(!this.triggered.has(i)&&this.percent+.0001>=w.at){
-      this.triggered.add(i);this.spawn(w.type,p.x+(p.x>this.level.length-900?-1:1)*(460+i*140));this.say(heroNames[w.type]+' datang! '+hints[w.type],4);this.sound('alarm');
+      this.triggered.add(i);arrivals.push(w.type);
+    }
+    if(arrivals.length){
+      // Formasi kepung
+      const side=p.x>this.level.length-900?-1:1;
+      for(const type of arrivals){
+        const e=this.spawn(type,p.x+side*flank[type]);e.timer+=delays[type];
+      }
+      this.say(arrivals.length>1?'Para penjaga mengepung Rex! Pecah formasi mereka satu per satu.':heroNames[arrivals[0]]+' datang! '+hints[arrivals[0]],4);
+      this.sound('alarm');
     }
     // Tentara baru
     this.spawnTime-=dt;
