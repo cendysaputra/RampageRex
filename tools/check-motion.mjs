@@ -125,4 +125,27 @@ for (const [index, level] of levels.entries()) {
   assert.ok(!world.civilians.includes(civilian), 'knocked civilians must clear');
 }
 
+// Ulti pahlawan mengenai sekali, raungan membatalkannya
+for (const type of ['perisai', 'rajawali', 'jaring']) {
+  const world = makeWorld();
+  const hero = world.spawn(type, world.rex.x + 400);
+  hero.ultCd = 0;
+  world.update(1 / 60, empty);
+  assert.equal(world.cast?.hero, hero, `${type}: ulti must start`);
+  let impacts = 0;
+  const strike = world.castStrike.bind(world);
+  world.castStrike = cast => { impacts++; strike(cast); };
+  const before = world.rex.hp;
+  for (let i = 0; i < 180; i++) world.update(1 / 60, empty);
+  assert.equal(impacts, 1, `${type}: ulti must land once`);
+  assert.ok(world.rex.hp < before, `${type}: ulti must hurt Rex`);
+  const roared = makeWorld(), target = roared.spawn(type, roared.rex.x + 400);
+  target.ultCd = 0;
+  roared.update(1 / 60, empty);
+  roared.rex.cd.roar = 0;
+  roared.startAttack('roar');
+  roared.strike(roared.rex.attack);
+  assert.equal(roared.cast, null, `${type}: roar must cancel the ulti`);
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

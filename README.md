@@ -62,6 +62,16 @@ Tujuan tiap distrik: **capai target destruksi** dan **kalahkan semua pahlawannya
   </tr>
 </table>
 
+Tiap penjaga juga punya **ulti** dengan cut-in panel yang sama seperti Amukan Rex, masuk dari kanan layar:
+
+| Penjaga | Ulti | Efek |
+| --- | --- | --- |
+| 🛡️ Perisai | **Benteng Baja** | Gelombang kejut sepanjang jalan, damage besar dan membuat Rex terpaku |
+| 🦅 Rajawali | **Hujan Laser** | Laser berjatuhan dari langit di sekitar Rex selama 1,5 detik |
+| 🕸️ Jaring | **Jaring Raksasa** | Jaring baja menutupi Rex, damage dan memperlambat 5 detik |
+
+Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. **Raung** saat panelnya muncul, atau pakai Ulti Rex, untuk menggagalkannya.
+
 ## 🪖 Tentara dan warga
 
 <table>
