@@ -146,4 +146,23 @@ Tidak ada gambar. Setelah panel 07, layar memudar ke hitam selama kira-kira satu
 
 1. Buat salinan WebP kualitas 90 di sebelah tiap PNG: `opening-01.webp` sampai `opening-07.webp`. Game hanya memuat WebP.
 2. Panel tidak perlu didaftarkan di `assets/manifest.json`, karena ditampilkan lewat halaman, bukan lewat canvas.
-3. Pemutar adegan (urutan panel, keterangan, efek, suara, tombol lewati, dan fade ke gameplay) dikerjakan lewat kode setelah gambarnya ada.
+3. Pemutar adegan (urutan panel, keterangan, efek, suara, tombol lewati, dan fade ke gameplay) ada di `src/opening.js` dan blok `#opening` di `style.css`.
+
+## Tata letak yang dipakai sekarang
+
+Panel yang terpasang bukan lagi 1600 × 900 penuh. Tiap panel adalah gambar tinta sepia dengan bentuk miring sendiri (alpha transparan di luar bentuk), dan kode mengikuti bentuk itu tanpa memotong paksa.
+
+| Panel | Ukuran | Sisi miring |
+| --- | --- | --- |
+| 01 | 960 × 700 | kanan |
+| 02 | 740 × 900 | kiri |
+| 03 | 1250 × 580 | keempat sisi sedikit miring |
+| 04 | 740 × 900 | kanan |
+| 05 | 950 × 730 | kiri dan bawah |
+| 06 | 700 × 900 | kanan |
+| 07 | 1300 × 680 | kiri |
+
+- Halaman 1 berisi panel 01 dan 02 di baris atas, panel 03 di bawah. Halaman 2 berisi panel 04 dan 05 di atas, 06 dan 07 di bawah.
+- Posisi, ukuran, dan poligon tiap panel ditulis sebagai `--x`, `--y`, `--w`, `--h`, `--cut` di `style.css`. Perbandingan `--w` dan `--h` mengikuti ukuran gambar, jadi kalau ukuran atau kemiringan gambar berubah, angka ini perlu dihitung ulang.
+- Kamera mendekat ke panel yang baru muncul, mundur menampilkan satu halaman penuh sebelum ganti halaman, lalu layar memudar ke hitam setelah panel 07.
+- Semua gerak hanya memakai `transform` dan `opacity`. Dengan `prefers-reduced-motion`, kamera diam dan panel hanya memudar masuk.
