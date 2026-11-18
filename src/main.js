@@ -14,19 +14,19 @@ function getSaved(key,def){try{return localStorage.getItem(key)??def}catch{retur
 function save(key,value){try{localStorage.setItem(key,value)}catch{}}
 let record=Number(getSaved('rex.best',0))||0;snd.enabled=getSaved('rex.sound','on')==='on';
 // Label suara
-function soundLabel(){const btn=document.querySelector('.audio');btn.textContent=snd.enabled?'Suara aktif':'Suara mati';btn.setAttribute('aria-pressed',String(snd.enabled))}
+function soundLabel(){const btn=document.querySelector('.audio');btn.textContent=snd.enabled?'Suara: nyala':'Suara: mati';btn.setAttribute('aria-pressed',String(snd.enabled))}
 // Ganti suara
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
-function recordLabel(){el('record').textContent='REKOR  '+String(record).padStart(6,'0')}
+function recordLabel(){el('record').textContent=record?'Rekor '+record.toLocaleString('id-ID'):'Belum ada rekor'}
 soundLabel();recordLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
 // Reset input
 function clearInput(){controls.clear();taps.clear();prior=0}
 // Buka dialog
-function modal(label,title,html,buttons){
-  clearInput();el('panel-label').textContent=label;el('panel-title').textContent=title;el('panel-copy').innerHTML=html;
+function modal(title,html,buttons){
+  clearInput();el('panel-title').textContent=title;el('panel-copy').innerHTML=html;
   const row=el('panel-actions');row.replaceChildren();
   for(const [i,[text,fn]] of buttons.entries()){
     const b=document.createElement('button');b.className=i?'secondary':'primary';b.textContent=text;b.onclick=fn;row.append(b);
@@ -40,8 +40,8 @@ function menu(){
   close();clearInput();screen='menu';world=null;el('hud').hidden=true;el('menu').hidden=false;el('start').focus();
 }
 // Cara main
-function help(){screen='help';modal('KONTROL','Cara main',
-  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung · membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex · mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya jeda (cooldown) sebelum bisa dipakai lagi; Ulti jedanya paling lama. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
+function help(){screen='help';modal('Cara main',
+  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
   [['Kembali',menu]]);
 }
 // Mulai level
@@ -61,16 +61,16 @@ async function start(index=0,carried=0){
 // Lanjut main
 function resume(){close();clearInput();screen='playing';el('pause').focus({preventScroll:true})}
 // Jeda
-function pause(){if(screen!=='playing')return;screen='paused';modal('DISTRIK 0'+(levelIndex+1),'Jeda',
-  '<p>'+world.level.name+' · '+Math.floor(world.percent)+'% hancur</p>',
+function pause(){if(screen!=='playing')return;screen='paused';modal('Jeda',
+  '<p>Distrik '+(levelIndex+1)+', '+world.level.name+' · '+Math.floor(world.percent)+'% hancur</p>',
   [['Lanjut main',resume],[snd.enabled?'Matikan suara':'Aktifkan suara',()=>{toggleSound();screen='playing';pause()}],['Menu utama',menu]])}
 // Hasil level
 function finish(){
   screen='result';const win=world.status==='won',score=previousScore+world.score;
   if(score>record){record=score;save('rex.best',record);recordLabel()}
   const more=win&&levelIndex<3;
-  modal(world.level.name.toUpperCase(),win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang',
-    '<p>Destruksi '+Math.floor(world.percent)+'% · Skor '+score.toLocaleString('id-ID')+'</p>',
+  modal(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang',
+    '<p>'+world.level.name+' · destruksi '+Math.floor(world.percent)+'% · Skor '+score.toLocaleString('id-ID')+'</p>',
     [[more?'Lanjut ke distrik '+(levelIndex+2):win?'Main dari awal':'Coba lagi',()=>more?start(levelIndex+1,score):win?start():start(levelIndex,previousScore)],['Menu utama',menu]]);
 }
 let bossKey='';
@@ -83,7 +83,7 @@ function fill(id,ratio){const value='scaleX('+ratio.toFixed(3)+')';if(shown.get(
 function updateHud(){
   const p=world.rex;text('hp-text',Math.ceil(p.hp)+' / 1000');fill('hp',p.hp/1000);
   fill('rage',p.fury>0?p.fury/8:p.rage/100);text('rage-text',p.fury>0?Math.ceil(p.fury)+' dtk':Math.floor(p.rage));
-  text('district','0'+(levelIndex+1)+' / '+world.level.name.toUpperCase());
+  text('district','Distrik '+(levelIndex+1)+' · '+world.level.name);
   text('destruction',Math.floor(world.percent)+'% / '+world.level.target+'%');
   let next='',names='';
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+heroNames[e.type]}
