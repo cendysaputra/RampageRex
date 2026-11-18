@@ -59,7 +59,7 @@ export class Art {
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
       k.startsWith('backgrounds/')||k.startsWith('buildings/')||k.startsWith('props/')
       ||k.startsWith('characters/rex/animations/')
-      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net'].includes(k));
+      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net','fx/ulti-cutin'].includes(k));
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
     await(this.rexFramesReady??=this.prepareRexFrames());
@@ -262,6 +262,49 @@ export class Renderer {
         const key=f.kind==='decor'?'shutter':f.seed>.5?'brick':'plaster';
         c.globalAlpha=1-smooth((age-.6)/.4);a.sprite(c,'fx/debris/frames/'+key,f.x,f.y,f.size,1,f.spin*(f.max-f.life));
       }c.restore();
-    }c.restore();
+    }
+    // Ultimate: shockwave rings race along the ground from Rex after the slam.
+    const wave=(t-g.quakeAt)/.7;
+    if(wave>=0&&wave<1){
+      c.save();c.lineWidth=14*(1-wave)+2;
+      for(const [delay,colour] of [[0,'#fff3c4'],[.18,'#ff9b40']]){
+        const k=clamp((wave-delay)/(1-delay),0,1);if(!k)continue;
+        c.globalAlpha=(1-k)*.9;c.strokeStyle=colour;c.beginPath();c.ellipse(g.rex.x,-4,80+smooth(k)*view*.75,14+smooth(k)*46,0,0,Math.PI*2);c.stroke();
+      }c.restore();
+    }
+    c.restore();
+    this.ultimateOverlay(c,g,view,logicalH,reduced);
+  }
+  // Screen-space dressing for the ultimate: the scene dims, a banner with Rex's cut-in slides
+  // in from the left during the wind-up, and the slam flashes the screen.
+  ultimateOverlay(c,g,view,logicalH,reduced){
+    const action=g.rex.attack?.key==='ulti'?g.rex.attack:null,flash=1-(g.time-g.quakeAt)/.3;
+    if(action&&action.age<action.impact){
+      const age=action.age,left=action.impact-age,show=smooth(age/.16)*smooth(left/.14);
+      c.fillStyle='rgba(14,8,26,'+.5*show+')';c.fillRect(0,0,view,logicalH);
+      const width=Math.min(view*.52,820),height=Math.min(logicalH*.5,470),top=logicalH*.2,lean=height*.22;
+      const slide=reduced?0:(1-smooth(age/.2))*-(width+lean)+(1-smooth(left/.14))*-(width+lean);
+      c.save();c.translate(slide,top);c.globalAlpha=reduced?show:1;
+      c.beginPath();c.moveTo(0,0);c.lineTo(width+lean,0);c.lineTo(width,height);c.lineTo(0,height);c.closePath();
+      c.save();c.clip();
+      const paint=c.createLinearGradient(0,0,width,height);paint.addColorStop(0,'#ff9b40');paint.addColorStop(1,'#c2314f');
+      c.fillStyle=paint;c.fillRect(0,0,width+lean,height);
+      // Speed lines drift left so the banner feels in motion while it holds.
+      c.strokeStyle='#fff0ce55';c.lineWidth=5;
+      for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173-(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
+        c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
+      const art=this.art,cutin=art.images.get('fx/ulti-cutin');
+      if(cutin){const m=art.meta['fx/ulti-cutin.png'],scale=Math.max((width+lean)/m.width,height/m.height),bump=reduced?0:(1-smooth(age/.3))*40;
+        c.drawImage(cutin,(width+lean-m.width*scale)/2-bump,(height-m.height*scale)/2,m.width*scale,m.height*scale)}
+      else{const pose=rexPose({...g.rex,attack:{...action,age:action.impact*.55}},art.rexAnimations);
+        c.translate(width*.12,height*1.42);c.scale(1.9,1.9);art.sprite(c,pose.to,0,0,art.rexAnimations.width)}
+      c.restore();
+      c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
+      c.font='italic 900 '+Math.round(height*.19)+'px Arial,sans-serif';c.textBaseline='bottom';
+      c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';c.strokeText('AMUKAN REX!',28,height-18);
+      c.fillStyle='#fff0ce';c.fillText('AMUKAN REX!',28,height-18);
+      c.restore();
+    }
+    if(flash>0&&!reduced){c.fillStyle='rgba(255,243,196,'+flash*.75+')';c.fillRect(0,0,view,logicalH)}
   }
 }
