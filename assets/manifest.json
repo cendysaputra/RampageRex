@@ -4085,21 +4085,6 @@
       ],
       "alpha": true
     },
-    "ui/hud/frames/health.png": {
-      "width": 145,
-      "height": 140,
-      "bounds": {
-        "x": 14,
-        "y": 18,
-        "width": 117,
-        "height": 104
-      },
-      "pivot": [
-        72,
-        70
-      ],
-      "alpha": true
-    },
     "ui/hud/frames/rage.png": {
       "width": 145,
       "height": 140,
@@ -4108,21 +4093,6 @@
         "y": 12,
         "width": 121,
         "height": 116
-      },
-      "pivot": [
-        72,
-        70
-      ],
-      "alpha": true
-    },
-    "ui/hud/frames/destruction.png": {
-      "width": 145,
-      "height": 140,
-      "bounds": {
-        "x": 13,
-        "y": 12,
-        "width": 118,
-        "height": 115
       },
       "pivot": [
         72,
