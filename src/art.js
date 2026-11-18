@@ -1,20 +1,45 @@
 import { clamp, moduleState } from './world.js';
 
+const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
+// Widest each asset group is ever drawn, in logical pixels. Bitmaps are scaled down to
+// 1.5x of this at load, which cuts memory and per-frame sampling cost without visible blur.
+const drawnWidths=[['buildings/',560],['characters/civilians/bakso-vendor/',150],['characters/civilians/',85],
+  ['characters/soldiers/jeep',240],['characters/soldiers/helicopter',285],['characters/soldiers/',97],
+  ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],
+  ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
+function bitmapWidth(path,source){
+  if(path.startsWith('characters/heroes/'))return Math.ceil(source*.45);
+  const match=drawnWidths.find(([prefix])=>path.startsWith(prefix));
+  return match?Math.min(source,Math.ceil(match[1]*1.5)):source;
+}
+
 export class Art {
   constructor(manifest){this.meta=manifest.assets;this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map()}
   load(path){
     if(this.loading.has(path))return this.loading.get(path);
-    const task=new Promise((resolve,reject)=>{
-      const img=new Image();img.onload=()=>{this.images.set(path,img);resolve()};img.onerror=()=>reject(new Error(path));
-      img.src='./assets/'+path+'.'+this.extension;
+    const task=this.decode(path);this.loading.set(path,task);return task;
+  }
+  // Decoding up front keeps the first draw of a sprite from stalling a frame mid-game.
+  async decode(path){
+    const url='./assets/'+path+'.'+this.extension,m=this.meta[path+'.png'],width=bitmapWidth(path,m.width);
+    let picture;
+    if(typeof createImageBitmap==='function'){
+      try{
+        const response=await fetch(url);if(!response.ok)throw new Error(path);
+        picture=await createImageBitmap(await response.blob(),width<m.width?{resizeWidth:width,resizeHeight:Math.round(m.height*width/m.width),resizeQuality:'high'}:{});
+      }catch{}
+    }
+    // Fallback for browsers without ImageBitmap; also reports a missing file by its path.
+    picture??=await new Promise((resolve,reject)=>{
+      const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error(path));img.src=url;
     });
-    this.loading.set(path,task);return task;
+    this.images.set(path,picture);
   }
   async preload(level){
     const heroes=level.bosses.map(b=>'characters/heroes/'+b.type+'/parts/');
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
       k.startsWith('backgrounds/')||k.startsWith('buildings/')||k.startsWith('props/')||k.startsWith('characters/rex/parts/')
-      ||heroes.some(h=>k.startsWith(h))||k.includes('/frames/')||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net'].includes(k));
+      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net'].includes(k));
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
   }
@@ -34,7 +59,7 @@ function rexRig(c,a,p,t){
   const action=p.attack,progress=action?clamp(action.age/action.duration,0,1):0;
   const swing=Math.sin(progress*Math.PI),bite=action?.key==='bite'?swing:0,tail=action?.key==='tail'?swing:0,
     stomp=action?.key==='stomp'?swing:0,roar=action?.key==='roar'?swing:0;
-  const step=p.moving?Math.sin(p.walk):0;
+  const step=Math.sin(p.walk)*p.stride;
   c.save();c.translate(p.x,0);c.scale(p.dir,1);c.translate(0,-3*Math.sin(t*2)-Math.abs(step)*5-stomp*12);
   const part=(name,x,y,w,r=0)=>a.part(c,'characters/rex/parts/'+name,x,y,w,r);
   function leg(side,x,phase){
@@ -88,12 +113,24 @@ function districtScenery(c,setting,cam,w){
   }c.restore();
 }
 export class Renderer {
-  constructor(canvas,art){this.canvas=canvas;this.c=canvas.getContext('2d',{alpha:false});this.art=art}
-  render(g){
-    const canvas=this.canvas,c=this.c,a=this.art,w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,devicePixelRatio||1);
+  constructor(canvas,art){
+    this.canvas=canvas;this.c=canvas.getContext('2d',{alpha:false});this.art=art;this.stale=true;
+    const mark=()=>{this.stale=true};addEventListener('resize',mark);
+    if(typeof ResizeObserver==='function')new ResizeObserver(mark).observe(canvas);
+  }
+  // Layout is only read when the canvas actually changes size, not every frame.
+  measure(){
+    const canvas=this.canvas,w=canvas.clientWidth,h=canvas.clientHeight;this.w=w;this.h=h;if(!w||!h)return;
+    // Cap the backing store near 2560x1440 so 4K and high-density screens stay fast.
+    let dpr=Math.min(2,devicePixelRatio||1);const over=w*h*dpr*dpr/3.7e6;if(over>1)dpr/=Math.sqrt(over);
     const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
     if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh}
-    const scale=Math.min(w/1000,h/1080),view=w/scale,logicalH=h/scale;
+    this.bw=bw;this.bh=bh;this.scale=Math.min(w/1000,h/1080);this.stale=false;
+  }
+  render(g){
+    if(this.stale)this.measure();
+    const c=this.c,a=this.art,{w,h,bw,bh,scale}=this;if(!w||!h)return;
+    const view=w/scale,logicalH=h/scale;
     g.view=view;c.setTransform(bw/w*scale,0,0,bh/h*scale,0,0);
     const cam=g.camera,t=g.time,floor=Math.min(logicalH*.82,logicalH*.55+285);
     c.fillStyle='#c97461';c.fillRect(0,0,view,logicalH);
@@ -116,7 +153,6 @@ export class Renderer {
         a.part(c,path,b.x,y,b.width*984/960);
       }
     }
-    const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
     for(const prop of g.level.props){if(visible(prop.x))a.sprite(c,'props/'+prop.type,prop.x,-46,propWidths[prop.type])}
     const shadow=(x,y,w)=>{c.fillStyle='#0c211e51';c.beginPath();c.ellipse(x,y,w,Math.max(5,w*.07),0,0,Math.PI*2);c.fill()};
     for(const e of g.enemies){if(!visible(e.x))continue;
