@@ -1,38 +1,52 @@
 import { clamp, moduleState } from './world.js';
 
 const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
-// Widest each asset group is ever drawn, in logical pixels. Bitmaps are scaled down to
-// 1.5x of this at load, which cuts memory and per-frame sampling cost without visible blur.
+// Two samples per logical pixel cover the renderer's capped backing store.
 const drawnWidths=[['buildings/',560],['characters/civilians/bakso-vendor/',150],['characters/civilians/',85],
   ['characters/soldiers/jeep',240],['characters/soldiers/helicopter',285],['characters/soldiers/',97],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
+const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
+  'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
 function bitmapWidth(path,source){
-  if(path.startsWith('characters/heroes/'))return Math.ceil(source*.45);
+  if(path.startsWith('characters/heroes/'))return Math.min(source,2*(heroWidths[path.split('/').pop()]||source));
   const match=drawnWidths.find(([prefix])=>path.startsWith(prefix));
-  return match?Math.min(source,Math.ceil(match[1]*1.5)):source;
+  return match?Math.min(source,Math.ceil(match[1]*2)):source;
+}
+function cropRect(meta,path){
+  if(path.startsWith('backgrounds/')||!meta.alpha||!meta.bounds)return {x:0,y:0,width:meta.width,height:meta.height};
+  const b=meta.bounds,x=Math.max(0,b.x-2),y=Math.max(0,b.y-2);
+  return {x,y,width:Math.min(meta.width,b.x+b.width+2)-x,height:Math.min(meta.height,b.y+b.height+2)-y};
 }
 
 export class Art {
-  constructor(manifest){this.meta=manifest.assets;this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map()}
+  constructor(manifest){
+    this.meta=manifest.assets;this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
+    this.crops=new Map(Object.entries(this.meta).map(([path,m])=>[path.slice(0,-4),cropRect(m,path)]));
+  }
   load(path){
     if(this.loading.has(path))return this.loading.get(path);
     const task=this.decode(path);this.loading.set(path,task);return task;
   }
   // Decoding up front keeps the first draw of a sprite from stalling a frame mid-game.
   async decode(path){
-    const url='./assets/'+path+'.'+this.extension,m=this.meta[path+'.png'],width=bitmapWidth(path,m.width);
+    const url='./assets/'+path+'.'+this.extension,m=this.meta[path+'.png'],crop=this.crops.get(path);
+    const scale=bitmapWidth(path,m.width)/m.width,width=Math.max(1,Math.ceil(crop.width*scale)),height=Math.max(1,Math.ceil(crop.height*scale));
     let picture;
     if(typeof createImageBitmap==='function'){
       try{
         const response=await fetch(url);if(!response.ok)throw new Error(path);
-        picture=await createImageBitmap(await response.blob(),width<m.width?{resizeWidth:width,resizeHeight:Math.round(m.height*width/m.width),resizeQuality:'high'}:{});
+        picture=await createImageBitmap(await response.blob(),crop.x,crop.y,crop.width,crop.height,
+          {resizeWidth:width,resizeHeight:height,resizeQuality:'high'});
       }catch{}
     }
     // Fallback for browsers without ImageBitmap; also reports a missing file by its path.
-    picture??=await new Promise((resolve,reject)=>{
-      const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error(path));img.src=url;
-    });
+    if(!picture){
+      const img=new Image();img.src=url;await img.decode();
+      picture=document.createElement('canvas');picture.width=width;picture.height=height;
+      const c=picture.getContext('2d');c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
+      c.drawImage(img,crop.x,crop.y,crop.width,crop.height,0,0,width,height);
+    }
     this.images.set(path,picture);
   }
   async preload(level){
@@ -45,13 +59,12 @@ export class Art {
   }
   part(c,path,x,y,width,angle=0){
     const im=this.images.get(path);if(!im)return;
-    const m=this.meta[path+'.png'],s=width/m.width;
-    c.save();c.translate(x,y);c.rotate(angle);c.drawImage(im,-m.pivot[0]*s,-m.pivot[1]*s,width,m.height*s);c.restore();
+    const m=this.meta[path+'.png'],crop=this.crops.get(path),s=width/m.width;
+    c.save();c.translate(x,y);c.rotate(angle);c.drawImage(im,(crop.x-m.pivot[0])*s,(crop.y-m.pivot[1])*s,crop.width*s,crop.height*s);c.restore();
   }
   sprite(c,path,x,y,width,dir=1,angle=0){
     const im=this.images.get(path);if(!im)return;
-    const m=this.meta[path+'.png'],s=width/m.width;
-    c.save();c.translate(x,y);c.scale(dir,1);c.rotate(angle);c.drawImage(im,-width/2,-m.pivot[1]*s,width,m.height*s);c.restore();
+    c.save();c.translate(x,y);c.scale(dir,1);this.part(c,path,0,0,width,angle);c.restore();
   }
 }
 
@@ -125,6 +138,7 @@ export class Renderer {
     let dpr=Math.min(2,devicePixelRatio||1);const over=w*h*dpr*dpr/3.7e6;if(over>1)dpr/=Math.sqrt(over);
     const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
     if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh}
+    this.c.imageSmoothingEnabled=true;this.c.imageSmoothingQuality='high';
     this.bw=bw;this.bh=bh;this.scale=Math.min(w/1000,h/1080);this.stale=false;
   }
   render(g){

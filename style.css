@@ -4,3 +4,4 @@
 @media(max-height:500px) and (orientation:landscape){#menu{padding:12px 5vw}.menu-bottom{padding-top:6px}.intro{margin:8px 0}.eyebrow{margin:5px 0}.primary,.secondary{padding:9px 16px}#load-status:empty{display:none}.hud-top{transform:scale(.85);transform-origin:top left;width:117.6%}#hud{padding:6px}#bosses{margin-top:-10px}}
 
 .pause-icon{display:inline-block;width:11px;height:14px;border-left:3px solid currentColor;border-right:3px solid currentColor;vertical-align:middle}
+.cover-rex{height:auto}
