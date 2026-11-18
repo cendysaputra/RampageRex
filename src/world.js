@@ -19,6 +19,8 @@ const abilities = {
 };
 // Darah Rex
 const rexHp=400;
+// Damage ke Rex
+const DAMAGE={bullet:4,rocket:26,laser:16,net:9,ram:20,charge:42,dive:38};
 // Pulih darah
 const HEAL={soldier:6,vehicle:10,hero:60};
 // Jeda serangan
@@ -58,6 +60,8 @@ export class World {
     });
     this.enemies=[];this.civilians=[];this.shots=[];this.effects=[];this.events=[];
     this.triggered=new Set();this.spawnTime=3;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
+    // Musuh makin keras di distrik berikutnya
+    this.power=1+index*.12;
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
   }
   // Persen hancur
@@ -171,7 +175,7 @@ export class World {
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
   // Lukai Rex
-  hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti')return;p.hp=Math.max(0,p.hp-amount);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
+  hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti')return;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
   // Tembak
   shoot(e,type){
     const x=e.x, y=e.y-(e.hero?68:e.type==='turret'?34:62), dx=this.rex.x-x,dy=-145-y;
@@ -186,14 +190,14 @@ export class World {
       if(e.mode==='approach'){e.dir=dir;if(dist>205)e.x+=dir*240*dt;
         if(e.timer<=0&&dist<730){e.mode='aim';e.timer=.85;e.dir=dir;e.connected=false}}
       else if(e.mode==='aim'&&e.timer<=0){e.mode='charge';e.timer=.62}
-      else if(e.mode==='charge'){e.x+=e.dir*840*dt;if(Math.abs(e.x-p.x)<94&&!e.connected){this.hurt(26,.4);e.connected=true}
+      else if(e.mode==='charge'){e.x+=e.dir*840*dt;if(Math.abs(e.x-p.x)<94&&!e.connected){this.hurt(DAMAGE.charge,.45);e.connected=true}
         if(e.timer<=0){e.mode='recover';e.timer=1.9}}
       else if(e.mode==='recover'&&e.timer<=0){e.mode='approach';e.timer=1.5}
     }else if(e.type==='rajawali'){
       e.dir=dir;
       if(e.mode==='ground'){e.y+=(0-e.y)*ease(10,dt);if(e.timer<=0){e.mode='approach';e.timer=3.6}}
       else if(e.mode==='dive'){e.y+=(-40-e.y)*ease(5,dt);e.x+=dir*360*dt;
-        if(dist<105&&!e.connected){this.hurt(24);e.connected=true}
+        if(dist<105&&!e.connected){this.hurt(DAMAGE.dive,.2);e.connected=true}
         if(e.timer<=0){e.mode='approach';e.timer=4}}
       else{e.y+=(-465+Math.sin(this.time*2)*32-e.y)*ease(3,dt);e.x+=dir*clamp(dist-390,-170,245)*dt;
         if(e.shot<=0){this.shoot(e,'laser');e.shot=2.2}
@@ -280,7 +284,7 @@ export class World {
       if(e.hero)this.tickHero(e,dt,dist,dir);
       else if(e.type==='turret'){if(!e.owner||e.owner.hp<=0){e.hp=0;continue}if(dist<900&&e.shot<=0){this.shoot(e,'bullet');e.shot=1.7}}
       else{
-        if(e.type==='jeep'){e.x+=e.dir*445*dt;if(dist<85&&e.shot<=0)this.hurt(12)}
+        if(e.type==='jeep'){e.x+=e.dir*445*dt;if(dist<85&&e.shot<=0)this.hurt(DAMAGE.ram,.2)}
         else{e.dir=dir;e.x+=dir*clamp(dist-(e.type==='bazooka'?510:350),-130,185)*dt}
         if(e.type==='helicopter')e.y=-420+Math.sin(this.time*1.5+e.phase)*135;
         if(dist<940&&e.shot<=0){const rocket=e.type==='bazooka'||e.type==='helicopter';
@@ -292,7 +296,7 @@ export class World {
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     // Proyektil
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:2,rocket:16,laser:10,net:5}[s.type]);
+      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt(s.damage??DAMAGE[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0);
     // Warga
