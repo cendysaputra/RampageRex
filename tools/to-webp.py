@@ -1,15 +1,4 @@
-"""Convert new or changed PNG art into the WebP files the game loads.
-
-The game only reads WebP (assets/manifest.json sets "imageFormat": "webp"),
-so the repo keeps the WebP copies and not the PNG sources. Drop a new PNG
-next to where its WebP should live, add it to the manifest, then run this
-from the repo root:
-
-    python tools/to-webp.py
-
-Every manifest image that has a PNG on disk is converted. Once the result
-looks right the PNG can be deleted. Needs Pillow (pip install pillow).
-"""
+# Konversi WebP
 import json
 import re
 from pathlib import Path
@@ -17,9 +6,9 @@ from pathlib import Path
 from PIL import Image
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
-# Reference art and UI icons are never drawn on the canvas and stay as PNG.
+# Dilewati
 SKIPPED = re.compile(r"(^ui/|(master|sheet|portrait)\.png$)")
-# The menu cover uses Rex's master illustration.
+# Sampul menu
 EXTRA = ["characters/rex/master.png"]
 
 

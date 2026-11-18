@@ -82,7 +82,7 @@ try {
   });
   assert.equal(assets.fallback, true);
   assert.equal(assets.generatedFrames, 32);
-  // Exercise every district and sprite family, including partial pose blends.
+  // Uji distrik
   const scenes = [];
   for (let district = 1; district <= 4; district++) {
     scenes.push(await page.evaluate(async district => {
