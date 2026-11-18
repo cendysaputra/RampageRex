@@ -43,7 +43,9 @@ export class Art {
     }
     // Fallback for browsers without ImageBitmap; also reports a missing file by its path.
     if(!picture){
-      const img=new Image();img.src=url;await img.decode();
+      const img=await new Promise((resolve,reject)=>{
+        const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error(path));img.src=url;
+      });
       picture=document.createElement('canvas');picture.width=width;picture.height=height;
       const c=picture.getContext('2d');c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
       c.drawImage(img,crop.x,crop.y,crop.width,crop.height,0,0,width,height);
