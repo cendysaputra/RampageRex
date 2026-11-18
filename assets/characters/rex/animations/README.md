@@ -1,6 +1,6 @@
 # Rex: generated animation art
 
-Generated with the built-in imagegen tool on 18 November 2026, using Rex's original `master.png` from commit `5146c71` as the identity reference. The selected PNG outputs are kept intact. WebP copies use the repository's existing quality-90 conversion settings.
+Generated with the built-in imagegen tool on 18 November 2026, using Rex's original `master.png` from commit `5146c71` as the identity reference. The PNG outputs were removed from the working tree after conversion and remain in git history. WebP copies use the repository's existing quality-90 conversion settings.
 
 | File | Poses, reading left to right and top to bottom |
 | --- | --- |
@@ -34,7 +34,7 @@ Refine the first reference into the updated master PNG illustration of this SAME
 
 ## Amukan Rex ultimate
 
-Generated with the built-in imagegen tool on 18 November 2026, using the current master and walk atlas as identity references. Original PNG outputs are preserved; WebP copies use quality 90 and method 6.
+Generated with the built-in imagegen tool on 18 November 2026, using the current master and walk atlas as identity references. WebP copies use quality 90 and method 6; the PNG outputs were removed from the working tree afterwards and remain in git history.
 
 - `ulti.png`: eight poses, from crouch through rearing, drop, impact (index 5), rebound and recovery.
 - `../../../fx/ulti-cutin.png`: transparent close-up for the left banner.
