@@ -1,5 +1,6 @@
 import { clamp, moduleState } from './world.js';
 import { attackPose, smooth } from './motion.js';
+import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Two samples per logical pixel cover the renderer's capped backing store.
@@ -22,7 +23,8 @@ function cropRect(meta,path){
 
 export class Art {
   constructor(manifest){
-    this.meta=manifest.assets;this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
+    this.meta={...manifest.assets};this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
+    this.rexAnimations=manifest.rexAnimations;
     this.crops=new Map(Object.entries(this.meta).map(([path,m])=>[path.slice(0,-4),cropRect(m,path)]));
   }
   load(path){
@@ -55,14 +57,34 @@ export class Art {
   async preload(level){
     const heroes=level.bosses.map(b=>'characters/heroes/'+b.type+'/parts/');
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
-      k.startsWith('backgrounds/')||k.startsWith('buildings/')||k.startsWith('props/')||k.startsWith('characters/rex/parts/')
+      k.startsWith('backgrounds/')||k.startsWith('buildings/')||k.startsWith('props/')
+      ||k.startsWith(this.rexAnimations?'characters/rex/animations/':'characters/rex/parts/')
       ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net'].includes(k));
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
+    if(this.rexAnimations)await(this.rexFramesReady??=this.prepareRexFrames());
+  }
+  async prepareRexFrames(){
+    for(const [atlas,definition] of Object.entries(this.rexAnimations.atlases)){
+      const source=this.images.get(definition.path);
+      for(const [index,[x,y,width,height,px,py]] of definition.frames.entries()){
+        let picture;
+        if(typeof createImageBitmap==='function'){
+          try{picture=await createImageBitmap(source,x,y,width,height)}catch{}
+        }
+        if(!picture){
+          picture=document.createElement('canvas');picture.width=width;picture.height=height;
+          picture.getContext('2d').drawImage(source,x,y,width,height,0,0,width,height);
+        }
+        const path=rexFramePath(atlas,index);
+        this.meta[path+'.png']={width,height,pivot:[px,py],scale:definition.scale||1,alpha:true};
+        this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
+      }
+    }
   }
   part(c,path,x,y,width,angle=0){
     const im=this.images.get(path);if(!im)return;
-    const m=this.meta[path+'.png'],crop=this.crops.get(path),s=width/m.width;
+    const m=this.meta[path+'.png'],crop=this.crops.get(path),s=width/m.width*(m.scale||1);
     c.save();c.translate(x,y);c.rotate(angle);c.drawImage(im,(crop.x-m.pivot[0])*s,(crop.y-m.pivot[1])*s,crop.width*s,crop.height*s);c.restore();
   }
   sprite(c,path,x,y,width,dir=1,angle=0){
@@ -73,7 +95,7 @@ export class Art {
     if(from===to||mix<=0){this.sprite(c,from,x,y,width,dir,angle);return}
     if(mix>=1){this.sprite(c,to,x,y,width,dir,angle);return}
     const rect=path=>{
-      const m=this.meta[path+'.png'],b=this.crops.get(path),scale=2*width/m.width;
+      const m=this.meta[path+'.png'],b=this.crops.get(path),scale=2*width/m.width*(m.scale||1);
       return {x:(b.x-m.pivot[0])*scale,y:(b.y-m.pivot[1])*scale,w:b.width*scale,h:b.height*scale};
     };
     const a=rect(from),b=rect(to),left=Math.floor(Math.min(a.x,b.x))-1,top=Math.floor(Math.min(a.y,b.y))-1;
@@ -93,6 +115,17 @@ export class Art {
 }
 
 function rexRig(c,a,p,t,reduced){
+  if(a.rexAnimations){
+    const pose=rexPose(p,a.rexAnimations),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
+    c.save();c.translate(p.x,reduced||p.attack?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
+    a.blend(c,pose.from,pose.to,pose.mix,0,0,a.rexAnimations.width);
+    if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
+    if(roar>.2){
+      c.strokeStyle='#ffe69f';c.lineWidth=4;c.globalAlpha=roar*.8;
+      for(let i=0;i<3;i++){c.beginPath();c.arc(270,-280,75+i*44+p.attack.age/p.attack.duration*65,-.75,.75);c.stroke()}
+    }
+    c.restore();return;
+  }
   const action=p.attack,progress=action?clamp(action.age/action.duration,0,1):0;
   const swing=attackPose(action),bite=action?.key==='bite'?swing:0,tail=action?.key==='tail'?swing:0,
     stomp=action?.key==='stomp'?swing:0,roar=action?.key==='roar'?swing:0;
