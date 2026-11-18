@@ -114,6 +114,7 @@ Susunan bangunan, properti jalan, titik muncul tentara, dan jadwal pahlawan tiap
 | `src/rex-animation.js`, `src/motion.js` | Pemilihan pose Rex dan kurva gerak |
 | `src/audio.js` | Efek suara Web Audio |
 | `data/levels/` | Data empat distrik |
+| `assets/backgrounds/` | Latar bersama, plus satu folder per distrik bila punya latar sendiri |
 | `assets/` | Gambar dan `manifest.json` |
 | `tools/` | Konversi WebP dan skrip pemeriksaan |
 | `image-prompts.md` | Arah visual dan prompt pembuatan gambar |

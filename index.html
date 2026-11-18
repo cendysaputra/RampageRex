@@ -9,13 +9,13 @@
 <main id="game">
   <canvas id="world" width="1920" height="1080" aria-label="Arena permainan Rampage Rex"></canvas>
   <section id="menu" aria-labelledby="title">
-    <div class="poster" aria-hidden="true"><div class="skyline"></div><div class="shops"></div><img class="cover-rex" src="./assets/characters/rex/master.webp" width="1728" height="910" fetchpriority="high" decoding="async" alt=""><div class="poster-shade"></div></div>
+    <div class="poster" aria-hidden="true"><picture><source media="(max-aspect-ratio:4/5)" srcset="./assets/backgrounds/menu-tall.webp" width="941" height="1672"><img class="cover" src="./assets/backgrounds/menu-wide.webp" width="1672" height="941" fetchpriority="high" decoding="async" alt=""></picture><div class="poster-shade"></div></div>
     <div class="menu-top"><button class="audio" aria-pressed="true">Suara: nyala</button></div>
     <div class="menu-body"><h1 id="title">Rampage <em>Rex</em></h1>
     <p class="intro">Kamu jadi Rex. Hancurkan empat distrik kota dan hadapi para penjaganya.</p>
     <div class="buttons"><button class="primary" id="start">Mulai main</button><button class="secondary" id="help">Cara main</button></div>
     <p id="load-status" role="status"></p></div>
-    <div class="menu-bottom"><span>Jalan Ruko, Pusat Kota, Pelabuhan, Alun-Alun</span><span id="record"></span></div>
+    <div class="menu-bottom"><span id="record"></span></div>
   </section>
   <div id="hud" hidden>
     <div class="hud-top"><div class="player-card"><div class="hud-heading"><strong>REX</strong><span id="hp-text"></span></div><div class="meter"><i id="hp"></i></div><div class="rage-row"><strong>Rage</strong><div class="meter"><i id="rage"></i></div><span id="rage-text"></span></div></div>

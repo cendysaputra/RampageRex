@@ -54,7 +54,7 @@ export class World {
       return {...b,modules,evacuated:false};
     });
     this.enemies=[];this.civilians=[];this.shots=[];this.effects=[];this.events=[];
-    this.triggered=new Set();this.spawnTime=1;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
+    this.triggered=new Set();this.spawnTime=3;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
   }
   // Persen hancur
@@ -163,7 +163,7 @@ export class World {
   defeat(e){
     const p=this.rex,big=e.type==='jeep'||e.type==='helicopter';
     this.score+=e.hero?1200:100;p.rage=Math.min(100,p.rage+(e.hero?20:6));
-    p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
+    if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
   // Lukai Rex
@@ -278,7 +278,7 @@ export class World {
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     // Proyektil
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:3,rocket:16,laser:10,net:5}[s.type]);
+      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:2,rocket:16,laser:10,net:5}[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0);
     // Warga

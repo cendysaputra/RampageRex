@@ -414,7 +414,106 @@ No text, no letters, no numbers, no logos, no signage lettering (signs show only
 
 1. Simpan salinan WebP di sebelahnya (`menu-wide.webp`, `menu-tall.webp`), kualitas 90. Kedua gambar ini tidak perlu masuk manifest karena tidak digambar di canvas.
 2. Periksa di tiga ukuran layar: 1440×900, 390×844, dan 844×390. Judul "Rampage Rex", dua tombol, dan baris bawah harus tetap terbaca di atas gambar tanpa menutupi wajah Rex atau para warga.
-3. Pemasangan di `index.html` dan `style.css` (mengganti lapisan `.skyline`, `.shops`, dan `.cover-rex`) dikerjakan setelah gambarnya disetujui.
+3. Kedua gambar sudah terpasang: `index.html` memilihnya lewat `<picture>` menurut orientasi layar, dan posisinya diatur `.cover` di `style.css`. Gambar pengganti cukup ditaruh dengan nama file yang sama.
+
+---
+
+## 11. Latar per distrik
+
+Saat ini keempat distrik memakai latar yang sama (bagian 8). Tiga set di bawah membuat Pusat Kota, Pelabuhan, dan Alun-Alun terlihat sebagai tempat yang berbeda. Distrik 1 (Jalan Ruko) tetap memakai latar yang ada.
+
+Tiap set terdiri dari empat lapis dengan **ukuran kanvas persis sama** dengan latar sekarang, supaya posisi cakrawala dan trotoar tidak bergeser:
+
+| Lapis | File | Ukuran | Latar belakang gambar |
+| --- | --- | --- | --- |
+| Langit | `sky.png` | 1600 × 900 | penuh, tidak transparan |
+| Kota jauh | `far-city.png` | 1600 × 295 | transparan, isi menempel ke tepi bawah |
+| Kota tengah | `mid-city.png` | 1600 × 239 | transparan, isi menempel ke tepi bawah |
+| Jalan | `street.png` | 1600 × 214 | transparan hanya di 13 px teratas |
+
+Aturan untuk semua lapis:
+
+- **Menyambung mulus ke kiri dan kanan** (seamless horizontal). Tepi kiri dan kanan harus cocok saat gambar diulang.
+- Gaya sama dengan latar sekarang: pakai `assets/backgrounds/sky.webp`, `far-city.webp`, `mid-city.webp`, dan `street.webp` sebagai referensi gaya dan komposisi.
+- Tanpa teks, huruf, angka, logo, atau watermark. Papan dan rambu hanya bentuk abstrak.
+- Tanpa karakter, kendaraan, atau benda yang bisa dihancurkan: itu digambar game di atasnya.
+- Di `street.png`, trotoar ada di bagian atas dan permukaan jalan di bawahnya, dengan tinggi trotoar sama seperti jalan sekarang. Kaki karakter berpijak sekitar 66 px dari tepi atas gambar.
+
+Simpan di `assets/backgrounds/<nama-set>/`, dengan nama set `office`, `port`, dan `square` (sama dengan `setting` di `data/levels/`).
+
+### 11.1 Pusat Kota (`office`)
+
+Suasana: senja yang lebih larut, lampu kantor mulai menyala, kaca gedung memantulkan langit.
+
+```
+SKY, 1600x900, opaque, horizontally seamless: a late sunset sky over a business district. Deep violet at the top fading through magenta to a narrow band of orange at the horizon, the sun already below the skyline. Long flat stratus clouds lit orange from underneath, a few early stars near the top. Same painterly cartoon cloud shapes as the reference sky. No buildings, no sun disc, no text.
+```
+
+```
+FAR CITY, 1600x295, transparent background, horizontally seamless: a distant skyline of tall modern office towers as flat dusky purple silhouettes with no outline, taller and denser than the reference skyline. Mix of slim glass towers, a stepped high-rise, a tower with a helipad, a telecom mast and two construction cranes. A scattering of tiny warm lit windows. Tops reach close to the upper edge, bases sit flush on the bottom edge. No text.
+```
+
+```
+MID CITY, 1600x239, transparent background, horizontally seamless: a mid-distance row of four to eight storey office and bank buildings in desaturated teal, slate blue and mauve, with thin soft outlines and lower contrast than the foreground. Glass curtain walls reflecting orange sky, rooftop air-conditioning units, blank billboards with abstract shapes only, a pedestrian bridge linking two buildings. Many small warm lit windows. Bases sit flush on the bottom edge. No text.
+```
+
+```
+STREET, 1600x214, transparent only above the kerb line, horizontally seamless, front orthographic elevation: a wide city-centre pavement of clean square grey paving slabs with a tactile yellow guide strip, a low planter edge and a stainless bollard rhythm, then a painted black-and-white kerb. Below it, smooth dark asphalt with crisp white lane dashes, a section of zebra crossing, a drain cover, and warm orange reflections of the sunset. Same outline weight and kerb height as the reference street. No text.
+```
+
+Warna dasar jalan untuk kode (`ground`): ambil warna aspal paling bawah gambar.
+
+### 11.2 Pelabuhan (`port`)
+
+Suasana: senja di tepi laut, udara berkabut asin, lampu sorot derek menyala.
+
+```
+SKY, 1600x900, opaque, horizontally seamless: a hazy harbour sunset. Teal-grey upper sky fading to peach and a strong orange glow low on the horizon, with a soft sea haze band just above the horizon line. Thin ragged clouds, a few distant seabirds as tiny dark ticks. Same painterly cartoon cloud shapes as the reference sky. No ships, no sun disc, no text.
+```
+
+```
+FAR CITY, 1600x295, transparent background, horizontally seamless: a distant port horizon as flat dusky blue-purple silhouettes with no outline. A flat sea line across the lower third with two cargo ships and a tanker on it, a row of giant ship-to-shore gantry cranes with their booms raised, a lighthouse, storage tank domes and a refinery chimney with a small flare. A few tiny warm lights. Bases sit flush on the bottom edge. No text.
+```
+
+```
+MID CITY, 1600x239, transparent background, horizontally seamless: a mid-distance dockside in desaturated teal, rust and mauve with thin soft outlines and lower contrast than the foreground. Stacks of shipping containers three and four high in muted red, blue and green with no markings, corrugated warehouse sheds with sawtooth roofs, floodlight masts with warm lamps, a straddle carrier, chain-link fencing. Bases sit flush on the bottom edge. No text.
+```
+
+```
+STREET, 1600x214, transparent only above the kerb line, horizontally seamless, front orthographic elevation: a worn concrete quay apron with expansion joints, oil stains and embedded steel crane rails, edged with a chunky yellow-and-black hazard-striped kerb and iron mooring bollards. Below it, rough dark concrete road with faded yellow lane lines, puddles reflecting orange sky and scattered gravel. Same outline weight and kerb height as the reference street. No text.
+```
+
+Warna dasar jalan untuk kode (`ground`): ambil warna beton paling bawah gambar.
+
+### 11.3 Alun-Alun (`square`)
+
+Suasana: malam, kota sudah berasap setelah amukan di tiga distrik sebelumnya. Ini distrik terakhir.
+
+```
+SKY, 1600x900, opaque, horizontally seamless: a smoky night sky over a burning city. Near-black indigo at the top, turning to deep crimson and a dirty orange glow at the horizon as if lit by distant fires. Heavy columns and drifting banks of dark smoke with ember-orange undersides, a pale full moon half hidden by smoke in the upper left, scattered floating embers. Same painterly cartoon cloud shapes as the reference sky. No buildings, no text.
+```
+
+```
+FAR CITY, 1600x295, transparent background, horizontally seamless: a distant city skyline at night as flat near-black purple silhouettes with no outline, back-lit by fire glow. A large mosque dome with two minarets, a clock tower, a radio mast, and broken tower outlines with missing upper floors. Several thin smoke plumes rising. Sparse tiny orange lights. Bases sit flush on the bottom edge. No text.
+```
+
+```
+MID CITY, 1600x239, transparent background, horizontally seamless: a mid-distance view across a town square at night in dark teal, plum and ember orange, with thin soft outlines and lower contrast than the foreground. A colonial-style white town hall with columns and a pediment, a tall stone monument on a stepped base, a huge old banyan tree with hanging roots, rows of unlit flagpoles, ornate street lamps casting warm pools of light, strings of festival bulbs. Bases sit flush on the bottom edge. No text.
+```
+
+```
+STREET, 1600x214, transparent only above the kerb line, horizontally seamless, front orthographic elevation: a ceremonial plaza edge paved in large terracotta and cream tiles laid in a diamond pattern, with a low carved stone border and a painted black-and-white kerb. Below it, dark cobblestone road lit by warm lamp pools and red fire glow, with scattered ash and a few glowing embers. Same outline weight and kerb height as the reference street. No text.
+```
+
+Warna dasar jalan untuk kode (`ground`): ambil warna batu paling bawah gambar.
+
+### 11.4 Yang perlu dihubungkan setelah gambar jadi
+
+1. Taruh PNG di `assets/backgrounds/office/`, `assets/backgrounds/port/`, dan `assets/backgrounds/square/`.
+2. Tambahkan 12 entri ke `assets` di `assets/manifest.json`, misalnya `"backgrounds/office/sky.png"`, dengan nilai yang sama seperti entri `backgrounds/sky.png`, `far-city.png`, `mid-city.png`, dan `street.png` yang sudah ada (ukuran, `bounds`, `pivot`, `alpha`, `repeatX`). Pada tiap entri `street.png`, tambahkan `"ground": "#rrggbb"` berisi warna jalan paling bawah.
+3. Jalankan `python tools/to-webp.py`, periksa hasilnya, lalu hapus PNG-nya.
+4. Tidak perlu mengubah kode. Distrik yang punya `sky.png` sendiri di manifest otomatis memakai setnya; siluet dan rona ungu buatan kode untuk distrik itu otomatis mati. Set yang belum lengkap jangan didaftarkan dulu.
+5. Jalankan `npm run check`, lalu lihat tiap distrik di layar 1440×900 dan 390×844. Sambungan antar-ulangan gambar tidak boleh terlihat saat Rex berjalan.
 
 ---
 
