@@ -9,7 +9,7 @@ const levels = await Promise.all([1, 2, 3, 4].map(async n =>
 const empty = new Set();
 const manifest = JSON.parse(await readFile(new URL('../assets/manifest.json', import.meta.url), 'utf8'));
 const animation = manifest.rexAnimations;
-assert.equal(Object.values(animation.atlases).reduce((sum, atlas) => sum + atlas.frames.length, 0), 24);
+assert.equal(Object.values(animation.atlases).reduce((sum, atlas) => sum + atlas.frames.length, 0), 32);
 for (const atlas of Object.values(animation.atlases)) {
   const image = manifest.assets[atlas.path + '.png'];
   for (const [x, y, w, h, px, py] of atlas.frames) {
@@ -23,12 +23,13 @@ const makeWorld = () => {
   return world;
 };
 
-for (const key of ['bite', 'tail', 'stomp', 'roar']) {
+for (const key of ['bite', 'tail', 'stomp', 'roar', 'ulti']) {
   const world = makeWorld();
+  world.rex.cd[key] = 0;
   world.startAttack(key);
   const action = world.rex.attack;
   const contact = rexPose({ ...world.rex, attack: { ...action, age: action.impact } }, animation);
-  const clip = animation.clips[key], contactIndex = key === 'tail' ? 1 : 2;
+  const clip = animation.clips[key], contactIndex = key === 'ulti' ? clip.contact : key === 'tail' ? 1 : 2;
   assert.equal(contact.from, rexFramePath(clip.atlas, clip.frames[contactIndex]));
   assert.equal(contact.mix, 0);
   const recovered = rexPose({ ...world.rex, attack: { ...action, age: action.duration } }, animation);
@@ -43,6 +44,7 @@ for (const key of ['bite', 'tail', 'stomp', 'roar']) {
   }
   for (const hz of [30, 60, 120, 144]) {
     const simulation = makeWorld();
+    simulation.rex.cd[key] = 0;
     simulation.startAttack(key);
     let impacts = 0;
     simulation.strike = () => impacts++;

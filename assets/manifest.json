@@ -8,6 +8,16 @@
   "rexAnimations": {
     "width": 800,
     "atlases": {
+      "ulti": {
+        "path": "characters/rex/animations/ulti",
+        "scale": 1.18,
+        "frames": [
+          [0, 78, 627, 216, 315, 213], [627, 17, 627, 277, 350, 274],
+          [0, 320, 627, 309, 310, 306], [627, 300, 627, 329, 330, 326],
+          [0, 642, 627, 273, 320, 270], [627, 720, 627, 196, 350, 193],
+          [0, 959, 627, 274, 330, 271], [627, 959, 627, 274, 330, 271]
+        ]
+      },
       "walk": {
         "path": "characters/rex/animations/walk",
         "frames": [
@@ -38,6 +48,7 @@
       }
     },
     "clips": {
+      "ulti": {"atlas": "ulti", "frames": [0, 1, 2, 3, 4, 5, 6, 7], "contact": 5},
       "idle": {"atlas": "tail-stomp", "frames": [3]},
       "walk": {"atlas": "walk", "frames": [0, 1, 2, 3, 4, 5, 6, 7]},
       "bite": {"atlas": "bite-roar", "frames": [0, 1, 2, 3]},
@@ -49,6 +60,8 @@
   "sourceBrief": "image-prompts.md",
   "sourceCommit": "4867eea7ffcdc67d73e88e5988164a99ddfb7a38",
   "assets": {
+    "characters/rex/animations/ulti.png": {"width": 1254, "height": 1254, "pivot": [0, 0], "alpha": true},
+    "fx/ulti-cutin.png": {"width": 1672, "height": 941, "pivot": [0, 0], "alpha": true},
     "characters/rex/animations/walk.png": {"width": 1254, "height": 1254, "pivot": [0, 0], "alpha": true},
     "characters/rex/animations/bite-roar.png": {"width": 1254, "height": 1254, "pivot": [0, 0], "alpha": true},
     "characters/rex/animations/tail-stomp.png": {"width": 1254, "height": 1254, "pivot": [0, 0], "alpha": true},

@@ -37,6 +37,13 @@ try {
   }
   assert.ok(parseInt(await page.locator('#destruction').textContent()) > 0);
   interactions.push('Walk and four keyboard attacks damage buildings');
+  await page.waitForFunction(() => !document.querySelector('.key-strip [data-skill="ulti"]').hasAttribute('data-cooling'), { }, { timeout: 30000 });
+  await page.keyboard.press('r');
+  await page.waitForTimeout(400);
+  assert.equal(await page.locator('.key-strip [data-skill="ulti"]').getAttribute('data-cooling'), '');
+  await page.screenshot({ path: join(output, 'ulti-keyboard.png') });
+  await page.waitForTimeout(1800);
+  interactions.push('R starts the ultimate with the final art and resets its cooldown');
   await page.locator('#pause').click();
   assert.equal(await page.locator('#panel-title').textContent(), 'Jeda');
   await page.getByRole('button', { name: 'Lanjut main', exact: true }).click();
@@ -66,7 +73,7 @@ try {
       for (const atlas of Object.values(manifest.rexAnimations.atlases)) await alternate.load(atlas.path);
       await alternate.prepareRexFrames();
       const frames = [...alternate.images.entries()].filter(([path]) => path.startsWith('characters/rex/animation-frames/'));
-      fallback = frames.length === 24 && frames.every(([, image]) => image instanceof HTMLCanvasElement && image.width > 0);
+      fallback = frames.length === 32 && frames.every(([, image]) => image instanceof HTMLCanvasElement && image.width > 0);
     } finally { window.createImageBitmap = nativeBitmap; }
     const count = art.images.size;
     const generatedFrames = [...art.images.keys()].filter(path => path.startsWith('characters/rex/animation-frames/')).length;
@@ -74,7 +81,7 @@ try {
     return { count, generatedFrames, decodedPixels, originalPixels, fallback };
   });
   assert.equal(assets.fallback, true);
-  assert.equal(assets.generatedFrames, 24);
+  assert.equal(assets.generatedFrames, 32);
   // Exercise every district and sprite family, including partial pose blends.
   const scenes = [];
   for (let district = 1; district <= 4; district++) {
@@ -109,6 +116,28 @@ try {
     }, district));
     await page.screenshot({ path: join(output, `district-${district}.png`) });
   }
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    for (const phase of ['windup', 'impact']) {
+      await page.evaluate(async phase => {
+        const { World } = await import('./src/world.js');
+        const { rexPose } = await import('./src/rex-animation.js');
+        const world = new World(window.previewWorld.level, 0), art = window.previewArt;
+        world.rex.cd.ulti = 0;world.startAttack('ulti');
+        const action = world.rex.attack;
+        action.age = phase === 'windup' ? .7 : action.impact;
+        const pose = rexPose(world.rex, art.rexAnimations);
+        if (!pose.from.includes('/ulti-') || !art.images.has(pose.from) || !art.images.has('fx/ulti-cutin')) throw Error('Ultimate final art is missing');
+        if (phase === 'impact') {
+          if (!pose.from.endsWith('/ulti-5') || pose.mix !== 0) throw Error('Wrong ultimate contact frame');
+          world.strike(action);world.time += .3;
+        }
+        window.previewRenderer.render(world);
+      }, phase);
+      await page.screenshot({ path: join(output, `ulti-${phase}-${viewport.width}.png`) });
+    }
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const reduced = await page.evaluate(() => {
     window.previewRenderer.render(window.previewWorld);
