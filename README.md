@@ -9,10 +9,10 @@ Dari root repo, jalankan `python -m http.server 8000`, lalu buka `http://localho
 | Kontrol | Aksi |
 | --- | --- |
 | A/D atau ←/→ | Jalan |
-| J | Gigit di depan |
-| K | Sabet dengan ekor di belakang |
+| W atau klik kiri | Gigit di depan |
+| Q atau klik kanan | Sabet dengan ekor di belakang |
 | S | Injak |
-| L | Raung (25 Rage) |
+| E | Raung (25 Rage) |
 | Esc atau P | Jeda |
 
 Di layar sentuh, gunakan tombol arah dan aksi. Rekor tersimpan di browser. Pengaturan empat distrik ada di `data/levels/`.
