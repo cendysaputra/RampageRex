@@ -25,7 +25,7 @@ Renderer memangkas ruang transparan saat decode berdasarkan `bounds` di manifest
 
 ## Pemeriksaan animasi
 
-Dengan Node.js 22 atau lebih baru, jalankan `node --experimental-default-type=module tools/check-motion.mjs`. Pemeriksaan ini menguji waktu benturan, perpindahan pose, pendaratan Rajawali, serta konsistensi gerak pada simulasi 30, 60, 120, dan 144 Hz.
+Jalankan `npm run check` (atau `node tools/check-motion.mjs`) dengan Node.js 16 atau lebih baru. Tidak ada paket yang perlu dipasang; `package.json` hanya menandai file `.js` sebagai modul ES. Pemeriksaan ini menguji waktu benturan, perpindahan pose, pendaratan Rajawali, serta konsistensi gerak pada simulasi 30, 60, 120, dan 144 Hz.
 
 Untuk pemeriksaan browser, jalankan server lokal lalu `node tools/preview-browser.mjs` dari environment yang menyediakan Playwright dan Chromium. Jika Playwright terpasang di luar repo, arahkan variabel `PLAYWRIGHT_PATH` ke file `index.mjs` paket tersebut. `REX_URL` dapat mengganti alamat server, dan `REX_PREVIEW_DIR` dapat mengganti lokasi hasil. Secara default, screenshot dan `results.json` disimpan dalam folder `rampage-rex-preview` di direktori temporer sistem.
 
