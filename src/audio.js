@@ -1,5 +1,7 @@
 // Daftar suara
 const sounds={
+  meteor:[180,1650,1.8,.055,'triangle'],steam:[520,90,1.3,.025,'sawtooth'],
+  chirp:[760,1450,.18,.045,'sine'],growl:[82,28,1.7,.09,'sawtooth'],
   step:[49,26,.08,.055,'sine'],bite:[160,49,.14,.085,'sawtooth'],
   tail:[190,52,.16,.07,'triangle'],stomp:[94,28,.25,.16,'sine'],roar:[113,33,.64,.13,'sawtooth'],
   collapse:[110,23,.42,.09,'sawtooth'],crack:[142,41,.085,.07,'square'],

@@ -1,6 +1,7 @@
 import {World,heroNames,cooldowns} from './world.js';
 import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
+import {playOpening} from './opening.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',
@@ -141,5 +142,11 @@ panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resu
 // Jeda otomatis
 window.addEventListener('blur',()=>{clearInput();pause()});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();pause()}});
 // Tombol menu
-el('start').onclick=()=>start();el('help').onclick=help;el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
+el('start').onclick=async()=>{
+  if(screen!=='menu')return;
+  screen='opening';snd.unlock();el('menu').hidden=true;
+  await playOpening(el('opening'),snd);
+  await start();
+};
+el('help').onclick=help;el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);
