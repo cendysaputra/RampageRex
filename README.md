@@ -38,7 +38,7 @@ Tujuan tiap distrik: **capai target destruksi** dan **kalahkan semua pahlawannya
 | 💥 | **Ulti: Amukan Rex**, mengguncang seluruh layar | `R` | | 40 dtk |
 | ⏸️ | Jeda | `Esc` atau `P` | | |
 
-- Petunjuk tombol di layar menggelap selama cooldown berjalan. Ulti baru bisa dipakai 15 detik setelah distrik dimulai.
+- Chip skill di bawah layar meredup dan menampilkan sisa detik selama cooldown berjalan. Ulti baru bisa dipakai 15 detik setelah distrik dimulai.
 - Serangan yang ditekan sedikit terlalu cepat tetap keluar begitu Rex bebas.
 - Meruntuhkan lantai dasar menjatuhkan semua lantai di atasnya.
 - Rex punya 400 darah. Mengalahkan tentara memulihkan sedikit, mengalahkan pahlawan memulihkan lebih banyak.
