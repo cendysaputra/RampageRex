@@ -246,7 +246,13 @@ export class Renderer {
     for(const e of g.enemies){if(!visible(e.x))continue;
       shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:40);c.save();
       if(e.hit>0&&!reduced)c.translate(-e.dir*Math.sin(clamp(e.hit/.2,0,1)*Math.PI)*4,0);
-      if(e.hero)heroRig(c,a,e);
+      if(e.hero){
+        heroRig(c,a,e);
+        // Darah pahlawan
+        const top=e.y-140,ratio=clamp(e.hp/e.max,0,1);
+        c.fillStyle='#102321';c.fillRect(e.x-48,top-4,96,18);
+        c.fillStyle='#e8536d';c.fillRect(e.x-44,top,88*ratio,10);
+      }
       else if(e.type==='turret'){
         c.save();c.translate(e.x,0);c.fillStyle='#172d2a';c.beginPath();c.moveTo(-27,0);c.lineTo(0,-38);c.lineTo(27,0);c.fill();
         a.sprite(c,'characters/heroes/jaring/parts/net-launcher',0,-27,61,e.dir);c.restore();
@@ -257,7 +263,7 @@ export class Renderer {
         const bob=Math.sin(e.walk)**2*e.stride*2;
         a.blend(c,base+(e.fromFrame||frame),base+frame,e.frameMix??1,e.x,-e.lift-bob,people[e.type],e.dir);
       }c.restore();
-      if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='30px Bangers,Impact,sans-serif';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-128)}
+      if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='30px Bangers,Impact,sans-serif';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-152)}
     }
     shadow(g.rex.x-15,2,212);c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
