@@ -9,6 +9,7 @@ const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
+const backdropLayers=['sky','far-city','mid-city','street'];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
 // Lebar bitmap
@@ -59,11 +60,23 @@ export class Art {
     }
     this.images.set(path,picture);
   }
+  // Latar distrik
+  backdrop(setting,name){
+    const own='backgrounds/'+setting+'/'+name;
+    return this.meta[own+'.png']?own:'backgrounds/'+name;
+  }
+  // Punya latar
+  hasBackdrop(setting){return !!this.meta['backgrounds/'+setting+'/sky.png']}
   // Pramuat level
   async preload(level){
     const heroes=level.bosses.map(b=>'characters/heroes/'+b.type+'/parts/');
+    const backdrops=backdropLayers.map(name=>this.backdrop(level.setting,name));
+    // Lepas latar
+    for(const [path,image] of this.images)if(path.startsWith('backgrounds/')&&!backdrops.includes(path)){
+      image.close?.();this.images.delete(path);this.loading.delete(path);
+    }
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
-      k.startsWith('backgrounds/')||k.startsWith('buildings/')||k.startsWith('props/')
+      backdrops.includes(k)||k.startsWith('buildings/')||k.startsWith('props/')
       ||k.startsWith('characters/rex/animations/')
       ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net','fx/ulti-cutin'].includes(k));
     let cursor=0;
@@ -197,18 +210,21 @@ export class Renderer {
       const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(width*sx));canvas.height=Math.max(1,Math.ceil(height*sy));
       const c=canvas.getContext('2d');c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';return {canvas,c};
     };
-    const sky=this.art.images.get('backgrounds/sky'),skyScale=Math.max(view/sky.width,(floor+5)/sky.height);
+    const place=name=>this.art.backdrop(this.setting,name);
+    const sky=this.art.images.get(place('sky')),skyScale=Math.max(view/sky.width,(floor+5)/sky.height);
     const skyW=view/skyScale,skyH=(floor+5)/skyScale,backdrop=surface(view,floor+5);
     backdrop.c.drawImage(sky,(sky.width-skyW)/2,sky.height-skyH,skyW,skyH,0,0,backdrop.canvas.width,backdrop.canvas.height);
     this.sky=backdrop.canvas;this.backgrounds=new Map();
     for(const [name,width,height] of [['far-city',1750,323],['mid-city',1800,269],['street',1750,235]]){
-      const layer=surface(width,height);layer.c.drawImage(this.art.images.get('backgrounds/'+name),0,0,layer.canvas.width,layer.canvas.height);
+      const layer=surface(width,height);layer.c.drawImage(this.art.images.get(place(name)),0,0,layer.canvas.width,layer.canvas.height);
       this.backgrounds.set(name,layer.canvas);
     }
+    this.ground=this.art.meta[place('street')+'.png'].ground||'#232e31';
     this.stale=false;
   }
   // Gambar frame
   render(g){
+    if(this.setting!==g.level.setting){this.setting=g.level.setting;this.stale=true}
     if(this.stale)this.measure();
     const c=this.c,a=this.art,{w,h,bw,bh,scale}=this;if(!w||!h)return;
     const view=w/scale,logicalH=h/scale;
@@ -221,14 +237,15 @@ export class Renderer {
       const im=this.backgrounds.get(name);for(let x=-(cam*ratio%width);x<view;x+=width)c.drawImage(im,x,top,width+1,height)
     };
     // Latar
-    tile('far-city',.16,-485,323,1750);districtScenery(c,g.level.setting,cam,view);
+    const own=a.hasBackdrop(g.level.setting);
+    tile('far-city',.16,-485,323,1750);if(!own)districtScenery(c,g.level.setting,cam,view);
     tile('mid-city',.48,-334,269,1800);
-    if(g.index){c.fillStyle='rgba(43,23,64,'+g.index*.105+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
-    c.fillStyle='#232e31';c.fillRect(-30,-64,view+60,logicalH-floor+130);
+    if(g.index&&!own){c.fillStyle='rgba(43,23,64,'+g.index*.105+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
+    c.fillStyle=this.ground;c.fillRect(-30,-64,view+60,logicalH-floor+130);
     tile('street',1,-66,235,1750);
     // Sambungan aspal
     const roadFade=c.createLinearGradient(0,125,0,170);
-    roadFade.addColorStop(0,'#232e3100');roadFade.addColorStop(1,'#232e31');
+    roadFade.addColorStop(0,this.ground+'00');roadFade.addColorStop(1,this.ground);
     c.fillStyle=roadFade;c.fillRect(-30,125,view+60,Math.max(45,logicalH-floor-125));
     c.translate(-cam,0);const visible=(x,pad=450)=>x>=cam-pad&&x<=cam+view+pad;
     // Bangunan
