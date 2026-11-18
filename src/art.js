@@ -3,9 +3,7 @@ import { attackPose, smooth } from './motion.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
-// Two samples per logical pixel cover the renderer's capped backing store.
-// Sprite widths are chosen so every adult stands about 88 logical pixels tall, the height the
-// civilians already had. Soldiers are a touch taller with their helmets, heroes about 1.3x.
+// Ukuran sprite
 const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64,samples=1.6;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/',people.bazooka],
@@ -13,28 +11,32 @@ const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
+// Lebar bitmap
 function bitmapWidth(path,source){
   if(path.startsWith('characters/heroes/'))return Math.min(source,Math.ceil(samples*heroScale*(heroWidths[path.split('/').pop()]||source)));
   const match=drawnWidths.find(([prefix])=>path.startsWith(prefix));
   return match?Math.min(source,Math.ceil(match[1]*samples)):source;
 }
+// Area potong
 function cropRect(meta,path){
   if(path.startsWith('backgrounds/')||!meta.alpha||!meta.bounds)return {x:0,y:0,width:meta.width,height:meta.height};
   const b=meta.bounds,x=Math.max(0,b.x-2),y=Math.max(0,b.y-2);
   return {x,y,width:Math.min(meta.width,b.x+b.width+2)-x,height:Math.min(meta.height,b.y+b.height+2)-y};
 }
 
+// Pemuat gambar
 export class Art {
   constructor(manifest){
     this.meta={...manifest.assets};this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
     this.rexAnimations=manifest.rexAnimations;
     this.crops=new Map(Object.entries(this.meta).map(([path,m])=>[path.slice(0,-4),cropRect(m,path)]));
   }
+  // Muat gambar
   load(path){
     if(this.loading.has(path))return this.loading.get(path);
     const task=this.decode(path);this.loading.set(path,task);return task;
   }
-  // Decoding up front keeps the first draw of a sprite from stalling a frame mid-game.
+  // Dekode gambar
   async decode(path){
     const url='./assets/'+path+'.'+this.extension,m=this.meta[path+'.png'],crop=this.crops.get(path);
     const scale=bitmapWidth(path,m.width)/m.width,width=Math.max(1,Math.ceil(crop.width*scale)),height=Math.max(1,Math.ceil(crop.height*scale));
@@ -46,7 +48,7 @@ export class Art {
           {resizeWidth:width,resizeHeight:height,resizeQuality:'high'});
       }catch{}
     }
-    // Fallback for browsers without ImageBitmap; also reports a missing file by its path.
+    // Jalur cadangan
     if(!picture){
       const img=await new Promise((resolve,reject)=>{
         const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error(path));img.src=url;
@@ -57,6 +59,7 @@ export class Art {
     }
     this.images.set(path,picture);
   }
+  // Pramuat level
   async preload(level){
     const heroes=level.bosses.map(b=>'characters/heroes/'+b.type+'/parts/');
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
@@ -67,6 +70,7 @@ export class Art {
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
     await(this.rexFramesReady??=this.prepareRexFrames());
   }
+  // Potong atlas
   async prepareRexFrames(){
     for(const [atlas,definition] of Object.entries(this.rexAnimations.atlases)){
       const source=this.images.get(definition.path);
@@ -83,19 +87,22 @@ export class Art {
         this.meta[path+'.png']={width,height,pivot:[px,py],scale:definition.scale||1,alpha:true};
         this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
       }
-      // The sheet is only needed for slicing; dropping it frees about 6 MB per atlas.
+      // Lepas atlas
       this.images.delete(definition.path);source.close?.();
     }
   }
+  // Gambar bagian
   part(c,path,x,y,width,angle=0){
     const im=this.images.get(path);if(!im)return;
     const m=this.meta[path+'.png'],crop=this.crops.get(path),s=width/m.width*(m.scale||1);
     c.save();c.translate(x,y);c.rotate(angle);c.drawImage(im,(crop.x-m.pivot[0])*s,(crop.y-m.pivot[1])*s,crop.width*s,crop.height*s);c.restore();
   }
+  // Gambar sprite
   sprite(c,path,x,y,width,dir=1,angle=0){
     const im=this.images.get(path);if(!im)return;
     c.save();c.translate(x,y);c.scale(dir,1);this.part(c,path,0,0,width,angle);c.restore();
   }
+  // Baur pose
   blend(c,from,to,mix,x,y,width,dir=1,angle=0){
     if(from===to||mix<=0){this.sprite(c,from,x,y,width,dir,angle);return}
     if(mix>=1){this.sprite(c,to,x,y,width,dir,angle);return}
@@ -109,7 +116,7 @@ export class Art {
     if(canvas.width<w)canvas.width=w;if(canvas.height<h)canvas.height=h;
     const buffer=canvas.getContext('2d');buffer.clearRect(0,0,canvas.width,canvas.height);
     buffer.imageSmoothingEnabled=true;buffer.imageSmoothingQuality='low';
-    // Add premultiplied colours so overlapping poses retain their original opacity.
+    // Campur warna
     buffer.globalCompositeOperation='source-over';buffer.globalAlpha=1-mix;
     buffer.drawImage(this.images.get(from),a.x-left,a.y-top,a.w,a.h);
     buffer.globalCompositeOperation='lighter';buffer.globalAlpha=mix;
@@ -119,6 +126,7 @@ export class Art {
   }
 }
 
+// Gambar Rex
 function rexRig(c,a,p,t,reduced){
   const pose=rexPose(p,a.rexAnimations),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
   c.save();c.translate(p.x,reduced||p.attack?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
@@ -130,6 +138,7 @@ function rexRig(c,a,p,t,reduced){
   }
   c.restore();
 }
+// Gambar pahlawan
 function heroRig(c,a,e){
   c.save();c.translate(e.x,e.y);c.scale(e.dir*heroScale,heroScale);
   const stride=Math.sin(e.walk)*e.stride;
@@ -146,6 +155,7 @@ function heroRig(c,a,e){
   if(e.type==='jaring')part('net-launcher',13,-99,75);
   c.restore();
 }
+// Latar distrik
 function districtScenery(c,setting,cam,w){
   if(setting==='ruko')return;
   c.save();c.translate(-(cam*.42%870),0);c.fillStyle='#3e3f40';c.strokeStyle='#4d4244';c.lineWidth=9;
@@ -163,6 +173,7 @@ function districtScenery(c,setting,cam,w){
     }
   }c.restore();
 }
+// Renderer
 export class Renderer {
   constructor(canvas,art){
     this.canvas=canvas;this.c=canvas.getContext('2d',{alpha:false});this.art=art;this.stale=true;
@@ -170,14 +181,14 @@ export class Renderer {
     const mark=()=>{this.stale=true};addEventListener('resize',mark);
     if(typeof ResizeObserver==='function')new ResizeObserver(mark).observe(canvas);
   }
-  // Layout is only read when the canvas actually changes size, not every frame.
+  // Ukur canvas
   measure(){
     const canvas=this.canvas,w=canvas.clientWidth,h=canvas.clientHeight;this.w=w;this.h=h;if(!w||!h)return;
-    // Cap the backing store near 2560x1440 so 4K and high-density screens stay fast.
+    // Batas resolusi
     let dpr=Math.min(2,devicePixelRatio||1);const over=w*h*dpr*dpr/3.7e6;if(over>1)dpr/=Math.sqrt(over);
     const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
     if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh}
-    // High quality resizing happens once; bilinear sampling keeps moving sprites cheap.
+    // Kualitas sampling
     this.c.imageSmoothingEnabled=true;this.c.imageSmoothingQuality='low';
     this.bw=bw;this.bh=bh;this.scale=Math.min(w/1000,h/1080);
     const view=w/this.scale,logicalH=h/this.scale,floor=Math.min(logicalH*.82,logicalH*.55+285);
@@ -196,6 +207,7 @@ export class Renderer {
     }
     this.stale=false;
   }
+  // Gambar frame
   render(g){
     if(this.stale)this.measure();
     const c=this.c,a=this.art,{w,h,bw,bh,scale}=this;if(!w||!h)return;
@@ -208,16 +220,18 @@ export class Renderer {
     const tile=(name,ratio,top,height,width)=>{
       const im=this.backgrounds.get(name);for(let x=-(cam*ratio%width);x<view;x+=width)c.drawImage(im,x,top,width+1,height)
     };
+    // Latar
     tile('far-city',.16,-485,323,1750);districtScenery(c,g.level.setting,cam,view);
     tile('mid-city',.48,-334,269,1800);
     if(g.index){c.fillStyle='rgba(43,23,64,'+g.index*.105+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
     c.fillStyle='#232e31';c.fillRect(-30,-64,view+60,logicalH-floor+130);
     tile('street',1,-66,235,1750);
-    // Continue the asphalt into tall viewports without stretching the curb artwork.
+    // Sambungan aspal
     const roadFade=c.createLinearGradient(0,125,0,170);
     roadFade.addColorStop(0,'#232e3100');roadFade.addColorStop(1,'#232e31');
     c.fillStyle=roadFade;c.fillRect(-30,125,view+60,Math.max(45,logicalH-floor-125));
     c.translate(-cam,0);const visible=(x,pad=450)=>x>=cam-pad&&x<=cam+view+pad;
+    // Bangunan
     for(const b of g.buildings){
       if(!visible(b.x,b.width))continue;
       for(const [i,m] of b.modules.entries()){
@@ -228,6 +242,7 @@ export class Renderer {
     }
     for(const prop of g.level.props){if(visible(prop.x))a.sprite(c,'props/'+prop.type,prop.x,-46,propWidths[prop.type])}
     const shadow=(x,y,w)=>{c.fillStyle='#0c211e51';c.beginPath();c.ellipse(x,y,w,Math.max(5,w*.07),0,0,Math.PI*2);c.fill()};
+    // Musuh
     for(const e of g.enemies){if(!visible(e.x))continue;
       shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:40);c.save();
       if(e.hit>0&&!reduced)c.translate(-e.dir*Math.sin(clamp(e.hit/.2,0,1)*Math.PI)*4,0);
@@ -247,12 +262,15 @@ export class Renderer {
     shadow(g.rex.x-15,2,212);c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
     rexRig(c,a,g.rex,t,reduced);c.restore();
+    // Warga
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;
       const base='characters/civilians/'+civ.type+'/frames/',frame=civ.frame||'run-a';
       a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x,civ.lane-Math.sin(civ.walk)**2*3,people.civilian,civ.dir);
     }
+    // Proyektil
     for(const s of g.shots){const path=s.type==='net'?'net-capsule':s.type;a.sprite(c,'fx/projectiles/frames/'+path,s.x,s.y,s.type==='bullet'?37:72,1,Math.atan2(s.vy,s.vx))}
+    // Efek
     for(const f of g.effects){
       if(!visible(f.x,f.size))continue;
       const age=clamp(1-f.life/f.max,0,1);c.save();
@@ -266,7 +284,7 @@ export class Renderer {
         c.globalAlpha=1-smooth((age-.6)/.4);a.sprite(c,'fx/debris/frames/'+key,f.x,f.y,f.size,1,f.spin*(f.max-f.life));
       }c.restore();
     }
-    // Ultimate: shockwave rings race along the ground from Rex after the slam.
+    // Gelombang kejut
     const wave=(t-g.quakeAt)/.7;
     if(wave>=0&&wave<1){
       c.save();c.lineWidth=14*(1-wave)+2;
@@ -278,8 +296,7 @@ export class Renderer {
     c.restore();
     this.ultimateOverlay(c,g,view,logicalH,reduced);
   }
-  // Screen-space dressing for the ultimate: the scene dims, a banner with Rex's cut-in slides
-  // in from the left during the wind-up, and the slam flashes the screen.
+  // Efek ulti
   ultimateOverlay(c,g,view,logicalH,reduced){
     const action=g.rex.attack?.key==='ulti'?g.rex.attack:null,flash=1-(g.time-g.quakeAt)/.3;
     if(action&&action.age<action.impact){
@@ -292,7 +309,7 @@ export class Renderer {
       outline();c.save();c.clip();
       const paint=c.createLinearGradient(0,0,width,height);paint.addColorStop(0,'#ff9b40');paint.addColorStop(1,'#c2314f');
       c.fillStyle=paint;c.fillRect(0,0,width+lean,height);
-      // Speed lines drift left so the banner feels in motion while it holds.
+      // Garis kecepatan
       c.strokeStyle='#fff0ce55';c.lineWidth=5;
       for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173-(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
         c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}

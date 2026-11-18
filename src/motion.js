@@ -1,10 +1,12 @@
+// Faktor redam
 export const damp = (rate, dt) => 1 - Math.exp(-rate * dt);
+// Kurva halus
 export function smooth(value) {
   const t = Math.max(0, Math.min(1, value));
   return t * t * (3 - 2 * t);
 }
 
-// Reach the contact pose on the damage tick, then ease back to rest.
+// Pose serangan
 export function attackPose(action) {
   if (!action) return 0;
   return action.age <= action.impact
@@ -12,6 +14,7 @@ export function attackPose(action) {
     : 1 - smooth((action.age - action.impact) / (action.duration - action.impact));
 }
 
+// Ganti pose
 export function spritePose(entity, frame, dt) {
   if (entity.frame !== frame) {
     entity.fromFrame = entity.frame || frame;

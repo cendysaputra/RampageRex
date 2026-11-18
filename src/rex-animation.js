@@ -1,11 +1,12 @@
 import { smooth } from './motion.js';
 
+// Jalur frame
 export const rexFramePath = (atlas, frame) => `characters/rex/animation-frames/${atlas}-${frame}`;
 
-// The generated poses differ too much to dissolve slowly: a long crossfade shows two
-// see-through Rexes at once. Each pose is held and only the last moment is blended.
+// Durasi baur
 const FADE = .05;
 
+// Pose Rex
 export function rexPose(rex, animation) {
   const frame = (clip, index) => {
     const sequence = animation.clips[clip];
@@ -16,7 +17,6 @@ export function rexPose(rex, animation) {
     const { key, age, impact, duration } = action, recovery = duration - impact;
     let times, poses;
     if (key === 'ulti') {
-      // Uses the dedicated clip when the manifest has one; until then it borrows roar and stomp poses.
       const { frames, contact } = animation.clips.ulti;
       const paths = frames.map((_, index) => frame('ulti', index)), after = paths.length - contact;
       times = [0, ...paths.map((_, index) => index <= contact
@@ -31,7 +31,7 @@ export function rexPose(rex, animation) {
     }
     const next = times.findIndex(time => time > age);
     if (next < 1) return { from: idle, to: idle, mix: 0 };
-    // The ultimate's poses change the whole silhouette, so its blend is kept even shorter.
+    // Baur ulti
     const end = times[next], fade = Math.min(key === 'ulti' ? FADE * .6 : FADE, end - times[next - 1]);
     return { from: poses[next - 1], to: poses[next], mix: smooth((age - (end - fade)) / fade) };
   }
