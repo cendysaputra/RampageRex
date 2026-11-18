@@ -4,12 +4,16 @@
   "target": 70,
   "bosses": [
     {
-      "at": 50,
+      "at": 35,
+      "type": "perisai"
+    },
+    {
+      "at": 35,
       "type": "rajawali"
     },
     {
-      "at": 60,
-      "type": "perisai"
+      "at": 35,
+      "type": "jaring"
     }
   ],
   "length": 14090,

@@ -7,7 +7,7 @@ const sounds={
   collapse:[110,23,.42,.09,'sawtooth'],crack:[142,41,.085,.07,'square'],
   panic:[480,830,.13,.027,'triangle'],shot:[335,68,.055,.035,'square'],
   launch:[240,52,.18,.05,'triangle'],alarm:[270,410,.23,.075,'square'],
-  ulti:[62,180,1.02,.16,'sawtooth']
+  ulti:[62,180,1.02,.16,'sawtooth'],heroUlti:[330,880,.9,.12,'square']
 };
 // Pemutar suara
 export class Sound {

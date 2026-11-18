@@ -4,15 +4,15 @@
   "target": 80,
   "bosses": [
     {
-      "at": 75,
+      "at": 50,
       "type": "perisai"
     },
     {
-      "at": 75,
+      "at": 50,
       "type": "rajawali"
     },
     {
-      "at": 75,
+      "at": 50,
       "type": "jaring"
     }
   ],

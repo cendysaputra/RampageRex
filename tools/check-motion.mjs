@@ -99,4 +99,53 @@ for (const [index, level] of levels.entries()) {
   }
 }
 
+// Pahlawan selalu bertiga
+for (const [index, level] of levels.entries()) {
+  assert.deepEqual(level.bosses.map(b => b.type).sort(), ['jaring', 'perisai', 'rajawali']);
+  const world = new World(level, index);
+  world.spawnTime = Infinity;
+  world.rex.x = level.length / 2;
+  world.lost = world.total * level.bosses[0].at / 100;
+  world.update(1 / 60, empty);
+  const heroes = world.enemies.filter(e => e.hero);
+  assert.equal(heroes.length, 3, `district ${index + 1}: heroes must arrive together`);
+  assert.ok(heroes.some(e => e.x < world.rex.x) && heroes.some(e => e.x > world.rex.x), 'heroes must flank Rex');
+}
+
+// Warga bisa dilempar Rex
+{
+  const world = makeWorld();
+  const civilian = { type: 'shopper', x: world.rex.x + 150, dir: 1, speed: 0, phase: 0, walk: 0, lane: 15 };
+  world.civilians.push(civilian);
+  world.rex.cd.bite = 0;
+  world.startAttack('bite');
+  for (let i = 0; i < 20; i++) world.update(1 / 60, empty);
+  assert.equal(civilian.down, true, 'bite must knock a civilian');
+  for (let i = 0; i < 90; i++) world.update(1 / 60, empty);
+  assert.ok(!world.civilians.includes(civilian), 'knocked civilians must clear');
+}
+
+// Ulti pahlawan mengenai sekali, raungan membatalkannya
+for (const type of ['perisai', 'rajawali', 'jaring']) {
+  const world = makeWorld();
+  const hero = world.spawn(type, world.rex.x + 400);
+  hero.ultCd = 0;
+  world.update(1 / 60, empty);
+  assert.equal(world.cast?.hero, hero, `${type}: ulti must start`);
+  let impacts = 0;
+  const strike = world.castStrike.bind(world);
+  world.castStrike = cast => { impacts++; strike(cast); };
+  const before = world.rex.hp;
+  for (let i = 0; i < 180; i++) world.update(1 / 60, empty);
+  assert.equal(impacts, 1, `${type}: ulti must land once`);
+  assert.ok(world.rex.hp < before, `${type}: ulti must hurt Rex`);
+  const roared = makeWorld(), target = roared.spawn(type, roared.rex.x + 400);
+  target.ultCd = 0;
+  roared.update(1 / 60, empty);
+  roared.rex.cd.roar = 0;
+  roared.startAttack('roar');
+  roared.strike(roared.rex.attack);
+  assert.equal(roared.cast, null, `${type}: roar must cancel the ulti`);
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

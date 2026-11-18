@@ -14,7 +14,7 @@
   <canvas id="world" width="1920" height="1080" aria-label="Arena permainan Rampage Rex"></canvas>
   <section id="menu" aria-labelledby="title">
     <div class="poster" aria-hidden="true"><picture><source media="(max-aspect-ratio:4/5)" srcset="./assets/backgrounds/menu-tall.webp" width="941" height="1672"><img class="cover" src="./assets/backgrounds/menu-wide.webp" width="1672" height="941" fetchpriority="high" decoding="async" alt=""></picture><div class="poster-shade"></div></div>
-    <div class="menu-top"><button class="audio" aria-pressed="true">Suara: nyala</button></div>
+    <div class="menu-top"><button class="audio" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M17 9l5 6M22 9l-5 6"/></svg><span>Suara nyala</span></button></div>
     <div class="menu-body"><h1 id="title">Rampage <em>Rex</em></h1>
     <p class="intro">Kamu jadi Rex. Hancurkan empat distrik kota dan hadapi para penjaganya.</p>
     <div class="buttons"><button class="primary" id="start">Mulai main</button><button class="secondary" id="help">Cara main</button></div>
@@ -22,8 +22,8 @@
     <div class="menu-bottom"><span id="record"></span></div>
   </section>
   <div id="hud" hidden>
-    <div class="hud-top"><div class="player-card"><div class="hud-heading"><strong>REX</strong><span id="hp-text"></span></div><div class="meter"><i id="hp"></i></div><div class="rage-row"><strong>Rage</strong><div class="meter"><i id="rage"></i></div><span id="rage-text"></span></div></div>
-    <div class="district-card"><span id="district"></span><b id="destruction"></b><small id="objective"></small></div><button id="pause" aria-label="Jeda"><span aria-hidden="true" class="pause-icon"></span></button></div>
+    <div class="hud-top"><div class="player-card"><div class="hud-heading"><strong>REX</strong><span id="hp-text"></span></div><div class="meter segmented"><i id="hp"></i></div><div class="rage-row"><strong>Rage</strong><div class="meter"><i id="rage"></i></div><span id="rage-text"></span></div></div>
+    <div class="district-card"><span id="district"></span><b id="destruction"></b><div class="meter"><i id="destroyed"></i><span class="goal" id="goal"></span></div><small id="objective"></small></div><button id="pause" aria-label="Jeda"><span aria-hidden="true" class="pause-icon"></span></button></div>
     <div id="bosses"></div><div id="notice" role="status"></div>
     <div id="touch"><div class="pad"><button data-action="left" aria-label="Kiri">◀</button><button data-action="right" aria-label="Kanan">▶</button></div><div class="pad actions"><button data-action="bite" data-skill="bite">Gigit</button><button data-action="tail" data-skill="tail">Ekor</button><button data-action="stomp" data-skill="stomp">Injak</button><button data-action="roar" data-skill="roar">Raung</button><button data-action="ulti" data-skill="ulti" class="ulti">Ulti</button></div></div>
     <div class="key-strip"><span><kbd>A D</kbd> Jalan</span><span data-skill="bite"><kbd>W / Klik kiri</kbd> Gigit</span><span data-skill="tail"><kbd>Q / Klik kanan</kbd> Ekor</span><span data-skill="stomp"><kbd>S</kbd> Injak</span><span data-skill="roar"><kbd>E</kbd> Raung</span><span data-skill="ulti" class="ulti"><kbd>R</kbd> Ulti</span></div>

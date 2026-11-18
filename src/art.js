@@ -9,6 +9,8 @@ const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
+// Warna ulti pahlawan
+const castColors={perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
 const backdropLayers=['sky','far-city','mid-city','street'];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
@@ -69,7 +71,7 @@ export class Art {
   hasBackdrop(setting){return !!this.meta['backgrounds/'+setting+'/sky.png']}
   // Pramuat level
   async preload(level){
-    const heroes=level.bosses.map(b=>'characters/heroes/'+b.type+'/parts/');
+    const heroes=level.bosses.flatMap(b=>['characters/heroes/'+b.type+'/parts/','characters/heroes/'+b.type+'/portrait']);
     const backdrops=backdropLayers.map(name=>this.backdrop(level.setting,name));
     // Lepas latar
     for(const [path,image] of this.images)if(path.startsWith('backgrounds/')&&!backdrops.includes(path)){
@@ -144,7 +146,8 @@ function rexRig(c,a,p,t,reduced){
   const pose=rexPose(p,a.rexAnimations),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
   c.save();c.translate(p.x,reduced||p.attack?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
   a.blend(c,pose.from,pose.to,pose.mix,0,0,a.rexAnimations.width);
-  if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
+  if(p.bigNet>0)a.sprite(c,'fx/steel-net',10,-8,520,1,Math.sin(t*3)*.03);
+  else if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
   if(roar>.2){
     c.strokeStyle='#ffe69f';c.lineWidth=4;c.globalAlpha=roar*.8;
     for(let i=0;i<3;i++){c.beginPath();c.arc(270,-280,75+i*44+p.attack.age/p.attack.duration*65,-.75,.75);c.stroke()}
@@ -264,6 +267,13 @@ export class Renderer {
       shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:40);c.save();
       if(e.hit>0&&!reduced)c.translate(-e.dir*Math.sin(clamp(e.hit/.2,0,1)*Math.PI)*4,0);
       if(e.hero){
+        // Aura saat mengumpulkan ulti
+        if(g.cast?.hero===e&&!g.cast.done){
+          const k=g.cast.age/g.cast.windup,[light,,glow]=castColors[e.type];
+          c.save();c.globalAlpha=.35+.35*Math.sin(t*22)**2;c.fillStyle=glow;
+          c.beginPath();c.ellipse(e.x,e.y-70,70+k*40,95+k*40,0,0,Math.PI*2);c.fill();
+          c.globalAlpha=.9;c.strokeStyle=light;c.lineWidth=5;c.beginPath();c.ellipse(e.x,e.y-70,90+k*60,115+k*60,0,0,Math.PI*2);c.stroke();c.restore();
+        }
         heroRig(c,a,e);
         // Darah pahlawan
         const top=e.y-140,ratio=clamp(e.hp/e.max,0,1);
@@ -289,6 +299,10 @@ export class Renderer {
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;
       const base='characters/civilians/'+civ.type+'/frames/',frame=civ.frame||'run-a';
+      if(civ.down){
+        // Berputar di sekitar badan, bukan di kaki
+        c.save();c.globalAlpha=clamp(civ.life/.35,0,1);c.translate(civ.x,civ.lane+civ.y-42);if(!reduced)c.rotate(civ.angle);
+        a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,0,42,people.civilian,civ.dir);c.restore();continue}
       a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x,civ.lane-Math.sin(civ.walk)**2*3,people.civilian,civ.dir);
     }
     // Proyektil
@@ -316,8 +330,18 @@ export class Renderer {
         c.globalAlpha=(1-k)*.9;c.strokeStyle=colour;c.beginPath();c.ellipse(g.rex.x,-4,80+smooth(k)*view*.75,14+smooth(k)*46,0,0,Math.PI*2);c.stroke();
       }c.restore();
     }
+    // Gelombang Perisai
+    const shield=g.heroWave&&(t-g.heroWave.at)/.75;
+    if(shield>=0&&shield<1){
+      c.save();c.lineWidth=16*(1-shield)+3;
+      for(const [delay,colour] of [[0,'#f2b33d'],[.15,'#4f7bd0']]){
+        const k=clamp((shield-delay)/(1-delay),0,1);if(!k)continue;
+        c.globalAlpha=(1-k)*.95;c.strokeStyle=colour;c.beginPath();c.ellipse(g.heroWave.x,-4,60+smooth(k)*950,12+smooth(k)*50,0,0,Math.PI*2);c.stroke();
+      }c.restore();
+    }
     c.restore();
     this.ultimateOverlay(c,g,view,logicalH,reduced);
+    this.heroOverlay(c,g,view,logicalH,reduced);
   }
   // Efek ulti
   ultimateOverlay(c,g,view,logicalH,reduced){
@@ -346,5 +370,37 @@ export class Renderer {
       c.restore();
     }
     if(flash>0&&!reduced){c.fillStyle='rgba(255,243,196,'+flash*.75+')';c.fillRect(0,0,view,logicalH)}
+  }
+  // Ulti pahlawan: panel yang sama dengan Amukan Rex, masuk dari kanan
+  heroOverlay(c,g,view,logicalH,reduced){
+    const cast=g.cast,flash=1-(g.time-g.castAt)/.3;
+    if(cast&&!cast.done){
+      const age=cast.age,left=cast.windup-age,show=smooth(age/.16)*smooth(left/.14),[light,dark,glow]=castColors[cast.type];
+      c.fillStyle='rgba(14,8,26,'+.5*show+')';c.fillRect(0,0,view,logicalH);
+      const width=Math.min(view*.52,820),height=Math.min(logicalH*.5,470,width*.58),top=logicalH*.24,lean=height*.22;
+      const slide=reduced?0:(1-smooth(age/.2))*(width+lean)+(1-smooth(left/.14))*(width+lean);
+      c.save();c.translate(view-width-lean+slide,top);c.globalAlpha=reduced?show:1;
+      const outline=()=>{c.beginPath();c.moveTo(lean,0);c.lineTo(width+lean,0);c.lineTo(width+lean,height);c.lineTo(0,height);c.closePath()};
+      outline();c.save();c.clip();
+      const paint=c.createLinearGradient(width+lean,0,0,height);paint.addColorStop(0,light);paint.addColorStop(1,dark);
+      c.fillStyle=paint;c.fillRect(0,0,width+lean,height);
+      // Garis kecepatan
+      c.strokeStyle=glow+'66';c.lineWidth=5;
+      for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173+(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
+        c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
+      // Potret menghadap ke kiri, ke arah Rex
+      const path='characters/heroes/'+cast.type+'/portrait',im=this.art.images.get(path);
+      if(im){const size=height*1.12,bump=reduced?0:(1-smooth(age/.3))*40;
+        c.save();c.translate(width+lean-size*.12+bump,height*.02);c.scale(-1,1);c.drawImage(im,0,0,size,size*im.height/im.width);c.restore()}
+      c.restore();outline();
+      c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
+      c.font=Math.round(height*.2)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';c.lineJoin='round';
+      c.lineWidth=10;c.strokeStyle='#102321';c.strokeText(cast.name,28,height-18);
+      c.fillStyle='#fff0ce';c.fillText(cast.name,28,height-18);
+      c.font='700 '+Math.round(height*.075)+'px "Baloo 2",sans-serif';c.lineWidth=6;
+      const tip='Raung untuk menggagalkan!';c.strokeText(tip,lean+24,height*.12+Math.round(height*.075));c.fillStyle=glow;c.fillText(tip,lean+24,height*.12+Math.round(height*.075));
+      c.restore();
+    }
+    if(flash>0&&!reduced&&g.cast){c.fillStyle=castColors[g.cast.type][2]+Math.round(flash*150).toString(16).padStart(2,'0');c.fillRect(0,0,view,logicalH)}
   }
 }
