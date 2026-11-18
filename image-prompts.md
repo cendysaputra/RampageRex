@@ -316,6 +316,58 @@ A wide horizontally seamless street ground strip on transparent background above
 
 ---
 
+## 9. Ulti Rex — Amukan Rex
+
+Ulti sudah berjalan di game dengan pose pinjaman (raung + injak) dan banner cut-in yang memakai pose Rex yang diperbesar. Dua gambar di bawah menggantikan keduanya. Kilatan layar, gelombang kejut, dan garis kecepatan digambar lewat kode, jadi **jangan** dimasukkan ke gambar.
+
+Referensi identitas untuk kedua prompt: `assets/characters/rex/master.png` dan `assets/characters/rex/animations/walk.png`. Ikuti cara kerja di `assets/characters/rex/animations/README.md` (simpan PNG asli, catat prompt akhirnya di sana).
+
+### 9.1 Atlas animasi ulti (8 pose)
+
+Simpan sebagai `assets/characters/rex/animations/ulti.png`.
+
+```
+Production transparent PNG sprite animation atlas for this exact Rex dinosaur. Match the green chunky Rex's identity and polished cartoon rendering in both references precisely: cream segmented belly, orange dorsal plates, dark teal outlines and spots, yellow eye, three red cheek scars, small clawed arms, long tapering tail, warm top rim lighting. Output one square transparent RGBA image, largest available resolution, with EXACTLY TWO equal columns and FOUR equal rows: EIGHT full-body sprites, read left to right then top to bottom. No grid, borders, text, ground, shadows or checkerboard. Every cell has the same fixed camera and the same body scale, hips at 58 percent of the cell width, planted feet on a ground line at 90 percent of the cell height, and at least 32 pixels of fully transparent margin on all sides. Rex faces RIGHT in every frame.
+
+This is his ULTIMATE attack, a furious rearing ground slam:
+(1) deep anticipatory crouch, body low and coiled, head tucked down, tail curled, eyes narrowed;
+(2) starting to rear up, chest swelling, head pulling back, small arms flexing, dorsal plates beginning to glow hot orange;
+(3) reared up tall on straightened legs, chest fully inflated, head thrown back with jaws wide open roaring at the sky, dorsal plates glowing bright orange-yellow, tail whipping upward;
+(4) peak of the rear: both small arms spread wide, jaws at their widest, whole body stretched to its tallest, plates at their brightest glow;
+(5) the drop: body plunging forward and down, head driving toward the ground, both feet about to hit, tail high behind him;
+(6) IMPACT: both feet and the underside of the tail slammed flat on the ground line, body squashed low and wide, head lunged forward with jaws open in a roar, plates still glowing;
+(7) rebound: body springing back up to mid height, mouth closing, plate glow fading to a dull ember;
+(8) settling into his neutral standing pose, jaw closed, plates back to their normal orange.
+
+Eight clearly different, individually clean poses with big readable silhouette changes. The glow belongs to the dorsal plates themselves: no aura, no flames, no smoke, no shockwave, no dust, no speed lines, no motion blur. No extra limbs. Smooth confident antialiased linework, consistent proportions, genuine alpha transparency. The whole character, including the raised head in frames 3 and 4 and the full tail, stays inside its own cell.
+```
+
+### 9.2 Ilustrasi cut-in (hiasan banner kiri)
+
+Simpan sebagai `assets/fx/ulti-cutin.png`. Banner tampil miring di sisi kiri layar selama ancang-ancang; judul "AMUKAN REX!" ditulis kode di pojok kiri bawah.
+
+```
+Dramatic close-up key art of this exact Rex dinosaur for a fighting-game style super move cut-in banner. Same character identity and polished cartoon cel shading as the references: green skin with dark teal spots and outlines, cream segmented belly and jaw, orange dorsal plates, yellow eye, three red cheek scars. Wide horizontal composition, 16:9, high resolution, genuine transparent RGBA background.
+
+Framing: head, neck and upper chest only, seen in a dynamic three-quarter view facing RIGHT and slightly toward the viewer, shot from a low angle so he looms. Jaws thrown wide open in a furious roar, teeth and pink tongue clearly visible, brow furrowed, the yellow eye blazing with a small bright highlight, saliva strands kept minimal. The dorsal plates along the back of the neck glow hot orange-yellow as if lit from within, casting a warm rim light across the top of the head and snout; deep teal shadows under the jaw and on the neck for strong contrast.
+
+Place the head in the upper-right two thirds of the frame. The lower-left third shows only the darker neck and chest, calm and low in detail, because a title will be overlaid there. The neck and back run off the left and bottom edges of the canvas; the snout and upper jaw keep a small transparent margin from the right and top edges.
+
+Thick confident antialiased outlines, clean silhouette, rich saturated colour. No background, no scenery, no speed lines, no energy aura, no flames, no smoke, no text, no letters, no logo, no frame, no border, no watermark, no checkerboard.
+```
+
+### 9.3 Yang perlu dihubungkan setelah gambar jadi
+
+1. Jalankan `python tools/to-webp.py` untuk membuat salinan WebP.
+2. Tambahkan ke `assets/manifest.json`:
+   - di `assets`: `"characters/rex/animations/ulti.png"` dan `"fx/ulti-cutin.png"`, masing-masing dengan `width`, `height`, `"pivot": [0, 0]`, `"alpha": true` (tanpa `bounds`, supaya gambar tidak dipangkas);
+   - di `rexAnimations.atlases`: `"ulti": {"path": "characters/rex/animations/ulti", "frames": [...]}` dengan delapan baris `[x, y, lebar, tinggi, pivotX, pivotY]` seperti atlas lain (pivot = titik tanah di bawah pinggul), ditambah `"scale"` bila ukuran badan perlu disamakan dengan atlas jalan;
+   - di `rexAnimations.clips`: `"ulti": {"atlas": "ulti", "frames": [0, 1, 2, 3, 4, 5, 6, 7], "contact": 5}`. `contact` adalah indeks pose hantaman (pose ke-6), yang tampil tepat saat damage.
+3. Tidak perlu mengubah kode: `src/rex-animation.js` otomatis memakai klip `ulti` bila ada, dan `src/art.js` otomatis memakai `fx/ulti-cutin` di banner.
+4. Jalankan `npm run check`, lalu coba Ulti (tombol R) di browser pada layar desktop dan portrait.
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).

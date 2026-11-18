@@ -3,7 +3,8 @@ const sounds={
   tail:[190,52,.16,.07,'triangle'],stomp:[94,28,.25,.16,'sine'],roar:[113,33,.64,.13,'sawtooth'],
   collapse:[110,23,.42,.09,'sawtooth'],crack:[142,41,.085,.07,'square'],
   panic:[480,830,.13,.027,'triangle'],shot:[335,68,.055,.035,'square'],
-  launch:[240,52,.18,.05,'triangle'],alarm:[270,410,.23,.075,'square']
+  launch:[240,52,.18,.05,'triangle'],alarm:[270,410,.23,.075,'square'],
+  ulti:[62,180,1.02,.16,'sawtooth']
 };
 export class Sound {
   constructor(){this.enabled=true;this.last=new Map()}

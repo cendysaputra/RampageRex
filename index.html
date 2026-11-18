@@ -9,7 +9,7 @@
 <main id="game">
   <canvas id="world" width="1920" height="1080" aria-label="Arena permainan Rampage Rex"></canvas>
   <section id="menu" aria-labelledby="title">
-    <div class="poster" aria-hidden="true"><div class="skyline"></div><div class="shops"></div><img class="cover-rex" src="./assets/characters/rex/master.webp" alt=""><div class="poster-shade"></div></div>
+    <div class="poster" aria-hidden="true"><div class="skyline"></div><div class="shops"></div><img class="cover-rex" src="./assets/characters/rex/master.webp" width="1728" height="910" fetchpriority="high" decoding="async" alt=""><div class="poster-shade"></div></div>
     <div class="menu-top"><span class="wordmark"><i></i> REX ARCADE</span><button class="audio" aria-label="Suara" aria-pressed="true">Suara aktif</button></div>
     <div class="menu-body"><p class="eyebrow"><b></b> KAMPANYE &nbsp;/&nbsp; RUKO SENJA</p><h1 id="title">RAMPAGE<br><em>REX</em></h1>
     <p class="intro">Kamu jadi Rex. Hancurkan empat distrik kota dan hadapi para penjaganya.</p>
@@ -21,8 +21,8 @@
     <div class="hud-top"><div class="player-card"><div class="hud-heading"><strong>REX</strong><span id="hp-text"></span></div><div class="meter"><i id="hp"></i></div><div class="rage-row"><strong>RAGE</strong><div class="meter"><i id="rage"></i></div><span id="rage-text"></span></div></div>
     <div class="district-card"><span id="district"></span><b id="destruction"></b><small id="objective"></small></div><button id="pause" aria-label="Jeda"><span aria-hidden="true" class="pause-icon"></span></button></div>
     <div id="bosses"></div><div id="notice" role="status"></div>
-    <div id="touch"><div class="pad"><button data-action="left" aria-label="Kiri">◀</button><button data-action="right" aria-label="Kanan">▶</button></div><div class="pad actions"><button data-action="bite">Gigit</button><button data-action="tail">Ekor</button><button data-action="stomp">Injak</button><button data-action="roar">Raung</button></div></div>
-    <div class="key-strip"><kbd>A D</kbd> Jalan <kbd>J</kbd> Gigit <kbd>K</kbd> Ekor <kbd>S</kbd> Injak <kbd>L</kbd> Raung</div>
+    <div id="touch"><div class="pad"><button data-action="left" aria-label="Kiri">◀</button><button data-action="right" aria-label="Kanan">▶</button></div><div class="pad actions"><button data-action="bite" data-skill="bite">Gigit</button><button data-action="tail" data-skill="tail">Ekor</button><button data-action="stomp" data-skill="stomp">Injak</button><button data-action="roar" data-skill="roar">Raung</button><button data-action="ulti" data-skill="ulti" class="ulti">Ulti</button></div></div>
+    <div class="key-strip"><span><kbd>A D</kbd> Jalan</span><span data-skill="bite"><kbd>W / Klik kiri</kbd> Gigit</span><span data-skill="tail"><kbd>Q / Klik kanan</kbd> Ekor</span><span data-skill="stomp"><kbd>S</kbd> Injak</span><span data-skill="roar"><kbd>E</kbd> Raung</span><span data-skill="ulti" class="ulti"><kbd>R</kbd> Ulti</span></div>
   </div>
   <dialog id="panel"><div class="panel-inner"><p class="eyebrow" id="panel-label"></p><h2 id="panel-title"></h2><div id="panel-copy"></div><div class="buttons" id="panel-actions"></div></div></dialog>
   <noscript>Aktifkan JavaScript untuk memainkan Rampage Rex.</noscript>
