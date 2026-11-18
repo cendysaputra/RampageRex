@@ -83,7 +83,7 @@ Makin hancur kotanya, makin berat perlawanannya. Helikopter hanya bisa digigit s
   <img src="assets/characters/civilians/bakso-vendor/master.png" alt="Pedagang bakso" height="96">
 </p>
 
-Warga sipil hanya berlarian panik. Mereka tidak menyerang dan tidak bisa dilukai.
+Warga sipil berlarian panik dan tidak menyerang. Gigitan, sabetan ekor, injakan, dan Ulti Rex bisa melempar mereka keluar layar, menambah skor dan sedikit Rage.
 
 ## 🏙️ Empat distrik
 

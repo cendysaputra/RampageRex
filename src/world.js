@@ -147,7 +147,15 @@ export class World {
       if(a.key==='tail'&&!e.hero){e.vx=-p.dir*(e.type==='jeep'?920:420);e.stun=.65;if(e.type==='jeep'){e.lift=1;e.vy=370}}
       if(e.hp<=0)this.defeat(e);
     }
+    // Warga ikut terlempar
+    for(const c of this.civilians)if(!c.down&&overlap(hitbox,box(c.x,c.lane,56,92)))this.knock(c,p.x);
     if(a.key==='stomp')this.fx('dust',p.x,0,3);
+  }
+  // Warga terlempar
+  knock(c,from){
+    c.down=true;c.dir=Math.sign(c.x-from)||1;c.vx=c.dir*range(380,640);c.vy=-range(560,820);c.y=0;
+    c.spin=c.dir*range(6,10);c.angle=0;c.life=1.15;
+    this.score+=25;this.rex.rage=clamp(this.rex.rage+1.5,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
   }
   // Gempa ulti
   quake(damage){
@@ -164,7 +172,7 @@ export class World {
       e.hp-=e.hero?damage*.8:damage*2;e.hit=.2;e.stun=Math.max(e.stun,e.hero?1.6:2.6);
       if(e.hp<=0)this.defeat(e);
     }
-    this.shots.length=0;for(const c of this.civilians)c.speed=Math.min(500,c.speed+120);
+    this.shots.length=0;for(const c of this.civilians)if(!c.down&&c.x>=left&&c.x<=right)this.knock(c,p.x);
     this.fx('dust',p.x,0,4);
   }
   // Musuh tumbang
@@ -301,11 +309,12 @@ export class World {
     keep(this.shots,s=>s.life>0);
     // Warga
     for(const c of this.civilians){
+      if(c.down){c.life-=dt;c.x+=c.vx*dt;c.y+=c.vy*dt;c.vy+=1500*dt;c.angle+=c.spin*dt;spritePose(c,'stumble',dt);continue}
       c.x+=c.dir*c.speed*dt;c.walk+=c.speed*dt/28;
       const glance=(this.time+c.phase)%5>4.6,stumble=(this.time+c.phase)%8>7.8;
       spritePose(c,stumble?'stumble':glance?'look-back':Math.sin(c.walk)>=0?'run-a':'run-b',dt);
     }
-    keep(this.civilians,c=>c.x>this.camera-170&&c.x<this.camera+this.view+170);
+    keep(this.civilians,c=>(!c.down||c.life>0)&&c.x>this.camera-170&&c.x<this.camera+this.view+170);
     // Efek
     for(const f of this.effects){f.life-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.kind==='debris'||f.kind==='decor')f.vy+=880*dt}
     keep(this.effects,f=>f.life>0);this.shake=Math.max(0,this.shake-dt*25);

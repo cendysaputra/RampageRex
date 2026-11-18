@@ -289,6 +289,10 @@ export class Renderer {
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;
       const base='characters/civilians/'+civ.type+'/frames/',frame=civ.frame||'run-a';
+      if(civ.down){
+        // Berputar di sekitar badan, bukan di kaki
+        c.save();c.globalAlpha=clamp(civ.life/.35,0,1);c.translate(civ.x,civ.lane+civ.y-42);if(!reduced)c.rotate(civ.angle);
+        a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,0,42,people.civilian,civ.dir);c.restore();continue}
       a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x,civ.lane-Math.sin(civ.walk)**2*3,people.civilian,civ.dir);
     }
     // Proyektil

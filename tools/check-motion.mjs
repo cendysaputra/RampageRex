@@ -112,4 +112,17 @@ for (const [index, level] of levels.entries()) {
   assert.ok(heroes.some(e => e.x < world.rex.x) && heroes.some(e => e.x > world.rex.x), 'heroes must flank Rex');
 }
 
+// Warga bisa dilempar Rex
+{
+  const world = makeWorld();
+  const civilian = { type: 'shopper', x: world.rex.x + 150, dir: 1, speed: 0, phase: 0, walk: 0, lane: 15 };
+  world.civilians.push(civilian);
+  world.rex.cd.bite = 0;
+  world.startAttack('bite');
+  for (let i = 0; i < 20; i++) world.update(1 / 60, empty);
+  assert.equal(civilian.down, true, 'bite must knock a civilian');
+  for (let i = 0; i < 90; i++) world.update(1 / 60, empty);
+  assert.ok(!world.civilians.includes(civilian), 'knocked civilians must clear');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));
