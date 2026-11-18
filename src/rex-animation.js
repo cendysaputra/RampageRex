@@ -17,11 +17,8 @@ export function rexPose(rex, animation) {
     let times, poses;
     if (key === 'ulti') {
       // Uses the dedicated clip when the manifest has one; until then it borrows roar and stomp poses.
-      const clip = animation.clips.ulti;
-      const paths = clip
-        ? clip.frames.map((_, index) => frame('ulti', index))
-        : [frame('roar', 0), frame('roar', 1), frame('roar', 2), frame('stomp', 1), frame('stomp', 2), frame('stomp', 3)];
-      const contact = clip ? clip.contact ?? paths.length - 3 : 4, after = paths.length - contact;
+      const { frames, contact } = animation.clips.ulti;
+      const paths = frames.map((_, index) => frame('ulti', index)), after = paths.length - contact;
       times = [0, ...paths.map((_, index) => index <= contact
         ? impact * (index + 1) / (contact + 1)
         : impact + recovery * (index - contact) / after), duration];
