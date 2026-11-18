@@ -2,6 +2,10 @@ import { smooth } from './motion.js';
 
 export const rexFramePath = (atlas, frame) => `characters/rex/animation-frames/${atlas}-${frame}`;
 
+// The generated poses differ too much to dissolve slowly: a long crossfade shows two
+// see-through Rexes at once. Each pose is held and only the last moment is blended.
+const FADE = .05;
+
 export function rexPose(rex, animation) {
   const frame = (clip, index) => {
     const sequence = animation.clips[clip];
@@ -16,11 +20,12 @@ export function rexPose(rex, animation) {
     const poses = [idle, ...animation.clips[key].frames.map((_, index) => frame(key, index)), idle];
     const next = times.findIndex(time => time > age);
     if (next < 1) return { from: idle, to: idle, mix: 0 };
-    return { from: poses[next - 1], to: poses[next], mix: smooth((age - times[next - 1]) / (times[next] - times[next - 1])) };
+    const end = times[next], fade = Math.min(FADE, end - times[next - 1]);
+    return { from: poses[next - 1], to: poses[next], mix: smooth((age - (end - fade)) / fade) };
   }
   if (rex.stride < .005) return { from: idle, to: idle, mix: 0 };
   const count = animation.clips.walk.frames.length, position = rex.walk / (Math.PI * 2) * count;
   const index = Math.floor(position) % count, from = frame('walk', index), to = frame('walk', (index + 1) % count);
-  if (rex.stride < .65) return { from: idle, to: from, mix: smooth(rex.stride / .65) };
-  return { from, to, mix: smooth((position % 1 - .55) / .45) };
+  if (rex.stride < .45) return { from: idle, to: from, mix: smooth((rex.stride - .2) / .25) };
+  return { from, to, mix: smooth((position % 1 - .7) / .3) };
 }
