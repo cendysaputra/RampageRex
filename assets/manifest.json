@@ -1,0 +1,4679 @@
+{
+  "version": 1,
+  "theme": "Ruko Senja",
+  "boundsFormat": "x, y, width, height",
+  "pivotUnits": "pixels from image top-left",
+  "characterFacing": "right",
+  "sourceBrief": "image-prompts.md",
+  "sourceCommit": "4867eea7ffcdc67d73e88e5988164a99ddfb7a38",
+  "assets": {
+    "buildings/ruko-01/ground.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 9,
+        "y": 4,
+        "width": 965,
+        "height": 441
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "intact"
+    },
+    "buildings/ruko-01/damage/ground-cracked.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 9,
+        "y": 3,
+        "width": 965,
+        "height": 442
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "cracked"
+    },
+    "buildings/ruko-01/damage/ground-broken.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 9,
+        "y": 3,
+        "width": 966,
+        "height": 442
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "broken"
+    },
+    "buildings/ruko-01/damage/ground-rubble.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 12,
+        "y": 214,
+        "width": 960,
+        "height": 231
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "rubble"
+    },
+    "buildings/ruko-01/colors/ground-mint.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 9,
+        "y": 4,
+        "width": 965,
+        "height": 441
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "mint"
+    },
+    "buildings/ruko-01/colors/ground-pink.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 9,
+        "y": 4,
+        "width": 965,
+        "height": 442
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "pink"
+    },
+    "buildings/ruko-01/colors/ground-mustard.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 9,
+        "y": 4,
+        "width": 965,
+        "height": 442
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "mustard"
+    },
+    "buildings/ruko-01/colors/ground-blue.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 9,
+        "y": 4,
+        "width": 966,
+        "height": 442
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "blue"
+    },
+    "buildings/ruko-01/upper.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 12,
+        "y": 9,
+        "width": 960,
+        "height": 343
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "intact"
+    },
+    "buildings/ruko-01/damage/upper-cracked.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 11,
+        "y": 9,
+        "width": 961,
+        "height": 344
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "cracked"
+    },
+    "buildings/ruko-01/damage/upper-broken.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 11,
+        "y": 9,
+        "width": 961,
+        "height": 343
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "broken"
+    },
+    "buildings/ruko-01/damage/upper-rubble.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 12,
+        "y": 151,
+        "width": 960,
+        "height": 198
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "rubble"
+    },
+    "buildings/ruko-01/colors/upper-mint.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 12,
+        "y": 9,
+        "width": 960,
+        "height": 344
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "mint"
+    },
+    "buildings/ruko-01/colors/upper-pink.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 12,
+        "y": 9,
+        "width": 961,
+        "height": 343
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "pink"
+    },
+    "buildings/ruko-01/colors/upper-mustard.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 12,
+        "y": 10,
+        "width": 960,
+        "height": 343
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "mustard"
+    },
+    "buildings/ruko-01/colors/upper-blue.png": {
+      "width": 984,
+      "height": 361,
+      "bounds": {
+        "x": 12,
+        "y": 9,
+        "width": 960,
+        "height": 343
+      },
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          349
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 337
+      },
+      "state": "blue"
+    },
+    "buildings/ruko-01/roof.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 8,
+        "y": 12,
+        "width": 968,
+        "height": 269
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "intact"
+    },
+    "buildings/ruko-01/damage/roof-cracked.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 8,
+        "y": 12,
+        "width": 968,
+        "height": 269
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "cracked"
+    },
+    "buildings/ruko-01/damage/roof-broken.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 7,
+        "y": 12,
+        "width": 968,
+        "height": 269
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "broken"
+    },
+    "buildings/ruko-01/damage/roof-rubble.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 12,
+        "y": 129,
+        "width": 960,
+        "height": 152
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "rubble"
+    },
+    "buildings/ruko-01/colors/roof-mint.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 7,
+        "y": 12,
+        "width": 968,
+        "height": 269
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "mint"
+    },
+    "buildings/ruko-01/colors/roof-pink.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 8,
+        "y": 12,
+        "width": 968,
+        "height": 269
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "pink"
+    },
+    "buildings/ruko-01/colors/roof-mustard.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 8,
+        "y": 12,
+        "width": 968,
+        "height": 269
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "mustard"
+    },
+    "buildings/ruko-01/colors/roof-blue.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 7,
+        "y": 12,
+        "width": 969,
+        "height": 269
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "blue"
+    },
+    "props/electric-pole.png": {
+      "width": 950,
+      "height": 878,
+      "bounds": {
+        "x": 0,
+        "y": 2,
+        "width": 950,
+        "height": 874
+      },
+      "pivot": [
+        475,
+        876
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "connection": {
+        "cableLeft": [
+          0,
+          153
+        ],
+        "cableRight": [
+          950,
+          153
+        ]
+      }
+    },
+    "props/angkot.png": {
+      "width": 760,
+      "height": 390,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 736,
+        "height": 366
+      },
+      "pivot": [
+        380,
+        378
+      ],
+      "alpha": true
+    },
+    "props/food-cart.png": {
+      "width": 760,
+      "height": 591,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 736,
+        "height": 567
+      },
+      "pivot": [
+        380,
+        579
+      ],
+      "alpha": true
+    },
+    "props/billboard.png": {
+      "width": 731,
+      "height": 760,
+      "bounds": {
+        "x": 12,
+        "y": 13,
+        "width": 707,
+        "height": 734
+      },
+      "pivot": [
+        366,
+        747
+      ],
+      "alpha": true
+    },
+    "props/tree.png": {
+      "width": 760,
+      "height": 694,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 736,
+        "height": 670
+      },
+      "pivot": [
+        380,
+        682
+      ],
+      "alpha": true
+    },
+    "props/tent-stall.png": {
+      "width": 760,
+      "height": 487,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 736,
+        "height": 463
+      },
+      "pivot": [
+        380,
+        475
+      ],
+      "alpha": true
+    },
+    "characters/rex/master.png": {
+      "width": 1100,
+      "height": 576,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 1076,
+        "height": 552
+      },
+      "pivot": [
+        550,
+        564
+      ],
+      "alpha": true,
+      "logicalHeight": 938
+    },
+    "characters/rex/parts/upper-skull.png": {
+      "width": 362,
+      "height": 203,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 338,
+        "height": 179
+      },
+      "pivot": [
+        93,
+        141
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/lower-jaw.png": {
+      "width": 261,
+      "height": 137,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 237,
+        "height": 112
+      },
+      "pivot": [
+        59,
+        43
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/torso.png": {
+      "width": 320,
+      "height": 244,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 296,
+        "height": 219
+      },
+      "pivot": [
+        154,
+        146
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/tail-base.png": {
+      "width": 328,
+      "height": 243,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 303,
+        "height": 219
+      },
+      "pivot": [
+        273,
+        115
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/tail-middle.png": {
+      "width": 315,
+      "height": 175,
+      "bounds": {
+        "x": 14,
+        "y": 12,
+        "width": 289,
+        "height": 151
+      },
+      "pivot": [
+        271,
+        81
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/tail-tip.png": {
+      "width": 307,
+      "height": 142,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 283,
+        "height": 118
+      },
+      "pivot": [
+        261,
+        71
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/near-arm.png": {
+      "width": 183,
+      "height": 174,
+      "bounds": {
+        "x": 13,
+        "y": 13,
+        "width": 158,
+        "height": 149
+      },
+      "pivot": [
+        53,
+        50
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/far-arm.png": {
+      "width": 163,
+      "height": 158,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 139,
+        "height": 134
+      },
+      "pivot": [
+        47,
+        46
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/near-leg.png": {
+      "width": 203,
+      "height": 196,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 179,
+        "height": 172
+      },
+      "pivot": [
+        87,
+        50
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/near-foot.png": {
+      "width": 224,
+      "height": 130,
+      "bounds": {
+        "x": 13,
+        "y": 13,
+        "width": 199,
+        "height": 105
+      },
+      "pivot": [
+        60,
+        44
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/far-leg.png": {
+      "width": 169,
+      "height": 196,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 145,
+        "height": 172
+      },
+      "pivot": [
+        71,
+        50
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/far-foot.png": {
+      "width": 223,
+      "height": 126,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 198,
+        "height": 102
+      },
+      "pivot": [
+        60,
+        43
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/closed-eye.png": {
+      "width": 166,
+      "height": 123,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 142,
+        "height": 99
+      },
+      "pivot": [
+        83,
+        62
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts/angry-eye.png": {
+      "width": 170,
+      "height": 129,
+      "bounds": {
+        "x": 13,
+        "y": 13,
+        "width": 145,
+        "height": 104
+      },
+      "pivot": [
+        85,
+        64
+      ],
+      "alpha": true
+    },
+    "characters/rex/parts-sheet.png": {
+      "width": 1420,
+      "height": 710,
+      "bounds": {
+        "x": 31,
+        "y": 9,
+        "width": 1375,
+        "height": 692
+      },
+      "pivot": [
+        718,
+        701
+      ],
+      "alpha": true,
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "sourceParts": [
+        {
+          "name": "upper-skull",
+          "file": "characters/rex/parts/upper-skull.png",
+          "sourceCell": [
+            0,
+            0,
+            461,
+            294
+          ],
+          "sheetCell": [
+            0,
+            0,
+            369,
+            235
+          ]
+        },
+        {
+          "name": "lower-jaw",
+          "file": "characters/rex/parts/lower-jaw.png",
+          "sourceCell": [
+            461,
+            0,
+            887,
+            294
+          ],
+          "sheetCell": [
+            369,
+            0,
+            710,
+            235
+          ]
+        },
+        {
+          "name": "torso",
+          "file": "characters/rex/parts/torso.png",
+          "sourceCell": [
+            887,
+            0,
+            1330,
+            294
+          ],
+          "sheetCell": [
+            710,
+            0,
+            1065,
+            235
+          ]
+        },
+        {
+          "name": "tail-base",
+          "file": "characters/rex/parts/tail-base.png",
+          "sourceCell": [
+            1330,
+            0,
+            1774,
+            294
+          ],
+          "sheetCell": [
+            1065,
+            0,
+            1420,
+            235
+          ]
+        },
+        {
+          "name": "tail-middle",
+          "file": "characters/rex/parts/tail-middle.png",
+          "sourceCell": [
+            0,
+            294,
+            444,
+            501
+          ],
+          "sheetCell": [
+            0,
+            235,
+            355,
+            401
+          ]
+        },
+        {
+          "name": "tail-tip",
+          "file": "characters/rex/parts/tail-tip.png",
+          "sourceCell": [
+            444,
+            294,
+            887,
+            501
+          ],
+          "sheetCell": [
+            355,
+            235,
+            710,
+            401
+          ]
+        },
+        {
+          "name": "near-arm",
+          "file": "characters/rex/parts/near-arm.png",
+          "sourceCell": [
+            887,
+            294,
+            1330,
+            501
+          ],
+          "sheetCell": [
+            710,
+            235,
+            1065,
+            401
+          ]
+        },
+        {
+          "name": "far-arm",
+          "file": "characters/rex/parts/far-arm.png",
+          "sourceCell": [
+            1330,
+            294,
+            1774,
+            501
+          ],
+          "sheetCell": [
+            1065,
+            235,
+            1420,
+            401
+          ]
+        },
+        {
+          "name": "near-leg",
+          "file": "characters/rex/parts/near-leg.png",
+          "sourceCell": [
+            0,
+            501,
+            444,
+            736
+          ],
+          "sheetCell": [
+            0,
+            401,
+            355,
+            589
+          ]
+        },
+        {
+          "name": "near-foot",
+          "file": "characters/rex/parts/near-foot.png",
+          "sourceCell": [
+            444,
+            501,
+            887,
+            736
+          ],
+          "sheetCell": [
+            355,
+            401,
+            710,
+            589
+          ]
+        },
+        {
+          "name": "far-leg",
+          "file": "characters/rex/parts/far-leg.png",
+          "sourceCell": [
+            887,
+            501,
+            1330,
+            736
+          ],
+          "sheetCell": [
+            710,
+            401,
+            1065,
+            589
+          ]
+        },
+        {
+          "name": "far-foot",
+          "file": "characters/rex/parts/far-foot.png",
+          "sourceCell": [
+            1330,
+            501,
+            1774,
+            736
+          ],
+          "sheetCell": [
+            1065,
+            401,
+            1420,
+            589
+          ]
+        },
+        {
+          "name": "closed-eye",
+          "file": "characters/rex/parts/closed-eye.png",
+          "sourceCell": [
+            0,
+            736,
+            444,
+            887
+          ],
+          "sheetCell": [
+            0,
+            589,
+            355,
+            710
+          ]
+        },
+        {
+          "name": "angry-eye",
+          "file": "characters/rex/parts/angry-eye.png",
+          "sourceCell": [
+            444,
+            736,
+            887,
+            887
+          ],
+          "sheetCell": [
+            355,
+            589,
+            710,
+            710
+          ]
+        }
+      ],
+      "logicalHeight": 938
+    },
+    "characters/heroes/perisai/master.png": {
+      "width": 693,
+      "height": 760,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 669,
+        "height": 736
+      },
+      "pivot": [
+        346,
+        748
+      ],
+      "alpha": true,
+      "logicalHeight": 223
+    },
+    "characters/heroes/perisai/parts/head.png": {
+      "width": 307,
+      "height": 307,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 282,
+        "height": 282
+      },
+      "pivot": [
+        156,
+        241
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/torso.png": {
+      "width": 316,
+      "height": 380,
+      "bounds": {
+        "x": 12,
+        "y": 13,
+        "width": 290,
+        "height": 355
+      },
+      "pivot": [
+        161,
+        254
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/near-upper-arm.png": {
+      "width": 237,
+      "height": 305,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 212,
+        "height": 281
+      },
+      "pivot": [
+        118,
+        63
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/near-forearm.png": {
+      "width": 226,
+      "height": 296,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 202,
+        "height": 272
+      },
+      "pivot": [
+        115,
+        61
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/far-upper-arm.png": {
+      "width": 225,
+      "height": 297,
+      "bounds": {
+        "x": 12,
+        "y": 14,
+        "width": 201,
+        "height": 270
+      },
+      "pivot": [
+        112,
+        61
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/far-forearm.png": {
+      "width": 235,
+      "height": 285,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 210,
+        "height": 259
+      },
+      "pivot": [
+        120,
+        59
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/near-thigh.png": {
+      "width": 214,
+      "height": 308,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 190,
+        "height": 284
+      },
+      "pivot": [
+        103,
+        57
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/near-shin.png": {
+      "width": 252,
+      "height": 303,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 227,
+        "height": 278
+      },
+      "pivot": [
+        108,
+        57
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/far-thigh.png": {
+      "width": 238,
+      "height": 303,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 213,
+        "height": 279
+      },
+      "pivot": [
+        115,
+        57
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/far-shin.png": {
+      "width": 245,
+      "height": 308,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 219,
+        "height": 284
+      },
+      "pivot": [
+        105,
+        57
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/shield.png": {
+      "width": 207,
+      "height": 369,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 183,
+        "height": 345
+      },
+      "pivot": [
+        105,
+        184
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts/cape.png": {
+      "width": 322,
+      "height": 357,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 296,
+        "height": 333
+      },
+      "pivot": [
+        227,
+        55
+      ],
+      "alpha": true
+    },
+    "characters/heroes/perisai/parts-sheet.png": {
+      "width": 1420,
+      "height": 1065,
+      "bounds": {
+        "x": 45,
+        "y": 11,
+        "width": 1325,
+        "height": 1041
+      },
+      "pivot": [
+        708,
+        1052
+      ],
+      "alpha": true,
+      "sourceSize": [
+        1448,
+        1086
+      ],
+      "sourceParts": [
+        {
+          "name": "head",
+          "file": "characters/heroes/perisai/parts/head.png",
+          "sourceCell": [
+            0,
+            0,
+            362,
+            382
+          ],
+          "sheetCell": [
+            0,
+            0,
+            355,
+            375
+          ]
+        },
+        {
+          "name": "torso",
+          "file": "characters/heroes/perisai/parts/torso.png",
+          "sourceCell": [
+            362,
+            0,
+            724,
+            382
+          ],
+          "sheetCell": [
+            355,
+            0,
+            710,
+            375
+          ]
+        },
+        {
+          "name": "near-upper-arm",
+          "file": "characters/heroes/perisai/parts/near-upper-arm.png",
+          "sourceCell": [
+            724,
+            0,
+            1086,
+            382
+          ],
+          "sheetCell": [
+            710,
+            0,
+            1065,
+            375
+          ]
+        },
+        {
+          "name": "near-forearm",
+          "file": "characters/heroes/perisai/parts/near-forearm.png",
+          "sourceCell": [
+            1086,
+            0,
+            1448,
+            382
+          ],
+          "sheetCell": [
+            1065,
+            0,
+            1420,
+            375
+          ]
+        },
+        {
+          "name": "far-upper-arm",
+          "file": "characters/heroes/perisai/parts/far-upper-arm.png",
+          "sourceCell": [
+            0,
+            382,
+            362,
+            700
+          ],
+          "sheetCell": [
+            0,
+            375,
+            355,
+            686
+          ]
+        },
+        {
+          "name": "far-forearm",
+          "file": "characters/heroes/perisai/parts/far-forearm.png",
+          "sourceCell": [
+            362,
+            382,
+            724,
+            700
+          ],
+          "sheetCell": [
+            355,
+            375,
+            710,
+            686
+          ]
+        },
+        {
+          "name": "near-thigh",
+          "file": "characters/heroes/perisai/parts/near-thigh.png",
+          "sourceCell": [
+            724,
+            382,
+            1086,
+            700
+          ],
+          "sheetCell": [
+            710,
+            375,
+            1065,
+            686
+          ]
+        },
+        {
+          "name": "near-shin",
+          "file": "characters/heroes/perisai/parts/near-shin.png",
+          "sourceCell": [
+            1086,
+            382,
+            1448,
+            700
+          ],
+          "sheetCell": [
+            1065,
+            375,
+            1420,
+            686
+          ]
+        },
+        {
+          "name": "far-thigh",
+          "file": "characters/heroes/perisai/parts/far-thigh.png",
+          "sourceCell": [
+            0,
+            700,
+            362,
+            1086
+          ],
+          "sheetCell": [
+            0,
+            686,
+            355,
+            1065
+          ]
+        },
+        {
+          "name": "far-shin",
+          "file": "characters/heroes/perisai/parts/far-shin.png",
+          "sourceCell": [
+            362,
+            700,
+            724,
+            1086
+          ],
+          "sheetCell": [
+            355,
+            686,
+            710,
+            1065
+          ]
+        },
+        {
+          "name": "shield",
+          "file": "characters/heroes/perisai/parts/shield.png",
+          "sourceCell": [
+            724,
+            700,
+            1086,
+            1086
+          ],
+          "sheetCell": [
+            710,
+            686,
+            1065,
+            1065
+          ]
+        },
+        {
+          "name": "cape",
+          "file": "characters/heroes/perisai/parts/cape.png",
+          "sourceCell": [
+            1086,
+            700,
+            1448,
+            1086
+          ],
+          "sheetCell": [
+            1065,
+            686,
+            1420,
+            1065
+          ]
+        }
+      ],
+      "logicalHeight": 223
+    },
+    "characters/heroes/perisai/portrait.png": {
+      "width": 400,
+      "height": 400,
+      "bounds": {
+        "x": 12,
+        "y": 27,
+        "width": 376,
+        "height": 361
+      },
+      "pivot": [
+        200,
+        388
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/master.png": {
+      "width": 532,
+      "height": 760,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 507,
+        "height": 736
+      },
+      "pivot": [
+        266,
+        748
+      ],
+      "alpha": true,
+      "logicalHeight": 223
+    },
+    "characters/heroes/rajawali/parts/head.png": {
+      "width": 334,
+      "height": 311,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 310,
+        "height": 287
+      },
+      "pivot": [
+        170,
+        244
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/torso.png": {
+      "width": 274,
+      "height": 353,
+      "bounds": {
+        "x": 12,
+        "y": 13,
+        "width": 248,
+        "height": 328
+      },
+      "pivot": [
+        140,
+        236
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/near-upper-arm.png": {
+      "width": 189,
+      "height": 270,
+      "bounds": {
+        "x": 12,
+        "y": 13,
+        "width": 165,
+        "height": 245
+      },
+      "pivot": [
+        94,
+        56
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/near-forearm.png": {
+      "width": 307,
+      "height": 201,
+      "bounds": {
+        "x": 14,
+        "y": 12,
+        "width": 281,
+        "height": 177
+      },
+      "pivot": [
+        156,
+        44
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/far-upper-arm.png": {
+      "width": 179,
+      "height": 283,
+      "bounds": {
+        "x": 12,
+        "y": 14,
+        "width": 154,
+        "height": 257
+      },
+      "pivot": [
+        90,
+        59
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/far-forearm.png": {
+      "width": 190,
+      "height": 251,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 166,
+        "height": 227
+      },
+      "pivot": [
+        97,
+        53
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/near-thigh.png": {
+      "width": 207,
+      "height": 254,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 183,
+        "height": 230
+      },
+      "pivot": [
+        100,
+        49
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/near-shin.png": {
+      "width": 215,
+      "height": 318,
+      "bounds": {
+        "x": 12,
+        "y": 13,
+        "width": 191,
+        "height": 293
+      },
+      "pivot": [
+        92,
+        59
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/far-thigh.png": {
+      "width": 202,
+      "height": 273,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 177,
+        "height": 249
+      },
+      "pivot": [
+        97,
+        52
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/far-shin.png": {
+      "width": 199,
+      "height": 315,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 175,
+        "height": 291
+      },
+      "pivot": [
+        86,
+        59
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts/jetpack.png": {
+      "width": 333,
+      "height": 337,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 308,
+        "height": 313
+      },
+      "pivot": [
+        194,
+        143
+      ],
+      "alpha": true
+    },
+    "characters/heroes/rajawali/parts-sheet.png": {
+      "width": 1420,
+      "height": 1065,
+      "bounds": {
+        "x": 44,
+        "y": 23,
+        "width": 1338,
+        "height": 1004
+      },
+      "pivot": [
+        713,
+        1027
+      ],
+      "alpha": true,
+      "sourceSize": [
+        1448,
+        1086
+      ],
+      "sourceParts": [
+        {
+          "name": "head",
+          "file": "characters/heroes/rajawali/parts/head.png",
+          "sourceCell": [
+            0,
+            0,
+            362,
+            362
+          ],
+          "sheetCell": [
+            0,
+            0,
+            355,
+            355
+          ]
+        },
+        {
+          "name": "torso",
+          "file": "characters/heroes/rajawali/parts/torso.png",
+          "sourceCell": [
+            362,
+            0,
+            724,
+            362
+          ],
+          "sheetCell": [
+            355,
+            0,
+            710,
+            355
+          ]
+        },
+        {
+          "name": "near-upper-arm",
+          "file": "characters/heroes/rajawali/parts/near-upper-arm.png",
+          "sourceCell": [
+            724,
+            0,
+            1086,
+            362
+          ],
+          "sheetCell": [
+            710,
+            0,
+            1065,
+            355
+          ]
+        },
+        {
+          "name": "near-forearm",
+          "file": "characters/heroes/rajawali/parts/near-forearm.png",
+          "sourceCell": [
+            1086,
+            0,
+            1448,
+            362
+          ],
+          "sheetCell": [
+            1065,
+            0,
+            1420,
+            355
+          ]
+        },
+        {
+          "name": "far-upper-arm",
+          "file": "characters/heroes/rajawali/parts/far-upper-arm.png",
+          "sourceCell": [
+            0,
+            362,
+            362,
+            724
+          ],
+          "sheetCell": [
+            0,
+            355,
+            355,
+            710
+          ]
+        },
+        {
+          "name": "far-forearm",
+          "file": "characters/heroes/rajawali/parts/far-forearm.png",
+          "sourceCell": [
+            362,
+            362,
+            724,
+            724
+          ],
+          "sheetCell": [
+            355,
+            355,
+            710,
+            710
+          ]
+        },
+        {
+          "name": "near-thigh",
+          "file": "characters/heroes/rajawali/parts/near-thigh.png",
+          "sourceCell": [
+            724,
+            362,
+            1086,
+            724
+          ],
+          "sheetCell": [
+            710,
+            355,
+            1065,
+            710
+          ]
+        },
+        {
+          "name": "near-shin",
+          "file": "characters/heroes/rajawali/parts/near-shin.png",
+          "sourceCell": [
+            1086,
+            362,
+            1448,
+            724
+          ],
+          "sheetCell": [
+            1065,
+            355,
+            1420,
+            710
+          ]
+        },
+        {
+          "name": "far-thigh",
+          "file": "characters/heroes/rajawali/parts/far-thigh.png",
+          "sourceCell": [
+            0,
+            724,
+            362,
+            1086
+          ],
+          "sheetCell": [
+            0,
+            710,
+            355,
+            1065
+          ]
+        },
+        {
+          "name": "far-shin",
+          "file": "characters/heroes/rajawali/parts/far-shin.png",
+          "sourceCell": [
+            362,
+            724,
+            724,
+            1086
+          ],
+          "sheetCell": [
+            355,
+            710,
+            710,
+            1065
+          ]
+        },
+        {
+          "name": "jetpack",
+          "file": "characters/heroes/rajawali/parts/jetpack.png",
+          "sourceCell": [
+            724,
+            724,
+            1086,
+            1086
+          ],
+          "sheetCell": [
+            710,
+            710,
+            1065,
+            1065
+          ]
+        }
+      ],
+      "logicalHeight": 223
+    },
+    "characters/heroes/rajawali/portrait.png": {
+      "width": 400,
+      "height": 400,
+      "bounds": {
+        "x": 36,
+        "y": 12,
+        "width": 328,
+        "height": 376
+      },
+      "pivot": [
+        200,
+        388
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/master.png": {
+      "width": 723,
+      "height": 760,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 699,
+        "height": 736
+      },
+      "pivot": [
+        362,
+        748
+      ],
+      "alpha": true,
+      "logicalHeight": 223
+    },
+    "characters/heroes/jaring/parts/head.png": {
+      "width": 326,
+      "height": 309,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 301,
+        "height": 284
+      },
+      "pivot": [
+        166,
+        243
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/torso.png": {
+      "width": 281,
+      "height": 345,
+      "bounds": {
+        "x": 14,
+        "y": 13,
+        "width": 254,
+        "height": 319
+      },
+      "pivot": [
+        143,
+        230
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/near-upper-arm.png": {
+      "width": 202,
+      "height": 285,
+      "bounds": {
+        "x": 14,
+        "y": 12,
+        "width": 175,
+        "height": 261
+      },
+      "pivot": [
+        101,
+        59
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/near-forearm.png": {
+      "width": 311,
+      "height": 153,
+      "bounds": {
+        "x": 14,
+        "y": 12,
+        "width": 283,
+        "height": 128
+      },
+      "pivot": [
+        158,
+        35
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/far-upper-arm.png": {
+      "width": 184,
+      "height": 293,
+      "bounds": {
+        "x": 12,
+        "y": 13,
+        "width": 160,
+        "height": 267
+      },
+      "pivot": [
+        92,
+        60
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/far-forearm.png": {
+      "width": 295,
+      "height": 177,
+      "bounds": {
+        "x": 14,
+        "y": 12,
+        "width": 268,
+        "height": 151
+      },
+      "pivot": [
+        150,
+        40
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/near-thigh.png": {
+      "width": 220,
+      "height": 313,
+      "bounds": {
+        "x": 12,
+        "y": 14,
+        "width": 194,
+        "height": 285
+      },
+      "pivot": [
+        106,
+        58
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/near-shin.png": {
+      "width": 242,
+      "height": 328,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 215,
+        "height": 304
+      },
+      "pivot": [
+        104,
+        61
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/far-thigh.png": {
+      "width": 214,
+      "height": 313,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 188,
+        "height": 288
+      },
+      "pivot": [
+        103,
+        58
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/far-shin.png": {
+      "width": 234,
+      "height": 326,
+      "bounds": {
+        "x": 14,
+        "y": 12,
+        "width": 208,
+        "height": 302
+      },
+      "pivot": [
+        100,
+        60
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/net-launcher.png": {
+      "width": 392,
+      "height": 261,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 365,
+        "height": 237
+      },
+      "pivot": [
+        137,
+        152
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts/tool-belt.png": {
+      "width": 341,
+      "height": 227,
+      "bounds": {
+        "x": 14,
+        "y": 13,
+        "width": 315,
+        "height": 202
+      },
+      "pivot": [
+        170,
+        114
+      ],
+      "alpha": true
+    },
+    "characters/heroes/jaring/parts-sheet.png": {
+      "width": 1420,
+      "height": 1065,
+      "bounds": {
+        "x": 30,
+        "y": 31,
+        "width": 1364,
+        "height": 1001
+      },
+      "pivot": [
+        712,
+        1032
+      ],
+      "alpha": true,
+      "sourceSize": [
+        1448,
+        1086
+      ],
+      "sourceParts": [
+        {
+          "name": "head",
+          "file": "characters/heroes/jaring/parts/head.png",
+          "sourceCell": [
+            0,
+            0,
+            362,
+            362
+          ],
+          "sheetCell": [
+            0,
+            0,
+            355,
+            355
+          ]
+        },
+        {
+          "name": "torso",
+          "file": "characters/heroes/jaring/parts/torso.png",
+          "sourceCell": [
+            362,
+            0,
+            724,
+            362
+          ],
+          "sheetCell": [
+            355,
+            0,
+            710,
+            355
+          ]
+        },
+        {
+          "name": "near-upper-arm",
+          "file": "characters/heroes/jaring/parts/near-upper-arm.png",
+          "sourceCell": [
+            724,
+            0,
+            1086,
+            362
+          ],
+          "sheetCell": [
+            710,
+            0,
+            1065,
+            355
+          ]
+        },
+        {
+          "name": "near-forearm",
+          "file": "characters/heroes/jaring/parts/near-forearm.png",
+          "sourceCell": [
+            1086,
+            0,
+            1448,
+            362
+          ],
+          "sheetCell": [
+            1065,
+            0,
+            1420,
+            355
+          ]
+        },
+        {
+          "name": "far-upper-arm",
+          "file": "characters/heroes/jaring/parts/far-upper-arm.png",
+          "sourceCell": [
+            0,
+            362,
+            362,
+            724
+          ],
+          "sheetCell": [
+            0,
+            355,
+            355,
+            710
+          ]
+        },
+        {
+          "name": "far-forearm",
+          "file": "characters/heroes/jaring/parts/far-forearm.png",
+          "sourceCell": [
+            362,
+            362,
+            724,
+            724
+          ],
+          "sheetCell": [
+            355,
+            355,
+            710,
+            710
+          ]
+        },
+        {
+          "name": "near-thigh",
+          "file": "characters/heroes/jaring/parts/near-thigh.png",
+          "sourceCell": [
+            724,
+            362,
+            1086,
+            724
+          ],
+          "sheetCell": [
+            710,
+            355,
+            1065,
+            710
+          ]
+        },
+        {
+          "name": "near-shin",
+          "file": "characters/heroes/jaring/parts/near-shin.png",
+          "sourceCell": [
+            1086,
+            362,
+            1448,
+            724
+          ],
+          "sheetCell": [
+            1065,
+            355,
+            1420,
+            710
+          ]
+        },
+        {
+          "name": "far-thigh",
+          "file": "characters/heroes/jaring/parts/far-thigh.png",
+          "sourceCell": [
+            0,
+            724,
+            362,
+            1086
+          ],
+          "sheetCell": [
+            0,
+            710,
+            355,
+            1065
+          ]
+        },
+        {
+          "name": "far-shin",
+          "file": "characters/heroes/jaring/parts/far-shin.png",
+          "sourceCell": [
+            362,
+            724,
+            686,
+            1086
+          ],
+          "sheetCell": [
+            355,
+            710,
+            673,
+            1065
+          ]
+        },
+        {
+          "name": "net-launcher",
+          "file": "characters/heroes/jaring/parts/net-launcher.png",
+          "sourceCell": [
+            686,
+            724,
+            1086,
+            1086
+          ],
+          "sheetCell": [
+            673,
+            710,
+            1065,
+            1065
+          ]
+        },
+        {
+          "name": "tool-belt",
+          "file": "characters/heroes/jaring/parts/tool-belt.png",
+          "sourceCell": [
+            1086,
+            724,
+            1448,
+            1086
+          ],
+          "sheetCell": [
+            1065,
+            710,
+            1420,
+            1065
+          ]
+        }
+      ],
+      "logicalHeight": 223
+    },
+    "characters/heroes/jaring/portrait.png": {
+      "width": 400,
+      "height": 400,
+      "bounds": {
+        "x": 22,
+        "y": 12,
+        "width": 355,
+        "height": 376
+      },
+      "pivot": [
+        200,
+        388
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/infantry/master.png": {
+      "width": 434,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 410,
+        "height": 536
+      },
+      "pivot": [
+        217,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/infantry/frames/aim.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 47,
+        "y": 31,
+        "width": 294,
+        "height": 381
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/infantry/frames/run-a.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 50,
+        "y": 31,
+        "width": 259,
+        "height": 381
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/infantry/frames/run-b.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 48,
+        "y": 32,
+        "width": 268,
+        "height": 380
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/infantry/frames/knockback.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 27,
+        "y": 12,
+        "width": 316,
+        "height": 400
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/infantry/sheet.png": {
+      "width": 1424,
+      "height": 425,
+      "bounds": {
+        "x": 47,
+        "y": 12,
+        "width": 1364,
+        "height": 400
+      },
+      "pivot": [
+        729,
+        412
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "aim",
+          "frame": [
+            0,
+            0,
+            356,
+            425
+          ],
+          "pivot": [
+            178,
+            413
+          ],
+          "file": "characters/soldiers/infantry/frames/aim.png"
+        },
+        {
+          "name": "run-a",
+          "frame": [
+            356,
+            0,
+            356,
+            425
+          ],
+          "pivot": [
+            178,
+            413
+          ],
+          "file": "characters/soldiers/infantry/frames/run-a.png"
+        },
+        {
+          "name": "run-b",
+          "frame": [
+            712,
+            0,
+            356,
+            425
+          ],
+          "pivot": [
+            178,
+            413
+          ],
+          "file": "characters/soldiers/infantry/frames/run-b.png"
+        },
+        {
+          "name": "knockback",
+          "frame": [
+            1068,
+            0,
+            356,
+            425
+          ],
+          "pivot": [
+            178,
+            413
+          ],
+          "file": "characters/soldiers/infantry/frames/knockback.png"
+        }
+      ],
+      "cellSize": [
+        356,
+        425
+      ],
+      "logicalHeight": 199
+    },
+    "characters/soldiers/bazooka/master.png": {
+      "width": 508,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 484,
+        "height": 536
+      },
+      "pivot": [
+        254,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/bazooka/frames/kneeling-fire.png": {
+      "width": 376,
+      "height": 425,
+      "bounds": {
+        "x": 45,
+        "y": 75,
+        "width": 319,
+        "height": 337
+      },
+      "pivot": [
+        188,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/bazooka/frames/run-a.png": {
+      "width": 376,
+      "height": 425,
+      "bounds": {
+        "x": 36,
+        "y": 45,
+        "width": 315,
+        "height": 368
+      },
+      "pivot": [
+        188,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/bazooka/frames/run-b.png": {
+      "width": 376,
+      "height": 425,
+      "bounds": {
+        "x": 27,
+        "y": 46,
+        "width": 325,
+        "height": 367
+      },
+      "pivot": [
+        188,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/bazooka/frames/knockback.png": {
+      "width": 376,
+      "height": 425,
+      "bounds": {
+        "x": 34,
+        "y": 12,
+        "width": 329,
+        "height": 401
+      },
+      "pivot": [
+        188,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/bazooka/sheet.png": {
+      "width": 1504,
+      "height": 425,
+      "bounds": {
+        "x": 45,
+        "y": 12,
+        "width": 1446,
+        "height": 401
+      },
+      "pivot": [
+        768,
+        413
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "kneeling-fire",
+          "frame": [
+            0,
+            0,
+            376,
+            425
+          ],
+          "pivot": [
+            188,
+            413
+          ],
+          "file": "characters/soldiers/bazooka/frames/kneeling-fire.png"
+        },
+        {
+          "name": "run-a",
+          "frame": [
+            376,
+            0,
+            376,
+            425
+          ],
+          "pivot": [
+            188,
+            413
+          ],
+          "file": "characters/soldiers/bazooka/frames/run-a.png"
+        },
+        {
+          "name": "run-b",
+          "frame": [
+            752,
+            0,
+            376,
+            425
+          ],
+          "pivot": [
+            188,
+            413
+          ],
+          "file": "characters/soldiers/bazooka/frames/run-b.png"
+        },
+        {
+          "name": "knockback",
+          "frame": [
+            1128,
+            0,
+            376,
+            425
+          ],
+          "pivot": [
+            188,
+            413
+          ],
+          "file": "characters/soldiers/bazooka/frames/knockback.png"
+        }
+      ],
+      "cellSize": [
+        376,
+        425
+      ],
+      "logicalHeight": 199
+    },
+    "characters/civilians/office-worker/master.png": {
+      "width": 270,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 246,
+        "height": 536
+      },
+      "pivot": [
+        135,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/office-worker/frames/run-a.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 67,
+        "y": 12,
+        "width": 259,
+        "height": 401
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/office-worker/frames/run-b.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 77,
+        "y": 18,
+        "width": 252,
+        "height": 395
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/office-worker/frames/look-back.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 74,
+        "y": 20,
+        "width": 257,
+        "height": 393
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/office-worker/frames/stumble.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 12,
+        "y": 56,
+        "width": 342,
+        "height": 357
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/office-worker/sheet.png": {
+      "width": 1568,
+      "height": 425,
+      "bounds": {
+        "x": 67,
+        "y": 12,
+        "width": 1463,
+        "height": 401
+      },
+      "pivot": [
+        798,
+        413
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "run-a",
+          "frame": [
+            0,
+            0,
+            392,
+            425
+          ],
+          "pivot": [
+            196,
+            413
+          ],
+          "file": "characters/civilians/office-worker/frames/run-a.png"
+        },
+        {
+          "name": "run-b",
+          "frame": [
+            392,
+            0,
+            392,
+            425
+          ],
+          "pivot": [
+            196,
+            413
+          ],
+          "file": "characters/civilians/office-worker/frames/run-b.png"
+        },
+        {
+          "name": "look-back",
+          "frame": [
+            784,
+            0,
+            392,
+            425
+          ],
+          "pivot": [
+            196,
+            413
+          ],
+          "file": "characters/civilians/office-worker/frames/look-back.png"
+        },
+        {
+          "name": "stumble",
+          "frame": [
+            1176,
+            0,
+            392,
+            425
+          ],
+          "pivot": [
+            196,
+            413
+          ],
+          "file": "characters/civilians/office-worker/frames/stumble.png"
+        }
+      ],
+      "cellSize": [
+        392,
+        425
+      ],
+      "logicalHeight": 199
+    },
+    "characters/civilians/shopper/master.png": {
+      "width": 311,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 287,
+        "height": 536
+      },
+      "pivot": [
+        156,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/shopper/frames/run-a.png": {
+      "width": 380,
+      "height": 425,
+      "bounds": {
+        "x": 80,
+        "y": 12,
+        "width": 280,
+        "height": 400
+      },
+      "pivot": [
+        190,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/shopper/frames/run-b.png": {
+      "width": 380,
+      "height": 425,
+      "bounds": {
+        "x": 66,
+        "y": 18,
+        "width": 290,
+        "height": 395
+      },
+      "pivot": [
+        190,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/shopper/frames/look-back.png": {
+      "width": 380,
+      "height": 425,
+      "bounds": {
+        "x": 63,
+        "y": 24,
+        "width": 284,
+        "height": 389
+      },
+      "pivot": [
+        190,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/shopper/frames/stumble.png": {
+      "width": 380,
+      "height": 425,
+      "bounds": {
+        "x": 12,
+        "y": 49,
+        "width": 337,
+        "height": 364
+      },
+      "pivot": [
+        190,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/shopper/sheet.png": {
+      "width": 1520,
+      "height": 425,
+      "bounds": {
+        "x": 80,
+        "y": 12,
+        "width": 1409,
+        "height": 401
+      },
+      "pivot": [
+        784,
+        413
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "run-a",
+          "frame": [
+            0,
+            0,
+            380,
+            425
+          ],
+          "pivot": [
+            190,
+            413
+          ],
+          "file": "characters/civilians/shopper/frames/run-a.png"
+        },
+        {
+          "name": "run-b",
+          "frame": [
+            380,
+            0,
+            380,
+            425
+          ],
+          "pivot": [
+            190,
+            413
+          ],
+          "file": "characters/civilians/shopper/frames/run-b.png"
+        },
+        {
+          "name": "look-back",
+          "frame": [
+            760,
+            0,
+            380,
+            425
+          ],
+          "pivot": [
+            190,
+            413
+          ],
+          "file": "characters/civilians/shopper/frames/look-back.png"
+        },
+        {
+          "name": "stumble",
+          "frame": [
+            1140,
+            0,
+            380,
+            425
+          ],
+          "pivot": [
+            190,
+            413
+          ],
+          "file": "characters/civilians/shopper/frames/stumble.png"
+        }
+      ],
+      "cellSize": [
+        380,
+        425
+      ],
+      "logicalHeight": 199
+    },
+    "characters/civilians/schoolkid/master.png": {
+      "width": 353,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 14,
+        "width": 329,
+        "height": 534
+      },
+      "pivot": [
+        176,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/schoolkid/frames/run-a.png": {
+      "width": 382,
+      "height": 425,
+      "bounds": {
+        "x": 101,
+        "y": 12,
+        "width": 230,
+        "height": 401
+      },
+      "pivot": [
+        191,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/schoolkid/frames/run-b.png": {
+      "width": 382,
+      "height": 425,
+      "bounds": {
+        "x": 89,
+        "y": 39,
+        "width": 237,
+        "height": 374
+      },
+      "pivot": [
+        191,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/schoolkid/frames/look-back.png": {
+      "width": 382,
+      "height": 425,
+      "bounds": {
+        "x": 99,
+        "y": 20,
+        "width": 241,
+        "height": 393
+      },
+      "pivot": [
+        191,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/schoolkid/frames/stumble.png": {
+      "width": 382,
+      "height": 425,
+      "bounds": {
+        "x": 55,
+        "y": 43,
+        "width": 315,
+        "height": 370
+      },
+      "pivot": [
+        191,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/schoolkid/sheet.png": {
+      "width": 1528,
+      "height": 425,
+      "bounds": {
+        "x": 101,
+        "y": 12,
+        "width": 1415,
+        "height": 401
+      },
+      "pivot": [
+        808,
+        413
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "run-a",
+          "frame": [
+            0,
+            0,
+            382,
+            425
+          ],
+          "pivot": [
+            191,
+            413
+          ],
+          "file": "characters/civilians/schoolkid/frames/run-a.png"
+        },
+        {
+          "name": "run-b",
+          "frame": [
+            382,
+            0,
+            382,
+            425
+          ],
+          "pivot": [
+            191,
+            413
+          ],
+          "file": "characters/civilians/schoolkid/frames/run-b.png"
+        },
+        {
+          "name": "look-back",
+          "frame": [
+            764,
+            0,
+            382,
+            425
+          ],
+          "pivot": [
+            191,
+            413
+          ],
+          "file": "characters/civilians/schoolkid/frames/look-back.png"
+        },
+        {
+          "name": "stumble",
+          "frame": [
+            1146,
+            0,
+            382,
+            425
+          ],
+          "pivot": [
+            191,
+            413
+          ],
+          "file": "characters/civilians/schoolkid/frames/stumble.png"
+        }
+      ],
+      "cellSize": [
+        382,
+        425
+      ],
+      "logicalHeight": 199
+    },
+    "characters/civilians/elder/master.png": {
+      "width": 298,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 274,
+        "height": 536
+      },
+      "pivot": [
+        149,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/elder/frames/run-a.png": {
+      "width": 408,
+      "height": 425,
+      "bounds": {
+        "x": 64,
+        "y": 12,
+        "width": 293,
+        "height": 401
+      },
+      "pivot": [
+        204,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/elder/frames/run-b.png": {
+      "width": 408,
+      "height": 425,
+      "bounds": {
+        "x": 56,
+        "y": 12,
+        "width": 300,
+        "height": 401
+      },
+      "pivot": [
+        204,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/elder/frames/look-back.png": {
+      "width": 408,
+      "height": 425,
+      "bounds": {
+        "x": 44,
+        "y": 18,
+        "width": 325,
+        "height": 395
+      },
+      "pivot": [
+        204,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/elder/frames/stumble.png": {
+      "width": 408,
+      "height": 425,
+      "bounds": {
+        "x": 12,
+        "y": 83,
+        "width": 365,
+        "height": 330
+      },
+      "pivot": [
+        204,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/elder/sheet.png": {
+      "width": 1632,
+      "height": 425,
+      "bounds": {
+        "x": 64,
+        "y": 12,
+        "width": 1537,
+        "height": 401
+      },
+      "pivot": [
+        832,
+        413
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "run-a",
+          "frame": [
+            0,
+            0,
+            408,
+            425
+          ],
+          "pivot": [
+            204,
+            413
+          ],
+          "file": "characters/civilians/elder/frames/run-a.png"
+        },
+        {
+          "name": "run-b",
+          "frame": [
+            408,
+            0,
+            408,
+            425
+          ],
+          "pivot": [
+            204,
+            413
+          ],
+          "file": "characters/civilians/elder/frames/run-b.png"
+        },
+        {
+          "name": "look-back",
+          "frame": [
+            816,
+            0,
+            408,
+            425
+          ],
+          "pivot": [
+            204,
+            413
+          ],
+          "file": "characters/civilians/elder/frames/look-back.png"
+        },
+        {
+          "name": "stumble",
+          "frame": [
+            1224,
+            0,
+            408,
+            425
+          ],
+          "pivot": [
+            204,
+            413
+          ],
+          "file": "characters/civilians/elder/frames/stumble.png"
+        }
+      ],
+      "cellSize": [
+        408,
+        425
+      ],
+      "logicalHeight": 199
+    },
+    "characters/civilians/bakso-vendor/master.png": {
+      "width": 521,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 497,
+        "height": 536
+      },
+      "pivot": [
+        260,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/bakso-vendor/frames/run-a.png": {
+      "width": 374,
+      "height": 425,
+      "bounds": {
+        "x": 32,
+        "y": 13,
+        "width": 312,
+        "height": 400
+      },
+      "pivot": [
+        187,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/bakso-vendor/frames/run-b.png": {
+      "width": 374,
+      "height": 425,
+      "bounds": {
+        "x": 28,
+        "y": 14,
+        "width": 314,
+        "height": 399
+      },
+      "pivot": [
+        187,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/bakso-vendor/frames/look-back.png": {
+      "width": 374,
+      "height": 425,
+      "bounds": {
+        "x": 36,
+        "y": 18,
+        "width": 320,
+        "height": 395
+      },
+      "pivot": [
+        187,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/bakso-vendor/frames/stumble.png": {
+      "width": 374,
+      "height": 425,
+      "bounds": {
+        "x": 33,
+        "y": 44,
+        "width": 329,
+        "height": 369
+      },
+      "pivot": [
+        187,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/bakso-vendor/sheet.png": {
+      "width": 1496,
+      "height": 425,
+      "bounds": {
+        "x": 32,
+        "y": 13,
+        "width": 1452,
+        "height": 400
+      },
+      "pivot": [
+        758,
+        413
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "run-a",
+          "frame": [
+            0,
+            0,
+            374,
+            425
+          ],
+          "pivot": [
+            187,
+            413
+          ],
+          "file": "characters/civilians/bakso-vendor/frames/run-a.png"
+        },
+        {
+          "name": "run-b",
+          "frame": [
+            374,
+            0,
+            374,
+            425
+          ],
+          "pivot": [
+            187,
+            413
+          ],
+          "file": "characters/civilians/bakso-vendor/frames/run-b.png"
+        },
+        {
+          "name": "look-back",
+          "frame": [
+            748,
+            0,
+            374,
+            425
+          ],
+          "pivot": [
+            187,
+            413
+          ],
+          "file": "characters/civilians/bakso-vendor/frames/look-back.png"
+        },
+        {
+          "name": "stumble",
+          "frame": [
+            1122,
+            0,
+            374,
+            425
+          ],
+          "pivot": [
+            187,
+            413
+          ],
+          "file": "characters/civilians/bakso-vendor/frames/stumble.png"
+        }
+      ],
+      "cellSize": [
+        374,
+        425
+      ],
+      "logicalHeight": 199
+    },
+    "characters/soldiers/jeep.png": {
+      "width": 820,
+      "height": 530,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 796,
+        "height": 506
+      },
+      "pivot": [
+        410,
+        518
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/helicopter.png": {
+      "width": 820,
+      "height": 374,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 796,
+        "height": 350
+      },
+      "pivot": [
+        410,
+        362
+      ],
+      "alpha": true
+    },
+    "fx/dust/frames/puff.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 72,
+        "y": 800,
+        "width": 75,
+        "height": 68
+      },
+      "pivot": [
+        110,
+        868
+      ],
+      "alpha": true
+    },
+    "fx/dust/frames/expanding.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 51,
+        "y": 773,
+        "width": 117,
+        "height": 95
+      },
+      "pivot": [
+        110,
+        868
+      ],
+      "alpha": true
+    },
+    "fx/dust/frames/wide.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 23,
+        "y": 741,
+        "width": 174,
+        "height": 127
+      },
+      "pivot": [
+        110,
+        868
+      ],
+      "alpha": true
+    },
+    "fx/dust/frames/dissipating.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 12,
+        "y": 722,
+        "width": 196,
+        "height": 146
+      },
+      "pivot": [
+        110,
+        868
+      ],
+      "alpha": true
+    },
+    "fx/dust/sheet.png": {
+      "width": 880,
+      "height": 880,
+      "bounds": {
+        "x": 72,
+        "y": 722,
+        "width": 796,
+        "height": 146
+      },
+      "pivot": [
+        470,
+        868
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "puff",
+          "frame": [
+            0,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            868
+          ],
+          "file": "fx/dust/frames/puff.png"
+        },
+        {
+          "name": "expanding",
+          "frame": [
+            220,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            868
+          ],
+          "file": "fx/dust/frames/expanding.png"
+        },
+        {
+          "name": "wide",
+          "frame": [
+            440,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            868
+          ],
+          "file": "fx/dust/frames/wide.png"
+        },
+        {
+          "name": "dissipating",
+          "frame": [
+            660,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            868
+          ],
+          "file": "fx/dust/frames/dissipating.png"
+        }
+      ],
+      "cellSize": [
+        220,
+        880
+      ]
+    },
+    "fx/debris/frames/plaster.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 18,
+        "y": 110,
+        "width": 134,
+        "height": 120
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/frames/brick.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 22,
+        "y": 124,
+        "width": 126,
+        "height": 91
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/frames/shutter.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 19,
+        "y": 107,
+        "width": 131,
+        "height": 126
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/frames/bars.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 16,
+        "y": 107,
+        "width": 137,
+        "height": 126
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/frames/roof-tile.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 12,
+        "y": 115,
+        "width": 146,
+        "height": 110
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/frames/glass.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 24,
+        "y": 114,
+        "width": 121,
+        "height": 111
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/frames/plaster-brick.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 12,
+        "y": 112,
+        "width": 145,
+        "height": 115
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/frames/brick-chips.png": {
+      "width": 170,
+      "height": 340,
+      "bounds": {
+        "x": 27,
+        "y": 121,
+        "width": 116,
+        "height": 98
+      },
+      "pivot": [
+        85,
+        170
+      ],
+      "alpha": true
+    },
+    "fx/debris/sheet.png": {
+      "width": 680,
+      "height": 680,
+      "bounds": {
+        "x": 12,
+        "y": 107,
+        "width": 651,
+        "height": 460
+      },
+      "pivot": [
+        338,
+        567
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "plaster",
+          "frame": [
+            0,
+            0,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/plaster.png"
+        },
+        {
+          "name": "brick",
+          "frame": [
+            170,
+            0,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/brick.png"
+        },
+        {
+          "name": "shutter",
+          "frame": [
+            340,
+            0,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/shutter.png"
+        },
+        {
+          "name": "bars",
+          "frame": [
+            510,
+            0,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/bars.png"
+        },
+        {
+          "name": "roof-tile",
+          "frame": [
+            0,
+            340,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/roof-tile.png"
+        },
+        {
+          "name": "glass",
+          "frame": [
+            170,
+            340,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/glass.png"
+        },
+        {
+          "name": "plaster-brick",
+          "frame": [
+            340,
+            340,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/plaster-brick.png"
+        },
+        {
+          "name": "brick-chips",
+          "frame": [
+            510,
+            340,
+            170,
+            340
+          ],
+          "pivot": [
+            85,
+            170
+          ],
+          "file": "fx/debris/frames/brick-chips.png"
+        }
+      ],
+      "cellSize": [
+        170,
+        340
+      ]
+    },
+    "fx/explosion/frames/flash.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 63,
+        "y": 389,
+        "width": 93,
+        "height": 101
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/explosion/frames/burst.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 12,
+        "y": 349,
+        "width": 196,
+        "height": 181
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/explosion/frames/embers.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 13,
+        "y": 361,
+        "width": 194,
+        "height": 157
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/explosion/frames/wisps.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 59,
+        "y": 382,
+        "width": 102,
+        "height": 116
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/explosion/sheet.png": {
+      "width": 880,
+      "height": 880,
+      "bounds": {
+        "x": 63,
+        "y": 349,
+        "width": 758,
+        "height": 181
+      },
+      "pivot": [
+        442,
+        530
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "flash",
+          "frame": [
+            0,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/explosion/frames/flash.png"
+        },
+        {
+          "name": "burst",
+          "frame": [
+            220,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/explosion/frames/burst.png"
+        },
+        {
+          "name": "embers",
+          "frame": [
+            440,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/explosion/frames/embers.png"
+        },
+        {
+          "name": "wisps",
+          "frame": [
+            660,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/explosion/frames/wisps.png"
+        }
+      ],
+      "cellSize": [
+        220,
+        880
+      ]
+    },
+    "fx/flame/frames/flame-01.png": {
+      "width": 142,
+      "height": 568,
+      "bounds": {
+        "x": 12,
+        "y": 433,
+        "width": 118,
+        "height": 123
+      },
+      "pivot": [
+        71,
+        556
+      ],
+      "alpha": true
+    },
+    "fx/flame/frames/flame-02.png": {
+      "width": 142,
+      "height": 568,
+      "bounds": {
+        "x": 12,
+        "y": 409,
+        "width": 118,
+        "height": 147
+      },
+      "pivot": [
+        71,
+        556
+      ],
+      "alpha": true
+    },
+    "fx/flame/frames/flame-03.png": {
+      "width": 142,
+      "height": 568,
+      "bounds": {
+        "x": 12,
+        "y": 400,
+        "width": 118,
+        "height": 155
+      },
+      "pivot": [
+        71,
+        556
+      ],
+      "alpha": true
+    },
+    "fx/flame/frames/flame-04.png": {
+      "width": 142,
+      "height": 568,
+      "bounds": {
+        "x": 12,
+        "y": 421,
+        "width": 117,
+        "height": 135
+      },
+      "pivot": [
+        71,
+        556
+      ],
+      "alpha": true
+    },
+    "fx/flame/sheet.png": {
+      "width": 568,
+      "height": 568,
+      "bounds": {
+        "x": 12,
+        "y": 400,
+        "width": 543,
+        "height": 156
+      },
+      "pivot": [
+        284,
+        556
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "flame-01",
+          "frame": [
+            0,
+            0,
+            142,
+            568
+          ],
+          "pivot": [
+            71,
+            556
+          ],
+          "file": "fx/flame/frames/flame-01.png"
+        },
+        {
+          "name": "flame-02",
+          "frame": [
+            142,
+            0,
+            142,
+            568
+          ],
+          "pivot": [
+            71,
+            556
+          ],
+          "file": "fx/flame/frames/flame-02.png"
+        },
+        {
+          "name": "flame-03",
+          "frame": [
+            284,
+            0,
+            142,
+            568
+          ],
+          "pivot": [
+            71,
+            556
+          ],
+          "file": "fx/flame/frames/flame-03.png"
+        },
+        {
+          "name": "flame-04",
+          "frame": [
+            426,
+            0,
+            142,
+            568
+          ],
+          "pivot": [
+            71,
+            556
+          ],
+          "file": "fx/flame/frames/flame-04.png"
+        }
+      ],
+      "cellSize": [
+        142,
+        568
+      ]
+    },
+    "fx/projectiles/frames/bullet.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 51,
+        "y": 425,
+        "width": 117,
+        "height": 30
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/projectiles/frames/rocket.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 12,
+        "y": 389,
+        "width": 196,
+        "height": 102
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/projectiles/frames/laser.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 30,
+        "y": 414,
+        "width": 160,
+        "height": 53
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/projectiles/frames/net-capsule.png": {
+      "width": 220,
+      "height": 880,
+      "bounds": {
+        "x": 42,
+        "y": 396,
+        "width": 146,
+        "height": 87
+      },
+      "pivot": [
+        110,
+        440
+      ],
+      "alpha": true
+    },
+    "fx/projectiles/sheet.png": {
+      "width": 880,
+      "height": 880,
+      "bounds": {
+        "x": 51,
+        "y": 389,
+        "width": 797,
+        "height": 102
+      },
+      "pivot": [
+        450,
+        491
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "bullet",
+          "frame": [
+            0,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/projectiles/frames/bullet.png"
+        },
+        {
+          "name": "rocket",
+          "frame": [
+            220,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/projectiles/frames/rocket.png"
+        },
+        {
+          "name": "laser",
+          "frame": [
+            440,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/projectiles/frames/laser.png"
+        },
+        {
+          "name": "net-capsule",
+          "frame": [
+            660,
+            0,
+            220,
+            880
+          ],
+          "pivot": [
+            110,
+            440
+          ],
+          "file": "fx/projectiles/frames/net-capsule.png"
+        }
+      ],
+      "cellSize": [
+        220,
+        880
+      ]
+    },
+    "fx/steel-net.png": {
+      "width": 650,
+      "height": 650,
+      "bounds": {
+        "x": 12,
+        "y": 189,
+        "width": 625,
+        "height": 449
+      },
+      "pivot": [
+        324,
+        638
+      ],
+      "alpha": true
+    },
+    "ui/hud/frames/health.png": {
+      "width": 145,
+      "height": 140,
+      "bounds": {
+        "x": 14,
+        "y": 18,
+        "width": 117,
+        "height": 104
+      },
+      "pivot": [
+        72,
+        70
+      ],
+      "alpha": true
+    },
+    "ui/hud/frames/rage.png": {
+      "width": 145,
+      "height": 140,
+      "bounds": {
+        "x": 12,
+        "y": 12,
+        "width": 121,
+        "height": 116
+      },
+      "pivot": [
+        72,
+        70
+      ],
+      "alpha": true
+    },
+    "ui/hud/frames/destruction.png": {
+      "width": 145,
+      "height": 140,
+      "bounds": {
+        "x": 13,
+        "y": 12,
+        "width": 118,
+        "height": 115
+      },
+      "pivot": [
+        72,
+        70
+      ],
+      "alpha": true
+    },
+    "ui/hud/sheet.png": {
+      "width": 435,
+      "height": 140,
+      "bounds": {
+        "x": 14,
+        "y": 12,
+        "width": 407,
+        "height": 116
+      },
+      "pivot": [
+        218,
+        128
+      ],
+      "alpha": true,
+      "frames": [
+        {
+          "name": "health",
+          "frame": [
+            0,
+            0,
+            145,
+            140
+          ],
+          "pivot": [
+            72,
+            70
+          ],
+          "file": "ui/hud/frames/health.png"
+        },
+        {
+          "name": "rage",
+          "frame": [
+            145,
+            0,
+            145,
+            140
+          ],
+          "pivot": [
+            72,
+            70
+          ],
+          "file": "ui/hud/frames/rage.png"
+        },
+        {
+          "name": "destruction",
+          "frame": [
+            290,
+            0,
+            145,
+            140
+          ],
+          "pivot": [
+            72,
+            70
+          ],
+          "file": "ui/hud/frames/destruction.png"
+        }
+      ],
+      "cellSize": [
+        145,
+        140
+      ]
+    },
+    "backgrounds/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 900
+      },
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "bounds": {
+        "x": 0,
+        "y": 13,
+        "width": 1600,
+        "height": 282
+      },
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "bounds": {
+        "x": 0,
+        "y": 13,
+        "width": 1600,
+        "height": 226
+      },
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/street.png": {
+      "width": 1600,
+      "height": 214,
+      "bounds": {
+        "x": 0,
+        "y": 13,
+        "width": 1600,
+        "height": 201
+      },
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true
+    }
+  },
+  "missing": [],
+  "review": [],
+  "scale": {
+    "rexHeight": 938,
+    "civilianHeight": 199,
+    "heroHeight": 223
+  }
+}
