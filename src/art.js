@@ -80,6 +80,8 @@ export class Art {
         this.meta[path+'.png']={width,height,pivot:[px,py],scale:definition.scale||1,alpha:true};
         this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
       }
+      // The sheet is only needed for slicing; dropping it frees about 6 MB per atlas.
+      this.images.delete(definition.path);source.close?.();
     }
   }
   part(c,path,x,y,width,angle=0){
