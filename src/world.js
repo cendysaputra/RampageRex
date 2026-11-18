@@ -21,11 +21,15 @@ export function moduleState(m){
 function overlap(a,b){return a.l<=b.r && a.r>=b.l && a.t<=b.b && a.b>=b.t}
 function box(x,y,w,h){return {l:x-w/2,r:x+w/2,t:y-h,b:y}}
 function range(a,b){return a+Math.random()*(b-a)}
+// Filters in place so the per-frame cleanup does not allocate new arrays.
+function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
+// Frame-rate independent easing factor for a given response rate.
+const ease=(rate,dt)=>1-Math.exp(-rate*dt);
 const groundRise={ground:433,upper:337,roof:269};
 export class World {
   constructor(level,index){
     this.level=level;this.index=index;this.time=0;this.score=0;this.lost=0;this.total=0;
-    this.rex={x:level.start,dir:1,hp:1000,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false};
+    this.rex={x:level.start,dir:1,hp:1000,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0};
     this.buildings=level.buildings.map(b=>{
       let y=-65;
       const modules=['ground',...Array(b.upper).fill('upper'),'roof'].map(type=>{
@@ -36,7 +40,7 @@ export class World {
       return {...b,modules,evacuated:false};
     });
     this.enemies=[];this.civilians=[];this.shots=[];this.effects=[];this.events=[];
-    this.triggered=new Set();this.spawnTime=1;this.enemyCount=0;this.camera=0;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
+    this.triggered=new Set();this.spawnTime=1;this.enemyCount=0;this.camera=0;this.look=1;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
   }
   get percent(){return 100*this.lost/this.total}
@@ -154,16 +158,30 @@ export class World {
     if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say('RAGE MODE · Damage ×2 selama 8 detik!',2.4);this.sound('roar')}
     const move=Number(input.has('right'))-Number(input.has('left'));
     p.moving=!!move&&p.stun<=0&&(!p.attack||p.attack.key==='bite');
-    if(p.moving){p.dir=move;p.x=clamp(p.x+move*dt*(p.slow>0?155:365),115,this.level.length-120);p.walk+=dt*8;this.stepTime+=dt;
-      if(this.stepTime>.44){this.stepTime=0;this.shake=Math.max(this.shake,2);this.sound('step')}}
-    for(const key of ['bite','tail','stomp','roar'])if(input.has(key)){this.startAttack(key);break}
+    if(p.moving)p.dir=move;
+    // Rex eases into and out of his walk instead of snapping to full speed.
+    p.vx+=((p.moving?move*(p.slow>0?155:365):0)-p.vx)*ease(p.moving?12:16,dt);
+    if(!p.moving&&Math.abs(p.vx)<3)p.vx=0;
+    if(p.vx){
+      const x=clamp(p.x+p.vx*dt,115,this.level.length-120);if(x===p.x)p.vx=0;p.x=x;
+      const pace=Math.abs(p.vx)/365;p.walk+=dt*8*pace;this.stepTime+=dt*pace;
+      if(this.stepTime>.44){this.stepTime=0;this.shake=Math.max(this.shake,2);this.sound('step')}
+    }
+    p.stride=clamp(Math.abs(p.vx)/150,0,1);
+    // An attack pressed slightly early is held briefly and fires as soon as Rex is free.
+    for(const key of ['bite','tail','stomp','roar'])if(input.has(key)){p.queued=key;p.queuedUntil=this.time+.25;break}
+    if(p.queued){
+      if(this.time>p.queuedUntil)p.queued=null;
+      else if(!p.attack&&p.stun<=0){this.startAttack(p.queued);p.queued=null}
+    }
     if(p.attack){const a=p.attack;a.age+=dt;if(!a.done&&a.age>=a.impact){a.done=true;this.strike(a)}if(a.age>=a.duration)p.attack=null}
-    this.camera+=(clamp(p.x-this.view*.44,0,Math.max(0,this.level.length-this.view))-this.camera)*Math.min(1,dt*6);
+    this.look+=(p.dir-this.look)*ease(1.6,dt);
+    this.camera+=(clamp(p.x-this.view*(.5-.06*this.look),0,Math.max(0,this.level.length-this.view))-this.camera)*ease(6,dt);
     for(const [i,w] of this.level.bosses.entries())if(!this.triggered.has(i)&&this.percent+.0001>=w.at){
       this.triggered.add(i);this.spawn(w.type,p.x+(p.x>this.level.length-900?-1:1)*(460+i*140));this.say(heroNames[w.type]+' datang! '+hints[w.type],4);this.sound('alarm');
     }
     this.spawnTime-=dt;
-    if(this.spawnTime<=0&&this.enemies.filter(e=>!e.hero&&e.type!=='turret').length<7){
+    if(this.spawnTime<=0&&this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0)<7){
       const pool=['infantry'];if(this.percent>=30)pool.push('bazooka');if(this.percent>=50)pool.push('jeep');if(this.percent>=70)pool.push('helicopter');
       const side=(this.enemyCount%3===2?-1:1);const target=p.x+side*(this.view*.49);
       const spawn=this.level.spawns.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a);
@@ -187,15 +205,15 @@ export class World {
       }
       if(e.hero)e.x=clamp(e.x,60,this.level.length-60);
     }
-    this.enemies=this.enemies.filter(e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
+    keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
       if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:2,rocket:13,laser:9,net:4}[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
-    this.shots=this.shots.filter(s=>s.life>0);
+    keep(this.shots,s=>s.life>0);
     for(const c of this.civilians)c.x+=c.dir*c.speed*dt;
-    this.civilians=this.civilians.filter(c=>c.x>this.camera-170&&c.x<this.camera+this.view+170);
+    keep(this.civilians,c=>c.x>this.camera-170&&c.x<this.camera+this.view+170);
     for(const f of this.effects){f.life-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.kind==='debris'||f.kind==='decor')f.vy+=880*dt}
-    this.effects=this.effects.filter(f=>f.life>0);this.shake=Math.max(0,this.shake-dt*25);
+    keep(this.effects,f=>f.life>0);this.shake=Math.max(0,this.shake-dt*25);
     for(const b of this.buildings)for(const m of b.modules)m.fall=Math.max(0,m.fall-dt);
     if(p.hp<=0)this.status='lost';
     else if(this.percent+.0001>=this.level.target&&this.triggered.size>0&&!this.enemies.some(e=>e.hero))this.status='won';
