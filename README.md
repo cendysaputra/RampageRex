@@ -122,6 +122,8 @@ Game memuat salinan WebP dari gambar di `assets/` (lihat `imageFormat` di `asset
 
 Renderer memangkas ruang transparan saat decode berdasarkan `bounds` di manifest, lalu menggambar dengan pivot asli. Perbarui bounds dan pivot jika bentuk aset berubah. Latar disiapkan ulang saat ukuran layar berubah; langit dan jalan mempertahankan proporsinya pada layar portrait.
 
+Huruf UI memakai Bangers (judul dan seruan) dan Baloo 2 (teks), keduanya berlisensi SIL Open Font License 1.1. File huruf dan lisensinya ada di `assets/fonts/`.
+
 Rex digambar dari pose di `assets/characters/rex/animations/`; catatan pembuatannya ada di [README folder itu](assets/characters/rex/animations/README.md).
 
 ## ✅ Pemeriksaan
