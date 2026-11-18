@@ -16,3 +16,7 @@ Dari root repo, jalankan `python -m http.server 8000`, lalu buka `http://localho
 | Esc atau P | Jeda |
 
 Di layar sentuh, gunakan tombol arah dan aksi. Rekor tersimpan di browser. Pengaturan empat distrik ada di `data/levels/`.
+
+## Aset
+
+Game memuat salinan WebP dari gambar di `assets/` (lihat `imageFormat` di `assets/manifest.json`). File PNG tetap disimpan sebagai sumber. Setelah menambah atau mengubah PNG, jalankan `python tools/to-webp.py` dari root repo (butuh Pillow) untuk membuat ulang salinan WebP-nya.

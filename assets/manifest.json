@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "imageFormat": "webp",
   "theme": "Ruko Senja",
   "boundsFormat": "x, y, width, height",
   "pivotUnits": "pixels from image top-left",
