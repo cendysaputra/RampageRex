@@ -1,0 +1,218 @@
+{
+  "name": "Pelabuhan",
+  "setting": "port",
+  "target": 75,
+  "bosses": [
+    {
+      "at": 75,
+      "type": "jaring"
+    }
+  ],
+  "length": 15150,
+  "start": 380,
+  "buildings": [
+    {
+      "x": 760,
+      "width": 540,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 1560,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 2510,
+      "width": 500,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 3095,
+      "width": 430,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 3825,
+      "width": 540,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 4625,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 5575,
+      "width": 500,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 6160,
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 6890,
+      "width": 540,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 7690,
+      "width": 470,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 8640,
+      "width": 500,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 9225,
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 9955,
+      "width": 540,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 10755,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 11705,
+      "width": 500,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 12290,
+      "width": 430,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 13020,
+      "width": 540,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 13820,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    }
+  ],
+  "props": [
+    {
+      "x": 463.0,
+      "type": "tree"
+    },
+    {
+      "x": 1301.5,
+      "type": "tent-stall"
+    },
+    {
+      "x": 2235.0,
+      "type": "food-cart"
+    },
+    {
+      "x": 2858.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 3528.0,
+      "type": "billboard"
+    },
+    {
+      "x": 4366.5,
+      "type": "angkot"
+    },
+    {
+      "x": 5300.0,
+      "type": "electric-pole"
+    },
+    {
+      "x": 5923.5,
+      "type": "tree"
+    },
+    {
+      "x": 6593.0,
+      "type": "tent-stall"
+    },
+    {
+      "x": 7431.5,
+      "type": "food-cart"
+    },
+    {
+      "x": 8365.0,
+      "type": "electric-pole"
+    },
+    {
+      "x": 8988.5,
+      "type": "billboard"
+    },
+    {
+      "x": 9658.0,
+      "type": "angkot"
+    },
+    {
+      "x": 10496.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 11430.0,
+      "type": "tree"
+    },
+    {
+      "x": 12053.5,
+      "type": "tent-stall"
+    },
+    {
+      "x": 12723.0,
+      "type": "food-cart"
+    },
+    {
+      "x": 13561.5,
+      "type": "electric-pole"
+    }
+  ],
+  "spawns": [
+    1040,
+    1320,
+    2270,
+    2855,
+    3585,
+    4385,
+    5335,
+    5920,
+    6650,
+    7450,
+    8400,
+    8985,
+    9715,
+    10515,
+    11465,
+    12050,
+    12780,
+    13580,
+    14530
+  ]
+}

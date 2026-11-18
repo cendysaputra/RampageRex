@@ -1,0 +1,196 @@
+{
+  "name": "Jalan Ruko",
+  "setting": "ruko",
+  "target": 60,
+  "bosses": [
+    {
+      "at": 25,
+      "type": "perisai"
+    }
+  ],
+  "length": 13400,
+  "start": 380,
+  "buildings": [
+    {
+      "x": 760,
+      "width": 500,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 1520,
+      "width": 430,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 2430,
+      "width": 540,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 3055,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 3825,
+      "width": 500,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 4585,
+      "width": 430,
+      "upper": 2,
+      "color": "mint"
+    },
+    {
+      "x": 5495,
+      "width": 540,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 6120,
+      "width": 470,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 6890,
+      "width": 500,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 7650,
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 8560,
+      "width": 540,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 9185,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 9955,
+      "width": 500,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 10715,
+      "width": 430,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 11625,
+      "width": 540,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 12250,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    }
+  ],
+  "props": [
+    {
+      "x": 485.0,
+      "type": "angkot"
+    },
+    {
+      "x": 1283.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 2133.0,
+      "type": "tree"
+    },
+    {
+      "x": 2796.5,
+      "type": "tent-stall"
+    },
+    {
+      "x": 3550.0,
+      "type": "food-cart"
+    },
+    {
+      "x": 4348.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 5198.0,
+      "type": "billboard"
+    },
+    {
+      "x": 5861.5,
+      "type": "angkot"
+    },
+    {
+      "x": 6615.0,
+      "type": "electric-pole"
+    },
+    {
+      "x": 7413.5,
+      "type": "tree"
+    },
+    {
+      "x": 8263.0,
+      "type": "tent-stall"
+    },
+    {
+      "x": 8926.5,
+      "type": "food-cart"
+    },
+    {
+      "x": 9680.0,
+      "type": "electric-pole"
+    },
+    {
+      "x": 10478.5,
+      "type": "billboard"
+    },
+    {
+      "x": 11328.0,
+      "type": "angkot"
+    },
+    {
+      "x": 11991.5,
+      "type": "electric-pole"
+    }
+  ],
+  "spawns": [
+    1040,
+    1280,
+    2190,
+    2815,
+    3585,
+    4345,
+    5255,
+    5880,
+    6650,
+    7410,
+    8320,
+    8945,
+    9715,
+    10475,
+    11385,
+    12010,
+    12780
+  ]
+}
