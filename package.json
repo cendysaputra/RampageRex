@@ -1,6 +1,8 @@
 {
   "name": "rampage-rex",
   "private": true,
+  "license": "MIT",
+  "author": "Cendy Saputra",
   "type": "module",
   "scripts": {
     "check": "node tools/check-motion.mjs"
