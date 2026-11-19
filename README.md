@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/characters/rex/master.webp" alt="Rex, dinosaurus hijau berpelat punggung oranye" width="620">
+<img src="assets/characters/rex/master.webp" alt="Rex, dinosaurus merah berpelat punggung oranye" width="620">
 
 # <img src="assets/ui/hud/frames/rage.png" alt="" width="36"> Rampage Rex
 
