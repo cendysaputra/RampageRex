@@ -149,3 +149,6 @@ Jalankan `npm run check` (atau `node tools/check-motion.mjs`) dengan Node.js 16 
 Untuk pemeriksaan browser, jalankan server lokal lalu `node tools/preview-browser.mjs` dari environment yang menyediakan Playwright dan Chromium. Jika Playwright terpasang di luar repo, arahkan variabel `PLAYWRIGHT_PATH` ke file `index.mjs` paket tersebut. `REX_URL` dapat mengganti alamat server, dan `REX_PREVIEW_DIR` dapat mengganti lokasi hasil. Secara default, screenshot dan `results.json` disimpan dalam folder `rampage-rex-preview` di direktori temporer sistem.
 
 Hasil pemeriksaan perubahan gambar dan animasi dicatat di [docs/animation-checks.md](docs/animation-checks.md).
+
+## 📄 Lisensi
+Kode dan aset game ini berlisensi [MIT](LICENSE) © 2026 Cendy Saputra, kecuali huruf di `assets/fonts/` yang tetap memakai SIL Open Font License 1.1.
