@@ -42,7 +42,7 @@ function menu(){
 }
 // Cara main
 function help(){screen='help';modal('Cara main',
-  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
+  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik. Pahlawan juga punya ulti: saat banner birunya muncul, bersiaplah, lalu balas ketika mereka kelelahan. Ulti Rex bisa menggagalkan ulti pahlawan.</p>',
   [['Kembali',menu]]);
 }
 // Kartu distrik
