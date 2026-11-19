@@ -39,6 +39,8 @@ function box(x,y,w,h){return {l:x-w/2,r:x+w/2,t:y-h,b:y}}
 function range(a,b){return a+Math.random()*(b-a)}
 // Saring daftar
 function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
+const propHitboxes={'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
+  billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
 // Formasi pahlawan: Perisai di depan, Rajawali di udara, Jaring memotong jalan mundur
 const flank={perisai:520,rajawali:780,jaring:-600};
@@ -65,6 +67,7 @@ export class World {
       });
       return {...b,modules,evacuated:false};
     });
+    this.props=(level.props||[]).map(prop=>({...prop,hp:150}));
     this.enemies=[];this.civilians=[];this.shots=[];this.effects=[];this.events=[];
     this.triggered=new Set();this.spawnTime=3;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
     // Musuh makin keras di distrik berikutnya
@@ -105,6 +108,12 @@ export class World {
       if(!m.hp){m.fall=.6;if(i+1<b.modules.length)this.damageModule(b,i+1,Infinity)}
     }
   }
+  damageProp(prop,damage){
+    if(prop.hp<=0)return;
+    prop.hp=Math.max(0,prop.hp-damage);
+    this.fx('dust',prop.x,-46,prop.hp?1:2);
+    this.sound(prop.hp?'crack':'collapse');
+  }
   // Munculkan musuh
   spawn(type,x){
     const hero=type in heroNames;
@@ -139,6 +148,10 @@ export class World {
     const [u,v]=a.range.map(n=>p.x+n*p.dir);
     const hitbox={l:Math.min(u,v),r:Math.max(u,v),t:a.height[0],b:a.height[1]};
     const damage=a.damage*(p.fury>0?2:1);
+    for(const prop of this.props){
+      const [width,height]=propHitboxes[prop.type];
+      if(overlap(hitbox,box(prop.x,-46,width,height)))this.damageProp(prop,damage);
+    }
     for(const b of this.buildings){
       if(b.x+b.width/2<hitbox.l||b.x-b.width/2>hitbox.r)continue;
       // Pilih lantai
@@ -171,6 +184,7 @@ export class World {
   // Gempa ulti
   quake(damage){
     const p=this.rex,left=this.camera-60,right=this.camera+this.view+60;
+    for(const prop of this.props)if(prop.x>=left&&prop.x<=right)this.damageProp(prop,damage);
     this.shake=24;this.sound('collapse');this.quakeAt=this.time;
     for(const b of this.buildings){
       if(b.x+b.width/2<left||b.x-b.width/2>right)continue;

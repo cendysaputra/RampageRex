@@ -2875,6 +2875,156 @@
       "alpha": true,
       "repeatX": true,
       "ground": "#2e2121"
+    },
+    "props/angkot-damaged.png": {
+      "width": 426,
+      "height": 221,
+      "alpha": true,
+      "pivot": [
+        213.0,
+        221
+      ],
+      "scale": 0.96842
+    },
+    "props/electric-pole-damaged.png": {
+      "width": 350,
+      "height": 413,
+      "alpha": true,
+      "pivot": [
+        175.0,
+        413
+      ],
+      "scale": 0.77966
+    },
+    "props/food-cart-damaged.png": {
+      "width": 408,
+      "height": 339,
+      "alpha": true,
+      "pivot": [
+        204.0,
+        339
+      ],
+      "scale": 0.96842
+    },
+    "props/billboard-damaged.png": {
+      "width": 397,
+      "height": 433,
+      "alpha": true,
+      "pivot": [
+        198.5,
+        433
+      ],
+      "scale": 0.96717
+    },
+    "props/tree-damaged.png": {
+      "width": 403,
+      "height": 399,
+      "alpha": true,
+      "pivot": [
+        201.5,
+        399
+      ],
+      "scale": 0.96842
+    },
+    "props/tent-stall-damaged.png": {
+      "width": 418,
+      "height": 293,
+      "alpha": true,
+      "pivot": [
+        209.0,
+        293
+      ],
+      "scale": 0.96842
+    },
+    "props/angkot-wreck.png": {
+      "width": 465,
+      "height": 161,
+      "alpha": true,
+      "pivot": [
+        232.5,
+        161
+      ],
+      "scale": 0.96842
+    },
+    "props/electric-pole-wreck.png": {
+      "width": 461,
+      "height": 154,
+      "alpha": true,
+      "pivot": [
+        230.5,
+        154
+      ],
+      "scale": 1.0
+    },
+    "props/food-cart-wreck.png": {
+      "width": 479,
+      "height": 204,
+      "alpha": true,
+      "pivot": [
+        239.5,
+        204
+      ],
+      "scale": 0.96842
+    },
+    "props/billboard-wreck.png": {
+      "width": 480,
+      "height": 222,
+      "alpha": true,
+      "pivot": [
+        240.0,
+        222
+      ],
+      "scale": 0.96717
+    },
+    "props/tree-wreck.png": {
+      "width": 470,
+      "height": 203,
+      "alpha": true,
+      "pivot": [
+        235.0,
+        203
+      ],
+      "scale": 0.96842
+    },
+    "props/tent-stall-wreck.png": {
+      "width": 489,
+      "height": 198,
+      "alpha": true,
+      "pivot": [
+        244.5,
+        198
+      ],
+      "scale": 0.96842
+    },
+    "props/street-lamp.png": {
+      "width": 289,
+      "height": 642,
+      "pivot": [
+        63,
+        642
+      ],
+      "alpha": true,
+      "scale": 0.99655
+    },
+    "props/street-lamp-damaged.png": {
+      "width": 421,
+      "height": 501,
+      "pivot": [
+        79,
+        501
+      ],
+      "alpha": true,
+      "scale": 1.45172
+    },
+    "props/street-lamp-wreck.png": {
+      "width": 742,
+      "height": 133,
+      "pivot": [
+        64,
+        133
+      ],
+      "alpha": true,
+      "scale": 2.55862
     }
   },
   "missing": [],

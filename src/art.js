@@ -2,7 +2,7 @@ import { clamp, moduleState } from './world.js';
 import { attackPose, smooth } from './motion.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
-const propWidths={'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
+const propWidths={'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
 const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64,samples=1.6;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
@@ -260,7 +260,11 @@ export class Renderer {
         a.part(c,path,b.x,y,b.width*984/960);
       }
     }
-    for(const prop of g.level.props){if(visible(prop.x))a.sprite(c,'props/'+prop.type,prop.x,-46,propWidths[prop.type])}
+    for(const prop of g.props){
+      if(!visible(prop.x))continue;
+      const suffix=prop.hp===0?'-wreck':prop.hp<150?'-damaged':'';
+      a.sprite(c,'props/'+prop.type+suffix,prop.x,-46,propWidths[prop.type]);
+    }
     const shadow=(x,y,w)=>{c.fillStyle='#0c211e51';c.beginPath();c.ellipse(x,y,w,Math.max(5,w*.07),0,0,Math.PI*2);c.fill()};
     // Musuh
     for(const e of g.enemies){if(!visible(e.x))continue;
