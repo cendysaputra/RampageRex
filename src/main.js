@@ -15,7 +15,7 @@ function getSaved(key,def){try{return localStorage.getItem(key)??def}catch{retur
 function save(key,value){try{localStorage.setItem(key,value)}catch{}}
 let record=Number(getSaved('rex.best',0))||0;snd.enabled=getSaved('rex.sound','on')==='on';
 // Label suara
-function soundLabel(){const btn=document.querySelector('.audio');btn.textContent=snd.enabled?'Suara: nyala':'Suara: mati';btn.setAttribute('aria-pressed',String(snd.enabled))}
+function soundLabel(){const btn=document.querySelector('.audio');btn.querySelector('span').textContent=snd.enabled?'Suara nyala':'Suara mati';btn.setAttribute('aria-pressed',String(snd.enabled))}
 // Ganti suara
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
@@ -42,7 +42,7 @@ function menu(){
 }
 // Cara main
 function help(){screen='help';modal('Cara main',
-  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
+  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p><p>Tiga penjaga selalu datang bersama. Saat panel ulti mereka muncul, raung untuk menggagalkannya.</p>',
   [['Kembali',menu]]);
 }
 // Kartu distrik
@@ -101,17 +101,21 @@ function updateHud(){
   fill('rage',p.fury>0?p.fury/8:p.rage/100);text('rage-text',p.fury>0?Math.ceil(p.fury)+' dtk':Math.floor(p.rage));
   text('district','Distrik '+(levelIndex+1)+' · '+world.level.name);
   text('destruction',Math.floor(world.percent)+'% / '+world.level.target+'%');
+  fill('destroyed',Math.min(1,world.percent/100));
+  const goal=world.level.target+'%';if(shown.get('goal')!==goal){shown.set('goal',goal);el('goal').style.left=goal}
+  const fury=p.fury>0;if(shown.get('fury')!==fury){shown.set('fury',fury);el('hp').closest('.player-card').toggleAttribute('data-fury',fury)}
   let next='',names='';
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+heroNames[e.type]}
   text('objective',names?'Kalahkan '+names:world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan');
   if(next!==bossKey){bossKey=next;el('bosses').replaceChildren(...world.enemies.filter(e=>e.hero).map(e=>{
-    const card=document.createElement('div');card.innerHTML='<strong>'+heroNames[e.type]+'</strong><div class="meter"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
+    const card=document.createElement('div');card.innerHTML='<img src="./assets/characters/heroes/'+e.type+'/portrait.webp" alt="" width="40" height="40"><strong>'+heroNames[e.type]+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
   }))}
   text('notice',world.time<world.messageUntil?world.message:'');
   // Indikator cooldown
   for(const node of skillNodes){
     const key=node.dataset.skill,left=p.cd[key],value=(Math.ceil(left/cooldowns[key]*50)/50).toFixed(2);
     if(shown.get(node)!==value){shown.set(node,value);node.style.setProperty('--cd',value);node.toggleAttribute('data-cooling',left>0)}
+    const seconds=left>0?String(Math.ceil(left)):'';if(node.dataset.left!==seconds)node.dataset.left=seconds;
   }
 }
 // Loop utama

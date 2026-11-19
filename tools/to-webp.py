@@ -7,7 +7,7 @@ from PIL import Image
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
 # Dilewati
-SKIPPED = re.compile(r"(^ui/|(master|sheet|portrait)\.png$)")
+SKIPPED = re.compile(r"(^ui/|(master|sheet)\.png$)")
 # Sampul menu
 EXTRA = ["characters/rex/master.png"]
 

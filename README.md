@@ -38,10 +38,11 @@ Tujuan tiap distrik: **capai target destruksi** dan **kalahkan semua pahlawannya
 | 💥 | **Ulti: Amukan Rex**, mengguncang seluruh layar | `R` | | 40 dtk |
 | ⏸️ | Jeda | `Esc` atau `P` | | |
 
-- Petunjuk tombol di layar menggelap selama cooldown berjalan. Ulti baru bisa dipakai 15 detik setelah distrik dimulai.
+- Chip skill di bawah layar meredup dan menampilkan sisa detik selama cooldown berjalan. Ulti baru bisa dipakai 15 detik setelah distrik dimulai.
 - Serangan yang ditekan sedikit terlalu cepat tetap keluar begitu Rex bebas.
 - Meruntuhkan lantai dasar menjatuhkan semua lantai di atasnya.
 - Rex punya 400 darah. Mengalahkan tentara memulihkan sedikit, mengalahkan pahlawan memulihkan lebih banyak.
+- Peluru, roket, dan serangan pahlawan cukup sakit, dan damage-nya naik 12% di tiap distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
 - Tiap pahlawan punya bar darah di atas kepalanya dan di pojok kanan atas layar.
 - Saat **Rage** penuh, damage Rex dua kali lipat selama 8 detik.
 - Di layar sentuh, pakai tombol arah dan tombol aksi di bagian bawah. Rekor skor tersimpan di browser.
@@ -60,6 +61,16 @@ Tujuan tiap distrik: **capai target destruksi** dan **kalahkan semua pahlawannya
     <td valign="top">Memasang turret dan menembakkan jaring baja yang memperlambat Rex.<br><br><b>Kelemahan:</b> hancurkan turretnya dulu, lalu injak.</td>
   </tr>
 </table>
+
+Tiap penjaga juga punya **ulti** dengan cut-in panel yang sama seperti Amukan Rex, masuk dari kanan layar:
+
+| Penjaga | Ulti | Efek |
+| --- | --- | --- |
+| 🛡️ Perisai | **Benteng Baja** | Gelombang kejut sepanjang jalan, damage besar dan membuat Rex terpaku |
+| 🦅 Rajawali | **Hujan Laser** | Laser berjatuhan dari langit di sekitar Rex selama 1,5 detik |
+| 🕸️ Jaring | **Jaring Raksasa** | Jaring baja menutupi Rex, damage dan memperlambat 5 detik |
+
+Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. **Raung** saat panelnya muncul, atau pakai Ulti Rex, untuk menggagalkannya.
 
 ## 🪖 Tentara dan warga
 
@@ -82,16 +93,18 @@ Makin hancur kotanya, makin berat perlawanannya. Helikopter hanya bisa digigit s
   <img src="assets/characters/civilians/bakso-vendor/master.png" alt="Pedagang bakso" height="96">
 </p>
 
-Warga sipil hanya berlarian panik. Mereka tidak menyerang dan tidak bisa dilukai.
+Warga sipil berlarian panik dan tidak menyerang. Gigitan, sabetan ekor, injakan, dan Ulti Rex bisa melempar mereka keluar layar, menambah skor dan sedikit Rage.
 
 ## 🏙️ Empat distrik
 
-| | Distrik | Target destruksi | Pahlawan |
-| :-: | --- | :-: | --- |
-| 1 | Jalan Ruko | 60% | Perisai |
-| 2 | Pusat Kota | 70% | Rajawali, lalu Perisai |
-| 3 | Pelabuhan | 75% | Jaring |
-| 4 | Alun-Alun | 80% | Ketiganya sekaligus |
+| | Distrik | Target destruksi | Para penjaga datang di |
+| :-: | --- | :-: | :-: |
+| 1 | Jalan Ruko | 60% | 25% |
+| 2 | Pusat Kota | 70% | 35% |
+| 3 | Pelabuhan | 75% | 45% |
+| 4 | Alun-Alun | 80% | 50% |
+
+Di setiap distrik, Perisai, Rajawali, dan Jaring selalu datang bertiga dan mengepung Rex: Perisai menghadang di depan, Rajawali menyerang dari udara, Jaring memotong jalan mundur. Darah mereka makin tebal di distrik berikutnya.
 
 <p align="center">
   <img src="assets/props/angkot.webp" alt="Angkot" height="84">
