@@ -266,7 +266,7 @@ export class World {
       if(e.hero)this.tickHero(e,dt,dist,dir);
       else if(e.type==='turret'){if(!e.owner||e.owner.hp<=0){e.hp=0;continue}if(dist<900&&e.shot<=0){this.shoot(e,'bullet');e.shot=1.7}}
       else{
-        if(e.type==='jeep'){e.x+=e.dir*445*dt;if(dist<85&&e.shot<=0)this.hurt(12)}
+        if(e.type==='jeep'){e.x+=e.dir*445*dt;if(dist<85&&e.shot<=0)this.hurt(15)}
         else{e.dir=dir;e.x+=dir*clamp(dist-(e.type==='bazooka'?510:350),-130,185)*dt}
         if(e.type==='helicopter')e.y=-420+Math.sin(this.time*1.5+e.phase)*135;
         if(dist<940&&e.shot<=0){const rocket=e.type==='bazooka'||e.type==='helicopter';
@@ -278,7 +278,7 @@ export class World {
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     // Proyektil
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:2,rocket:16,laser:10,net:5}[s.type]);
+      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt({bullet:3,rocket:20,laser:10,net:5}[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0);
     // Warga
