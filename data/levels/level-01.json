@@ -1,7 +1,7 @@
 {
   "name": "Jalan Ruko",
   "setting": "ruko",
-  "target": 60,
+  "target": 100,
   "bosses": [
     {
       "at": 25,

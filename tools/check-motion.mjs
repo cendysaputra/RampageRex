@@ -112,18 +112,37 @@ for (const [index, level] of levels.entries()) {
   assert.ok(heroes.some(e => e.x < world.rex.x) && heroes.some(e => e.x > world.rex.x), 'heroes must flank Rex');
 }
 
-// Warga bisa dilempar Rex
+// Warga terhuyung lalu tumbang seperti tentara
 {
   const world = makeWorld();
   const civilian = { type: 'shopper', x: world.rex.x + 150, dir: 1, speed: 0, phase: 0, walk: 0, lane: 15 };
   world.civilians.push(civilian);
-  world.rex.cd.bite = 0;
-  world.startAttack('bite');
-  for (let i = 0; i < 20; i++) world.update(1 / 60, empty);
-  assert.equal(civilian.down, true, 'bite must knock a civilian');
+  const bite = () => {
+    world.rex.cd.bite = 0;
+    world.startAttack('bite');
+    for (let i = 0; i < 40; i++) world.update(1 / 60, empty);
+  };
+  bite();
+  assert.ok(!civilian.down && civilian.hp > 0 && civilian.hp < civilian.max, 'first bite must only stagger');
+  civilian.x = world.rex.x + 150;
+  bite();
+  assert.equal(civilian.down, true, 'second bite must defeat the civilian');
   for (let i = 0; i < 90; i++) world.update(1 / 60, empty);
-  assert.ok(!world.civilians.includes(civilian), 'knocked civilians must clear');
+  assert.ok(!world.civilians.includes(civilian), 'defeated civilians must clear');
 }
+
+// Tentara datang beregu dari dua sisi
+{
+  const world = new World(levels[0], 0);
+  world.rex.x = levels[0].length / 2;
+  for (let i = 0; i < 60 * 30; i++) world.update(1 / 60, empty);
+  const troops = world.enemies.filter(e => !e.hero && e.type !== 'turret');
+  assert.ok(troops.length >= 10, `expected a mob of soldiers, got ${troops.length}`);
+  assert.ok(troops.some(e => e.x < world.rex.x) && troops.some(e => e.x > world.rex.x), 'soldiers must come from both sides');
+}
+
+// Target destruksi 100%
+for (const level of levels) assert.equal(level.target, 100);
 
 // Ulti pahlawan mengenai sekali, raungan membatalkannya
 for (const type of ['perisai', 'rajawali', 'jaring']) {

@@ -1,7 +1,7 @@
 {
   "name": "Alun-Alun",
   "setting": "square",
-  "target": 80,
+  "target": 100,
   "bosses": [
     {
       "at": 50,
