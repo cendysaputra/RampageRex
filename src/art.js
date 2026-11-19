@@ -15,10 +15,10 @@ const backdropLayers=['sky','far-city','mid-city','street'];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
 // Lebar bitmap
-function bitmapWidth(path,source){
+function bitmapWidth(path,source,scale=1){
   if(path.startsWith('characters/heroes/'))return Math.min(source,Math.ceil(samples*heroScale*(heroWidths[path.split('/').pop()]||source)));
   const match=drawnWidths.find(([prefix])=>path.startsWith(prefix));
-  return match?Math.min(source,Math.ceil(match[1]*samples)):source;
+  return match?Math.min(source,Math.ceil(match[1]*samples*scale)):source;
 }
 // Area potong
 function cropRect(meta,path){
@@ -42,7 +42,7 @@ export class Art {
   // Dekode gambar
   async decode(path){
     const url='./assets/'+path+'.'+this.extension,m=this.meta[path+'.png'],crop=this.crops.get(path);
-    const scale=bitmapWidth(path,m.width)/m.width,width=Math.max(1,Math.ceil(crop.width*scale)),height=Math.max(1,Math.ceil(crop.height*scale));
+    const scale=bitmapWidth(path,m.width,m.scale||1)/m.width,width=Math.max(1,Math.ceil(crop.width*scale)),height=Math.max(1,Math.ceil(crop.height*scale));
     let picture;
     if(typeof createImageBitmap==='function'){
       try{

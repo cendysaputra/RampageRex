@@ -39,6 +39,7 @@ function box(x,y,w,h){return {l:x-w/2,r:x+w/2,t:y-h,b:y}}
 function range(a,b){return a+Math.random()*(b-a)}
 // Saring daftar
 function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
+// Kotak properti
 const propHitboxes={'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
   billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
@@ -108,11 +109,14 @@ export class World {
       if(!m.hp){m.fall=.6;if(i+1<b.modules.length)this.damageModule(b,i+1,Infinity)}
     }
   }
+  // Rusak properti
   damageProp(prop,damage){
     if(prop.hp<=0)return;
     prop.hp=Math.max(0,prop.hp-damage);
     this.fx('dust',prop.x,-46,prop.hp?1:2);
     this.sound(prop.hp?'crack':'collapse');
+    // Hadiah rusak
+    if(!prop.hp){this.fx('debris',prop.x,-90,4);this.score+=40;this.rex.rage=clamp(this.rex.rage+2,0,100)}
   }
   // Munculkan musuh
   spawn(type,x){
