@@ -45,18 +45,33 @@ function help(){screen='help';modal('Cara main',
   '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Penuhi target destruksi dan kalahkan pahlawan distrik. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p>',
   [['Kembali',menu]]);
 }
+// Kartu distrik
+function stageCard(index,manifest,level){
+  const card=el('stage');card.hidden=false;card.classList.remove('leaving');
+  text('stage-number','Distrik '+(index+1));text('stage-name',level?.name??'');
+  text('stage-goal',level?'Target destruksi '+level.target+'%':'');
+  if(manifest&&level){
+    const layer=name=>{const own='backgrounds/'+level.setting+'/'+name;return './assets/'+(manifest.assets[own+'.png']?own:'backgrounds/'+name)+'.webp'};
+    card.style.setProperty('--far','url('+layer('far-city')+')');card.style.setProperty('--sky','url('+layer('sky')+')');
+  }
+}
+// Tutup kartu
+function stageOut(){const card=el('stage');card.classList.add('leaving');setTimeout(()=>{if(card.classList.contains('leaving'))card.hidden=true},320)}
 // Mulai level
 async function start(index=0,carried=0){
   if(screen==='loading')return;
-  close();clearInput();screen='loading';el('menu').hidden=false;el('hud').hidden=true;
-  el('start').disabled=el('help').disabled=true;el('load-status').textContent='Memuat distrik…';snd.unlock();
+  close();clearInput();screen='loading';el('menu').hidden=true;el('hud').hidden=true;
+  el('start').disabled=el('help').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
+  const shownAt=performance.now();stageCard(index);
   try{
     boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]);
-    const [manifest,levels]=await boot;art??=new Art(manifest);await art.preload(levels[index]);
+    const [manifest,levels]=await boot;stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
     renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],index);
-    renderer.render(world);updateHud();el('menu').hidden=true;el('hud').hidden=false;el('load-status').textContent='';screen='playing';el('pause').focus({preventScroll:true});clearInput();
+    renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
+    await new Promise(r=>setTimeout(r,Math.max(0,1400-(performance.now()-shownAt))));
+    stageOut();el('hud').hidden=false;screen='playing';el('pause').focus({preventScroll:true});clearInput();
   }catch(err){
-    boot=null;art=null;renderer=null;screen='menu';el('load-status').textContent='Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.';console.error(err);
+    boot=null;art=null;renderer=null;el('stage').hidden=true;el('menu').hidden=false;screen='menu';el('load-status').textContent='Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.';console.error(err);
   }finally{el('start').disabled=el('help').disabled=false}
 }
 // Lanjut main
