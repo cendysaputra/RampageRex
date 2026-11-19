@@ -541,19 +541,19 @@ Dramatic close-up key art of this exact hero for a fighting-game style super mov
 ### 12.1 Perisai — "BENTENG BAJA!"
 
 ```
-Perisai braces behind his round batik-patterned shield, raised in front of his chest at an angle so its rim catches a hard white highlight. Visor helmet, jaw set, eyes narrowed over the top edge of the shield. His batik cape whips back behind his shoulder. A bright gleam travels across the shield face as if it is charged with force.
+Perisai braces behind the batik-patterned shield, raised in front of the chest at an angle so its rim catches a hard white highlight. Visor helmet, jaw set, eyes narrowed over the top edge of the shield. The batik cape whips back behind the shoulder. A bright gleam travels across the shield face as if it is charged with force.
 ```
 
 ### 12.2 Rajawali — "HUJAN RAJAWALI!"
 
 ```
-Rajawali hovers mid-air with his jetpack wings flared wide behind him, goggles pushed down over his eyes, arm thrust forward toward the left with the wrist blaster glowing at the tip, ready to fire. His hair and scarf stream upward from the jetpack thrust; small warm exhaust glow under the wings.
+Rajawali hovers mid-air with the jetpack wings flared wide behind, goggles pushed down over the eyes, arm thrust forward toward the left with the wrist blaster glowing at the tip, ready to fire. Hair and scarf stream upward from the jetpack thrust; small warm exhaust glow under the wings.
 ```
 
 ### 12.3 Jaring — "JARING RAKSASA!"
 
 ```
-Jaring aims her oversized net launcher forward toward the left with both hands, one eye squinting along the barrel, goggles on her forehead, tool belt across her chest. The folded steel net bulges out of the launcher muzzle, about to burst open; coils of rope and a grappling weight hang from her shoulder.
+Jaring aims the oversized net launcher forward toward the left with both hands, one eye squinting along the barrel, goggles on the forehead, tool belt across the chest. The folded steel net bulges out of the launcher muzzle, about to burst open; coils of rope and a grappling weight hang from one shoulder.
 ```
 
 ### 12.4 Yang perlu dihubungkan setelah gambar jadi
