@@ -1,7 +1,7 @@
 {
   "name": "Pusat Kota",
   "setting": "office",
-  "target": 70,
+  "target": 100,
   "bosses": [
     {
       "at": 35,

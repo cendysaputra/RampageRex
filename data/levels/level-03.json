@@ -1,7 +1,7 @@
 {
   "name": "Pelabuhan",
   "setting": "port",
-  "target": 75,
+  "target": 100,
   "bosses": [
     {
       "at": 45,

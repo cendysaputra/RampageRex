@@ -24,7 +24,7 @@ python -m http.server 8000
 
 Lalu buka `http://localhost:8000`. Game membaca modul JavaScript, data level, dan aset lewat HTTP, jadi tidak bisa dibuka langsung sebagai file. Tidak ada paket yang perlu dipasang.
 
-Tujuan tiap distrik: **capai target destruksi** dan **kalahkan semua pahlawannya**. Kalau HP Rex habis, distrik diulang.
+Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya**. Kalau HP Rex habis, distrik diulang.
 
 ## 🕹️ Kontrol
 
@@ -83,7 +83,7 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. **Raung** saat panel
   </tr>
 </table>
 
-Makin hancur kotanya, makin berat perlawanannya. Helikopter hanya bisa digigit saat terbang rendah.
+Tentara datang beregu dari depan dan belakang sampai 14 orang di layar (bertambah 2 tiap distrik), jadi Rex selalu dikeroyok. Makin hancur kotanya, makin besar regunya dan makin berat senjatanya. Helikopter hanya bisa digigit saat terbang rendah.
 
 <p align="center">
   <img src="assets/characters/civilians/office-worker/master.png" alt="Pekerja kantoran" height="96">
@@ -93,16 +93,16 @@ Makin hancur kotanya, makin berat perlawanannya. Helikopter hanya bisa digigit s
   <img src="assets/characters/civilians/bakso-vendor/master.png" alt="Pedagang bakso" height="96">
 </p>
 
-Warga sipil berlarian panik dan tidak menyerang. Gigitan, sabetan ekor, injakan, dan Ulti Rex bisa melempar mereka keluar layar, menambah skor dan sedikit Rage.
+Warga sipil berlarian panik dan tidak menyerang, tapi bisa dikalahkan seperti tentara: serangan pertama membuat mereka terhuyung, serangan kedua melempar mereka keluar layar. Ulti Rex langsung menjatuhkan semua warga di layar. Tiap warga menambah skor dan sedikit Rage.
 
 ## 🏙️ Empat distrik
 
 | | Distrik | Target destruksi | Para penjaga datang di |
 | :-: | --- | :-: | :-: |
-| 1 | Jalan Ruko | 60% | 25% |
-| 2 | Pusat Kota | 70% | 35% |
-| 3 | Pelabuhan | 75% | 45% |
-| 4 | Alun-Alun | 80% | 50% |
+| 1 | Jalan Ruko | 100% | 25% |
+| 2 | Pusat Kota | 100% | 35% |
+| 3 | Pelabuhan | 100% | 45% |
+| 4 | Alun-Alun | 100% | 50% |
 
 Di setiap distrik, Perisai, Rajawali, dan Jaring selalu datang bertiga dan mengepung Rex: Perisai menghadang di depan, Rajawali menyerang dari udara, Jaring memotong jalan mundur. Darah mereka makin tebal di distrik berikutnya.
 
