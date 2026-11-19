@@ -118,6 +118,22 @@
   ],
   "props": [
     {
+      "x": 884,
+      "type": "street-lamp"
+    },
+    {
+      "x": 3949,
+      "type": "street-lamp"
+    },
+    {
+      "x": 7014,
+      "type": "street-lamp"
+    },
+    {
+      "x": 10079,
+      "type": "street-lamp"
+    },
+    {
       "x": 485.0,
       "type": "angkot"
     },

@@ -136,6 +136,26 @@
   ],
   "props": [
     {
+      "x": 858,
+      "type": "street-lamp"
+    },
+    {
+      "x": 3923,
+      "type": "street-lamp"
+    },
+    {
+      "x": 6988,
+      "type": "street-lamp"
+    },
+    {
+      "x": 10053,
+      "type": "street-lamp"
+    },
+    {
+      "x": 13118,
+      "type": "street-lamp"
+    },
+    {
       "x": 501.5,
       "type": "tent-stall"
     },
