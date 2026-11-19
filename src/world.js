@@ -109,7 +109,7 @@ export class World {
   spawn(type,x){
     const hero=type in heroNames;
     // Pahlawan lebih tipis di distrik awal karena selalu datang bertiga
-    const max={perisai:620,rajawali:500,jaring:470,infantry:75,bazooka:100,jeep:150,helicopter:90,turret:75}[type]*(hero?.7+this.index*.1:1);
+    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.index*.1:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
       ultCd:hero?14:0,mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
@@ -156,6 +156,7 @@ export class World {
       e.hp-=damage*(counter?2:1);e.hit=.2;
       if(a.key==='tail'&&!e.hero){e.vx=-p.dir*(e.type==='jeep'?920:420);e.stun=.65;if(e.type==='jeep'){e.lift=1;e.vy=370}}
       if(e.hp<=0)this.defeat(e);
+      else if(!e.hero&&a.key!=='tail')this.stagger(e,p.x);
     }
     // Warga ikut terlempar
     for(const c of this.civilians)if(!c.down&&overlap(hitbox,box(c.x,c.lane,56,92)))this.knock(c,p.x);
@@ -184,6 +185,11 @@ export class World {
     }
     this.shots.length=0;for(const c of this.civilians)if(!c.down&&c.x>=left&&c.x<=right)this.knock(c,p.x);
     this.fx('dust',p.x,0,4);
+  }
+  // Tentara terhuyung
+  stagger(e,from){
+    const away=Math.sign(e.x-from)||1,heavy=e.type==='jeep'||e.type==='helicopter';
+    e.vx=away*(heavy?180:300);e.stun=Math.max(e.stun,heavy?.3:.5);this.fx('dust',e.x,e.y,1);
   }
   // Musuh tumbang
   defeat(e){

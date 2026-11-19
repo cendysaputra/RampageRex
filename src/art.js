@@ -290,6 +290,9 @@ export class Renderer {
         const bob=Math.sin(e.walk)**2*e.stride*2;
         a.blend(c,base+(e.fromFrame||frame),base+frame,e.frameMix??1,e.x,-e.lift-bob,people[e.type],e.dir);
       }c.restore();
+      // Darah tentara
+      if(!e.hero&&e.hp<e.max){const top=e.y-e.lift-(e.type==='helicopter'?95:e.type==='jeep'?80:96),ratio=clamp(e.hp/e.max,0,1);
+        c.fillStyle='#102321';c.fillRect(e.x-31,top-3,62,11);c.fillStyle=ratio>.5?'#ffd477':'#e8536d';c.fillRect(e.x-28,top,56*ratio,5)}
       if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='30px Bangers,Impact,sans-serif';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-152)}
     }
     shadow(g.rex.x-15,2,212);c.save();
