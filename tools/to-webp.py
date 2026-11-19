@@ -8,8 +8,8 @@ from PIL import Image
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
 # Dilewati
 SKIPPED = re.compile(r"(^ui/|(master|sheet|portrait)\.png$)")
-# Sampul menu dan potret ulti
-EXTRA = ["characters/rex/master.png"] + [f"characters/heroes/{h}/portrait.png" for h in ("perisai", "rajawali", "jaring")]
+# Sampul menu
+EXTRA = ["characters/rex/master.png"]
 
 
 def main():
