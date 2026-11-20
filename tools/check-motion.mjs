@@ -504,4 +504,29 @@ for (const late of [.1, .3, .6]) {
   assert.ok(['firefighter', 'drone', 'firetruck', 'tank'].every(type => pools.slice(4).some(set => set.has(type))), 'later districts field the new troops');
 }
 
+// Bos final
+{
+  assert.equal(levels[7].boss, 'robot');
+  assert.ok(levels.slice(0, 7).every(l => !l.boss), 'only Alun-Alun has the boss');
+  const world = new World(levels[7], 7);
+  world.spawnTime = Infinity;
+  world.rex.x = levels[7].length / 2;
+  world.triggered = new Set(levels[7].bosses.map((_, i) => i));
+  world.lost = world.total;
+  world.update(1 / 60, empty);
+  const boss = world.enemies.find(e => e.type === 'robot');
+  assert.ok(boss && boss.hero, 'the robot arrives once the district is flat and the trio is down');
+  assert.equal(world.phase, 'fight', 'the district does not clear while the robot stands');
+  boss.x = world.rex.x + 230; boss.ultCd = 99;
+  const hp = world.rex.hp;
+  for (let i = 0; i < 180 && world.rex.hp === hp; i++) world.update(1 / 60, empty);
+  assert.ok(world.rex.hp < hp, 'the robot punches');
+  boss.hp = 1; world.rex.cd.bite = 0; world.rex.dir = Math.sign(boss.x - world.rex.x); boss.x = world.rex.x + 200 * world.rex.dir;
+  world.rex.stun = 0; world.rex.attack = null; world.startAttack('bite');
+  for (let i = 0; i < 30; i++) world.update(1 / 60, empty);
+  assert.ok(boss.hp <= 0, 'the robot can be defeated');
+  for (let i = 0; i < 5; i++) world.update(1 / 60, empty);
+  assert.equal(world.phase, 'clear', 'beating the robot clears Alun-Alun');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

@@ -4,7 +4,7 @@ export const clamp = (n, low, high) => Math.max(low, Math.min(n, high));
 export const people = ['office-worker','shopper','schoolkid','elder','bakso-vendor'];
 // Pekerja Kopdes
 export const kopdesWorker='kopdes-worker';
-export const heroNames = {perisai:'Perisai',rajawali:'Rajawali',jaring:'Jaring'};
+export const heroNames = {perisai:'Perisai',rajawali:'Rajawali',jaring:'Jaring',robot:'Robot Penjaga'};
 export const hints = {
   perisai:'Hindari tubrukannya, lalu sabet dengan ekor.',
   rajawali:'Raungkan Rex saat Rajawali mendekat, lalu gigit.',
@@ -63,7 +63,8 @@ const delays={perisai:0,rajawali:.9,jaring:1.8};
 export const heroUltis={
   perisai:{name:'BENTENG BAJA!',reach:950,damage:60,stun:1.1},
   rajawali:{name:'HUJAN LASER!',reach:1300,damage:14},
-  jaring:{name:'JARING RAKSASA!',reach:1150,damage:45,stun:.8,slow:5}
+  jaring:{name:'JARING RAKSASA!',reach:1150,damage:45,stun:.8,slow:5},
+  robot:{name:'MEGA PENJAGA!',reach:1200,damage:70,stun:1,slow:3}
 };
 // Darah warga
 const civilianHp=110;
@@ -80,16 +81,18 @@ const blastRadius=480,blastDamage=260,warungHeal=60;
 // Distrik terakhir
 export const lastDistrict=7;
 // Ukuran badan
-const bodies={jeep:[170,96],turret:[60,60],tank:[200,130],firetruck:[210,130],drone:[70,50]};
+const bodies={robot:[170,340],jeep:[170,96],turret:[60,60],tank:[200,130],firetruck:[210,130],drone:[70,50]};
 // Musuh berat
 const heavy=new Set(['jeep','helicopter','tank','firetruck']);
 // Jadwal musuh baru
 const newTroops=[['firefighter',1/7,15],['drone',2/7,35],['firetruck',3/7,45],['tank',4/7,55]];
 // Semprotan pemadam
 const sprayRange=480,rageDrain=14,furyDrain=1.5;
+// Aturan robot
+const robot={reach:240,speed:150,windup:.75,punch:50,netEvery:4.5};
 // Batas tentara
 const squadCap=14;
-const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
+const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
 // Dunia permainan
 export class World {
   constructor(level,index,options={}){
@@ -214,7 +217,7 @@ export class World {
   spawn(type,x){
     const hero=type in heroNames;
     // Darah pahlawan
-    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150,tank:520,firetruck:320,firefighter:170,drone:60}[type]*(hero?.7+this.tier*.3:1)*(hero&&this.level.endless?1+this.percent/80:1);
+    const max={robot:2600,perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150,tank:520,firetruck:320,firefighter:170,drone:60}[type]*(hero?.7+this.tier*.3:1)*(hero&&this.level.endless?1+this.percent/80:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:type==='drone'?-330:0,dir:-1,hp:max,max,hero,
       ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(190,380),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
@@ -259,7 +262,7 @@ export class World {
       if(i!==undefined)this.damageModule(b,i,damage);
     }
     for(const e of this.enemies){
-      const [bw,bh]=e.hero?[80,112]:bodies[e.type]||[84,96];
+      const [bw,bh]=bodies[e.type]||(e.hero?[80,112]:[84,96]);
       if(e.hp<=0||!overlap(hitbox,box(e.x,e.y-e.lift,bw,bh)))continue;
       if(e.type==='helicopter'&&(a.key!=='bite'||e.y< -395))continue;
       if(e.type==='rajawali'&&e.mode!=='ground'&&e.mode!=='dive')continue;
@@ -339,7 +342,7 @@ export class World {
   // Musuh tumbang
   defeat(e){
     const p=this.rex,big=heavy.has(e.type);this.kills[e.type]=(this.kills[e.type]||0)+1;
-    this.addScore(e.hero?1200:100);p.rage=Math.min(100,p.rage+(e.hero?20:6));
+    this.addScore(e.type==='robot'?5000:e.hero?1200:100);if(e.type==='robot'){for(let i=0;i<5;i++)this.fx('explosion',e.x+range(-120,120),-range(60,320));this.shake=26}p.rage=Math.min(100,p.rage+(e.hero?20:6));
     if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
@@ -364,6 +367,9 @@ export class World {
     if(cast.type==='perisai'){
       this.heroWave={x:e.x,at:this.time};this.sound('collapse');
       if(near)this.hurt(cast.damage,cast.stun);
+    }else if(cast.type==='robot'){
+      this.heroWave={x:e.x,at:this.time};this.sound('collapse');
+      if(near&&this.hurt(cast.damage,cast.stun)){p.slow=Math.max(p.slow,cast.slow);p.bigNet=cast.slow}
     }else if(cast.type==='rajawali'){
       this.rain={until:this.time+1.5,next:0,damage:cast.damage};this.sound('launch');
     }else{
@@ -381,6 +387,17 @@ export class World {
   // AI pahlawan
   tickHero(e,dt,dist,dir){
     const p=this.rex;e.timer-=dt;
+    if(e.type==='robot'){
+      // Robot penjaga
+      if(e.mode==='approach'){e.dir=dir;if(dist>robot.reach)e.x+=dir*robot.speed*dt;
+        if(e.timer<=0&&dist<robot.reach+80){e.mode='windup';e.timer=robot.windup;e.connected=false}
+        else if(e.shot<=0&&dist>robot.reach+120){this.shoot(e,'net');e.shot=robot.netEvery;e.mode='net';e.timer=.5}}
+      else if(e.mode==='windup'&&e.timer<=0){e.mode='punch';e.timer=.35;e.x+=e.dir*60}
+      else if(e.mode==='punch'){if(!e.connected&&dist<robot.reach+90){this.hurt(robot.punch,.6);e.connected=true;this.shake=Math.max(this.shake,12)}
+        if(e.timer<=0){e.mode='recover';e.timer=1.1}}
+      else if((e.mode==='recover'||e.mode==='net')&&e.timer<=0){e.mode='approach';e.timer=1.6}
+      return;
+    }
     if(e.type==='perisai'){
       if(e.mode==='approach'){e.dir=dir;if(dist>205)e.x+=dir*240*dt;
         if(e.timer<=0&&dist<730){e.mode='aim';e.timer=.85;e.dir=dir;e.connected=false}}
@@ -589,7 +606,13 @@ export class World {
       if(!this.fellAt&&this.time-this.dieAt>=.85){this.fellAt=this.time;this.shake=22;this.sound('collapse');this.fx('dust',p.x-120*p.dir,0,3);this.fx('dust',p.x+160*p.dir,0,3)}
       if(this.time-this.dieAt>=dieTime)this.status='lost';
     }
-    else if(this.phase==='fight'&&this.percent+.0001>=this.level.target&&this.triggered.size===this.level.bosses.length&&!this.enemies.some(e=>e.hero)){
+    else if(this.phase==='fight'&&this.level.boss&&!this.bossSpawned&&this.percent+.0001>=this.level.target&&this.triggered.size===this.level.bosses.length&&!this.enemies.some(e=>e.hero)){
+      // Bos final
+      this.bossSpawned=true;const side=p.x>this.level.length-1200?-1:1;
+      const boss=this.spawn(this.level.boss,p.x+side*760);boss.dir=-side;boss.timer=2;boss.ultCd=firstUlt[this.level.boss];
+      this.say('Ketiga penjaga bergabung: ROBOT PENJAGA!',4);this.sound('alarm');this.shake=18;
+    }
+    else if(this.phase==='fight'&&(!this.level.boss||this.bossSpawned)&&this.percent+.0001>=this.level.target&&this.triggered.size===this.level.bosses.length&&!this.enemies.some(e=>e.hero)){
       this.phase='clear';this.shots.length=0;this.rain=null;
       for(const e of this.enemies)e.flee=true;
       this.say('Kota rata! Jalan ke ujung distrik →',4);this.sound('roar');

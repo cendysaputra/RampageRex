@@ -10,7 +10,9 @@ const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 // Warna ulti pahlawan
-const castColors={perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
+const castColors={robot:['#f2b33d','#24365c','#8ff4ff'],perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
+// Lebar robot
+const robotWidth=544;
 const backdropLayers=['sky','far-city','mid-city','street'];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
@@ -31,7 +33,7 @@ function cropRect(meta,path){
 export class Art {
   constructor(manifest){
     this.meta={...manifest.assets};this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
-    this.rexAnimations=manifest.rexAnimations;this.cutin='fx/ulti-cutin';this.skin='';
+    this.rexAnimations=manifest.rexAnimations;this.robot=manifest.robot;this.cutin='fx/ulti-cutin';this.skin='';
     this.basePaths=Object.fromEntries(Object.entries(this.rexAnimations.atlases).map(([k,d])=>[k,d.path]));
     this.crops=new Map(Object.entries(this.meta).map(([path,m])=>[path.slice(0,-4),cropRect(m,path)]));
   }
@@ -73,6 +75,8 @@ export class Art {
   // Pramuat level
   async preload(level){
     const heroes=level.bosses.flatMap(b=>['characters/heroes/'+b.type+'/parts/','characters/heroes/'+b.type+'/portrait']);
+    // Aset bos
+    if(level.boss)heroes.push('characters/heroes/'+level.boss+'/atlas','characters/heroes/'+level.boss+'/cutin');
     const backdrops=backdropLayers.map(name=>this.backdrop(level.setting,name));
     // Atlas Rex
     const rexPaths=[...Object.values(this.rexAnimations.atlases).map(d=>d.path),this.cutin];
@@ -90,6 +94,20 @@ export class Art {
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
     await(this.rexFramesReady??=this.prepareRexFrames());
+    if(level.boss)await(this.robotReady??=this.prepareRobot());
+  }
+  // Potong robot
+  async prepareRobot(){
+    const def=this.robot;if(!def)return;
+    const source=this.images.get(def.path);if(!source)return;
+    for(const [index,[x,y,width,height,px,py]] of def.frames.entries()){
+      let picture;
+      if(typeof createImageBitmap==='function'){try{picture=await createImageBitmap(source,x,y,width,height)}catch{}}
+      if(!picture){picture=document.createElement('canvas');picture.width=width;picture.height=height;picture.getContext('2d').drawImage(source,x,y,width,height,0,0,width,height)}
+      const path='characters/heroes/robot/frame-'+index;
+      this.meta[path+'.png']={width,height,pivot:[px,py],alpha:true};this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
+    }
+    this.images.delete(def.path);source.close?.();
   }
   // Ganti skin
   useSkin(skin=''){
@@ -226,6 +244,15 @@ function exclaim(c,x,y,k){
   c.save();c.globalAlpha=clamp(k*2,0,1);c.font='42px Bangers,Impact,sans-serif';c.textAlign='center';c.textBaseline='bottom';
   c.lineJoin='round';c.lineWidth=7;c.strokeStyle='#102321';c.strokeText('!',x,y-(1-k)*12);c.fillStyle='#ffd45c';c.fillText('!',x,y-(1-k)*12);c.restore();
 }
+// Gambar robot
+function robotRig(c,a,e,t,reduced){
+  const poses=a.robot.poses,mode=e.mode;
+  const index=e.hit>0?poses.hit:mode==='windup'?poses.windup:mode==='punch'?poses.punch:mode==='net'?poses.net
+    :e.stride>.15?poses.walk[Math.sin(e.walk)>=0?0:1]:poses.idle;
+  const shake=mode==='windup'&&!reduced?Math.sin(t*60)*2:0;
+  // Menghadap kiri asli
+  a.sprite(c,'characters/heroes/robot/frame-'+index,e.x+shake,0,robotWidth,-e.dir);
+}
 // Gambar pahlawan
 function heroRig(c,a,e){
   c.save();c.translate(e.x,e.y);c.scale(e.dir*heroScale,heroScale);
@@ -353,9 +380,9 @@ export class Renderer {
           c.beginPath();c.ellipse(e.x,e.y-70,70+k*40,95+k*40,0,0,Math.PI*2);c.fill();
           c.globalAlpha=.9;c.strokeStyle=light;c.lineWidth=5;c.beginPath();c.ellipse(e.x,e.y-70,90+k*60,115+k*60,0,0,Math.PI*2);c.stroke();c.restore();
         }
-        heroRig(c,a,e);
+        if(e.type==='robot')robotRig(c,a,e,t,reduced);else heroRig(c,a,e);
         // Darah pahlawan
-        const top=e.y-140,ratio=clamp(e.hp/e.max,0,1);
+        const top=e.type==='robot'?-400:e.y-140,ratio=clamp(e.hp/e.max,0,1);
         c.fillStyle='#102321';c.fillRect(e.x-48,top-4,96,18);
         c.fillStyle='#e8536d';c.fillRect(e.x-44,top,88*ratio,10);
       }
@@ -507,8 +534,10 @@ export class Renderer {
       for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173+(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
         c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
       // Potret menghadap kiri
-      const path='characters/heroes/'+cast.type+'/portrait',im=this.art.images.get(path);
-      if(im){const size=height*1.12,bump=reduced?0:(1-smooth(age/.3))*40;
+      const path='characters/heroes/'+cast.type+'/portrait',im=this.art.images.get(path),wide=this.art.images.get('characters/heroes/'+cast.type+'/cutin');
+      // Cut-in robot
+      if(wide){const s=Math.max((width+lean)/wide.width,height/wide.height),bump=reduced?0:(1-smooth(age/.3))*40;c.drawImage(wide,(width+lean-wide.width*s)/2+bump,(height-wide.height*s)/2,wide.width*s,wide.height*s)}
+      else if(im){const size=height*1.12,bump=reduced?0:(1-smooth(age/.3))*40;
         c.save();c.translate(width+lean-size*.12+bump,height*.02);c.scale(-1,1);c.drawImage(im,0,0,size,size*im.height/im.width);c.restore()}
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();

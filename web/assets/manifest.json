@@ -4397,6 +4397,33 @@
       ],
       "alpha": true,
       "logicalHeight": 199
+    },
+    "characters/heroes/robot/atlas.png": {
+      "width": 1280,
+      "height": 2048,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/heroes/robot/cutin.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/heroes/robot/master.png": {
+      "width": 969,
+      "height": 1514,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
     }
   },
   "review": [],
@@ -4404,5 +4431,86 @@
     "rexHeight": 938,
     "civilianHeight": 199,
     "heroHeight": 223
+  },
+  "robot": {
+    "path": "characters/heroes/robot/atlas",
+    "frames": [
+      [
+        0,
+        0,
+        640,
+        512,
+        283,
+        461
+      ],
+      [
+        640,
+        0,
+        640,
+        512,
+        302,
+        461
+      ],
+      [
+        0,
+        512,
+        640,
+        512,
+        321,
+        461
+      ],
+      [
+        640,
+        512,
+        640,
+        512,
+        319,
+        461
+      ],
+      [
+        0,
+        1024,
+        640,
+        512,
+        363,
+        461
+      ],
+      [
+        640,
+        1024,
+        640,
+        512,
+        406,
+        461
+      ],
+      [
+        0,
+        1536,
+        640,
+        512,
+        271,
+        461
+      ],
+      [
+        640,
+        1536,
+        640,
+        512,
+        319,
+        461
+      ]
+    ],
+    "poses": {
+      "idle": 0,
+      "walk": [
+        1,
+        2
+      ],
+      "windup": 3,
+      "punch": 4,
+      "net": 5,
+      "hit": 6,
+      "down": 7
+    }
   }
 }

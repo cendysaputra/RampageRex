@@ -2,6 +2,7 @@
   "name": "Alun-Alun",
   "setting": "square",
   "target": 100,
+  "boss": "robot",
   "bosses": [
     {
       "at": 50,

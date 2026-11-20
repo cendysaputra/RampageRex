@@ -122,6 +122,10 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul
   <img src="docs/screenshots/hero-ulti.webp" alt="Cut-in ulti Hujan Laser milik Rajawali" width="70%">
 </p>
 
+### Bos final: Robot Penjaga
+
+Di **Alun-Alun**, setelah kota rata dan ketiga penjaga kalah, mereka bergabung menjadi **Robot Penjaga** setinggi Rex. Robot ini memukul dengan perisai setelah ancang-ancang, menembakkan jaring dari jauh, dan punya ulti **Mega Penjaga** berupa gelombang kejut yang membuat Rex terpaku dan melambat. Seperti ulti penjaga lain, ulti ini bisa digagalkan dengan **raung**, **lompat**, atau Ulti Rex. Kota baru ditaklukkan setelah robotnya tumbang.
+
 ## Tentara
 
 <table>
