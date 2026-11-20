@@ -154,6 +154,10 @@
       "type": "tree"
     },
     {
+      "x": 1700,
+      "type": "mobil-sppg"
+    },
+    {
       "x": 2211.5,
       "type": "tent-stall"
     },

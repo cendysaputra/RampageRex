@@ -164,6 +164,10 @@
       "type": "tent-stall"
     },
     {
+      "x": 1800,
+      "type": "mobil-sppg"
+    },
+    {
       "x": 2235.0,
       "type": "food-cart"
     },

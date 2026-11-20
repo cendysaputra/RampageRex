@@ -142,6 +142,10 @@
       "type": "electric-pole"
     },
     {
+      "x": 1700,
+      "type": "mobil-sppg"
+    },
+    {
       "x": 2133.0,
       "type": "tree"
     },
