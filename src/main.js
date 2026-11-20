@@ -2,6 +2,7 @@ import {World,heroNames,cooldowns} from './world.js';
 import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
 import {playOpening} from './opening.js';
+import {playCredit} from './credit.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -166,6 +167,7 @@ window.addEventListener('blur',()=>{clearInput();pause()});document.addEventList
 el('start').onclick=async()=>{
   if(screen!=='menu')return;
   screen='opening';snd.unlock();el('menu').hidden=true;
+  await playCredit(el('credit'));
   await playOpening(el('opening'),snd);
   await start();
 };
