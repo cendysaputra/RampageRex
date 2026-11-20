@@ -3,7 +3,14 @@ import { difficulties } from './world.js';
 // Kunci simpanan
 const KEY = 'rex.settings';
 export const padSizes = { s: 'Kecil', m: 'Sedang', l: 'Besar' };
-export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal' };
+// Skin Rex
+export const skins = {
+  merah: { label: 'Merah', stars: 0, folder: '' },
+  batik: { label: 'Batik', stars: 4, folder: 'batik' },
+  hutan: { label: 'Hutan', stars: 8, folder: 'hutan' },
+  mecha: { label: 'Mecha', stars: 12, folder: 'mecha' }
+};
+export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah' };
 
 // Baca pengaturan
 export function loadSettings(storage = globalThis.localStorage) {
@@ -14,7 +21,8 @@ export function loadSettings(storage = globalThis.localStorage) {
     sfx: Number.isFinite(sfx) ? Math.max(0, Math.min(100, Math.round(sfx))) : defaults.sfx,
     vibrate: typeof data.vibrate === 'boolean' ? data.vibrate : defaults.vibrate,
     pad: data.pad in padSizes ? data.pad : defaults.pad,
-    difficulty: data.difficulty in difficulties ? data.difficulty : defaults.difficulty
+    difficulty: data.difficulty in difficulties ? data.difficulty : defaults.difficulty,
+    skin: data.skin in skins ? data.skin : defaults.skin
   };
 }
 

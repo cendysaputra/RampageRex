@@ -320,7 +320,9 @@ for (const late of [.1, .3, .6]) {
   const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   assert.deepEqual(loadSettings(storage), defaults);
   saveSettings({ sfx: 140, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
-  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk' }, 'invalid values fall back');
+  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah' }, 'invalid values fall back');
+  saveSettings({ skin: 'mecha' }, storage);
+  assert.equal(loadSettings(storage).skin, 'mecha');
   const easy = new World(levels[0], 0, { difficulty: 'santai' }), normal = new World(levels[0], 0), hard = new World(levels[0], 0, { difficulty: 'ngamuk' });
   assert.ok(easy.power < normal.power && normal.power < hard.power, 'difficulty scales enemy damage');
   assert.ok(easy.squadBonus < 0 && hard.squadBonus > 0, 'difficulty scales squad size');

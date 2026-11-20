@@ -74,7 +74,7 @@ Setiap distrik punya tiga misi bintang:
 | Pelabuhan | Ratakan distrik | Selesai dalam 8 menit | Hancurkan semua properti jalan |
 | Alun-Alun | Ratakan distrik | Selesai dalam 9 menit | Selesai dengan darah ≥ 50% |
 
-Bintang dari permainan yang berbeda tetap terkumpul.
+Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk membuka **skin Rex** di Pengaturan: **Batik** (4 ★), **Hutan** (8 ★), dan **Mecha** (12 ★). Skin berlaku untuk semua gerakan Rex dan cut-in ulti-nya.
 
 ### Tips
 

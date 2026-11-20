@@ -3305,6 +3305,195 @@
         490
       ],
       "alpha": true
+    },
+    "characters/rex/skins/batik/walk.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/bite-roar.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/tail-stomp.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/ulti.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/jump.png": {
+      "width": 1254,
+      "height": 2080,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/knockdown.png": {
+      "width": 1254,
+      "height": 1125,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/ulti-cutin.png": {
+      "width": 1672,
+      "height": 941,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/walk.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/bite-roar.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/tail-stomp.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/ulti.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/jump.png": {
+      "width": 1254,
+      "height": 2080,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/knockdown.png": {
+      "width": 1254,
+      "height": 1125,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/ulti-cutin.png": {
+      "width": 1672,
+      "height": 941,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/walk.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/bite-roar.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/tail-stomp.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/ulti.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/jump.png": {
+      "width": 1254,
+      "height": 2080,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/knockdown.png": {
+      "width": 1254,
+      "height": 1125,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/ulti-cutin.png": {
+      "width": 1672,
+      "height": 941,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
     }
   },
   "review": [],
