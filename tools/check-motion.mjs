@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { World, cooldowns } from '../src/world.js';
-import { attackPose, damp, spritePose } from '../src/motion.js';
-import { rexFramePath, rexPose } from '../src/rex-animation.js';
+import { World, cooldowns } from '../web/src/world.js';
+import { attackPose, damp, spritePose } from '../web/src/motion.js';
+import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
 
 const levels = await Promise.all([1, 2, 3, 4].map(async n =>
-  JSON.parse(await readFile(new URL(`../data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
+  JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
 const empty = new Set();
-const manifest = JSON.parse(await readFile(new URL('../assets/manifest.json', import.meta.url), 'utf8'));
+const manifest = JSON.parse(await readFile(new URL('../web/assets/manifest.json', import.meta.url), 'utf8'));
 const animation = manifest.rexAnimations;
 assert.equal(Object.values(animation.atlases).reduce((sum, atlas) => sum + atlas.frames.length, 0), 46);
 for (const atlas of Object.values(animation.atlases)) {

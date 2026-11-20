@@ -5,7 +5,7 @@ from pathlib import Path
 
 from PIL import Image
 
-ASSETS = Path(__file__).resolve().parent.parent / "assets"
+ASSETS = Path(__file__).resolve().parent.parent / "web" / "assets"
 # Dilewati
 SKIPPED = re.compile(r"(^ui/|(master|sheet)\.png$)")
 # Sampul dan warga
