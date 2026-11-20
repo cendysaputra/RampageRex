@@ -144,6 +144,9 @@ for (const [index, level] of levels.entries()) {
 // Target destruksi 100%
 for (const level of levels) assert.equal(level.target, 100);
 
+// Setiap distrik punya Kopdes
+for (const level of levels) assert.ok(level.buildings.some(b => b.color === 'kopdes' && b.upper === 0), `${level.name} needs a Kopdes`);
+
 // Ulti pahlawan mengenai sekali, raungan membatalkannya
 for (const type of ['perisai', 'rajawali', 'jaring']) {
   const world = makeWorld();
