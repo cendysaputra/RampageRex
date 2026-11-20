@@ -192,6 +192,9 @@ function updateHud(){
   text('destruction',Math.floor(world.percent+.0001)+'% / '+world.level.target+'%');
   fill('destroyed',Math.min(1,world.percent/100));
   const goal=world.level.target+'%';if(shown.get('goal')!==goal){shown.set('goal',goal);el('goal').style.left=goal}
+  // Kombo
+  const combo=world.combo>=5?world.combo:0;el('combo').hidden=!combo;
+  if(combo){text('combo-mult','×'+world.multiplier.toString().replace('.',','));text('combo-count',combo+' kombo')}
   const fury=p.fury>0;if(shown.get('fury')!==fury){shown.set('fury',fury);el('hp').closest('.player-card').toggleAttribute('data-fury',fury)}
   let next='',names='';
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+heroNames[e.type]}

@@ -105,6 +105,10 @@ h1 em{font:inherit;display:block;color:var(--orange);font-size:1.5em;transform:r
 #notice{width:max-content;max-width:85%;margin:14px auto;padding:7px 30px 6px;text-align:center;font-size:18px;font-weight:800;color:var(--ink);background:var(--cream);clip-path:var(--slant)}
 #notice:empty{display:none}
 
+/* Kombo */
+#combo{position:absolute;left:clamp(8px,2vw,28px);top:clamp(104px,15vh,140px);display:grid;justify-items:start;line-height:1;color:var(--cream);text-shadow:0 3px 0 var(--ink)}
+#combo b{font-family:var(--shout);font-weight:400;font-size:clamp(38px,5vw,56px);color:var(--orange);letter-spacing:.02em}
+#combo span{font-weight:800;font-size:14px;margin-top:2px}
 /* Tutorial */
 #tutorial{position:absolute;left:50%;top:clamp(150px,26vh,250px);transform:translateX(-50%);width:min(560px,92vw);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 26px 10px 22px;color:var(--cream);background:var(--panel);clip-path:var(--slant);box-shadow:inset 4px 0 0 var(--orange)}
 #tutorial-step{font-family:var(--shout);font-size:22px;letter-spacing:.04em;color:var(--orange)}

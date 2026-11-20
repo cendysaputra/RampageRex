@@ -351,4 +351,21 @@ for (const late of [.1, .3, .6]) {
   assert.equal(tutorialSteps.length, 6);
 }
 
+// Kombo
+{
+  const world = makeWorld();
+  for (let i = 0; i < 9; i++) world.addScore(10);
+  assert.equal(world.multiplier, 1);
+  world.addScore(10);
+  assert.equal(world.multiplier, 1.5, 'ten hits raise the multiplier');
+  const before = world.score;
+  world.addScore(100);
+  assert.equal(world.score - before, 150, 'points use the multiplier');
+  for (let i = 0; i < 100; i++) world.addScore(1);
+  assert.equal(world.multiplier, 3, 'multiplier caps at 3');
+  for (let i = 0; i < 160; i++) world.update(1 / 60, empty);
+  assert.equal(world.combo, 0, 'combo drops after 2.5 s without a hit');
+  assert.ok(world.maxCombo >= 111);
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));
