@@ -23,7 +23,7 @@ def main():
     for source in sources:
         target = source.with_suffix(".webp")
         with Image.open(source) as image:
-            image.save(target, "WEBP", quality=90, method=6)
+            image.save(target, "WEBP", quality=86, method=6, alpha_quality=100)
         before += source.stat().st_size
         after += target.stat().st_size
     print(f"{len(sources)} files: {before / 1e6:.1f} MB PNG -> {after / 1e6:.1f} MB WebP")

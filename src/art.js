@@ -73,12 +73,15 @@ export class Art {
   async preload(level){
     const heroes=level.bosses.flatMap(b=>['characters/heroes/'+b.type+'/parts/','characters/heroes/'+b.type+'/portrait']);
     const backdrops=backdropLayers.map(name=>this.backdrop(level.setting,name));
+    // Aset terpakai
+    const colors=[...new Set(level.buildings.map(b=>b.color))],props=[...new Set((level.props||[]).map(p=>p.type))];
     // Lepas latar
     for(const [path,image] of this.images)if(path.startsWith('backgrounds/')&&!backdrops.includes(path)){
       image.close?.();this.images.delete(path);this.loading.delete(path);
     }
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
-      backdrops.includes(k)||k.startsWith('buildings/')||k.startsWith('props/')
+      backdrops.includes(k)||k.startsWith('buildings/ruko-01/damage/')||colors.some(c=>k.startsWith('buildings/ruko-01/colors/')&&k.endsWith('-'+c))
+      ||props.some(t=>k==='props/'+t||k==='props/'+t+'-damaged'||k==='props/'+t+'-wreck')
       ||k.startsWith('characters/rex/animations/')
       ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net','fx/ulti-cutin'].includes(k));
     let cursor=0;
