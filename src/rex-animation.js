@@ -13,11 +13,11 @@ export function rexPose(rex, animation, down = -1) {
     return rexFramePath(sequence.atlas, sequence.frames[index]);
   };
   const idle = frame('idle', 0), action = rex.attack;
-  // Tumbang: pakai klip defeat bila sudah ada, kalau belum tahan pose impact injak
+  // Pose tumbang
   if (down >= 0) {
     const clip = animation.clips.defeat;
     if (!clip) return { from: idle, to: frame('stomp', 2), mix: smooth(down / .25) };
-    // Tempo per frame dari atlas; frame terakhir ditahan
+    // Tempo per frame
     if (clip.frameMs) {
       let left = down * 1000, index = 0;
       while (index < clip.frames.length - 1 && left >= clip.frameMs[index]) left -= clip.frameMs[index++];
@@ -32,7 +32,7 @@ export function rexPose(rex, animation, down = -1) {
     const { key, age, impact, duration } = action, recovery = duration - impact;
     let times, poses;
     if ((key === 'ulti' || key === 'jump') && animation.clips[key]) {
-      // Klip khusus dengan pose kontak di indeks `contact`
+      // Klip khusus
       const { frames, contact } = animation.clips[key];
       const paths = frames.map((_, index) => frame(key, index)), after = paths.length - contact;
       times = [0, ...paths.map((_, index) => index <= contact
@@ -40,7 +40,7 @@ export function rexPose(rex, animation, down = -1) {
         : impact + recovery * (index - contact) / after), duration];
       poses = [idle, ...paths, idle];
     } else if (key === 'jump') {
-      // Pose pinjaman sampai atlas lompat jadi: jongkok, raung di udara, hantaman injak
+      // Pose pinjaman
       times = [0, .16, .34, .8, impact, impact + recovery * .55, duration];
       poses = [idle, frame('stomp', 0), frame('roar', 1), frame('roar', 2), frame('stomp', 2), frame('stomp', 3), idle];
     } else {

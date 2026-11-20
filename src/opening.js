@@ -1,5 +1,5 @@
 // Daftar adegan
-// cam: [x%, y%, zoom] awal dan akhir; layers: kedalaman parallax tiap lapis, move = geser sendiri (%)
+// Kamera dan lapis
 const scenes = [
   { line: 'Suatu malam, sesuatu jatuh dari langit.', cues: ['meteor'], enter: 'fade',
     cam: [[-3, 1, 1], [3, -1, 1.05]], layers: { bg: .25, mid: .6, fg: { depth: 1, move: [16, 12] } } },
@@ -18,7 +18,7 @@ const scenes = [
 ];
 // Durasi adegan
 const HOLD = 3800;
-// Lebih besar dari layar
+// Lebihan layar
 const OVERSCAN = 1.1;
 const STORY = './assets/story/';
 

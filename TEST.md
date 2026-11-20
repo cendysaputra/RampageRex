@@ -6,6 +6,20 @@
 
 `staging` (`0a3078406871eb45f6cecf966de5433ff5b4d7ab`, 2026-11-17) is still the initial README. `main` is the playable browser game. The planned Tauri wrapper is not in the repo: there is no Rust crate, `tauri.conf`, capability file, IPC command, updater, or filesystem/shell permission. The game is static HTML, CSS, and ES modules on a canvas.
 
+## Status
+
+All five findings are resolved on `ccr-1f571043-sgacw4` (PR #32):
+
+| Finding | Status |
+| --- | --- |
+| RR-1 | Fixed in `49230b7`: `hurt()` returns whether the hit landed; net, giant net and rocket burst apply only then, and projectiles pass through an invulnerable Rex. |
+| RR-2 | Fixed in `49230b7`: Rex is immune from the first frame of the jump (`lift > 0`), and the takeoff cancels an on-screen hero ulti. A jump pressed up to ~0.85 s after the banner still counters it. |
+| RR-3 | Fixed in `49230b7`: the queued attack is kept while Rex is stunned. |
+| RR-4 | Fixed in `49230b7`: `start()` pauses right away when the tab is hidden. |
+| RR-5 | Resolved in `ced8583`: `tools/preview-browser.mjs` and `docs/animation-checks.md` were removed as unused. |
+
+`rex.bigNet` is now initialised to 0. `npm run check` reproduces RR-1 to RR-3 and passes.
+
 ## Summary
 
 | Severity | Count |
@@ -78,9 +92,9 @@
 | Build | No build script. The game is the static files. Not run. |
 | `npm audit` | Not run. `package.json` has no dependencies and there is no lockfile (`npm audit` exits with `ENOLOCK`). Nothing to audit. |
 | Secrets | No private keys, `AKIA` ids, or `api_key` strings in the tree or in git history. `localStorage` only stores `rex.best` and `rex.sound`. |
-| Assets | Every building color, damage state, prop (including `mobil-sppg`), civilian frame, soldier frame, hero part, and backdrop used by the four levels is in `assets/manifest.json` and has a `.webp`. Six manifest PNGs have no WebP (`hero`/`soldier` master sheets and `ui/hud/frames/rage.png`); the loader does not request those paths. The favicon uses the PNG directly. |
+| Assets | Every building color, damage state, prop (including `mobil-sppg`), civilian frame, soldier frame, hero part, and backdrop used by the four levels is in `assets/manifest.json` and has a `.webp`. Six manifest PNGs had no WebP (`hero`/`soldier` master sheets and `ui/hud/frames/rage.png`); the loader does not request those paths. Since `ced8583` the master-sheet entries are gone, and only `ui/hud/frames/rage.png` remains, used directly as the favicon. |
 | Simulation | District 4 for 90 s did not throw. Overkill damage stops at 100% (`lost === total`). Every building can be bitten or stomped before `exitX`. Truck props do not share a cell with another prop (nearest other prop is 417–512 px). |
-| Browser script | Not executed (no Playwright, no static server). See RR-5. |
+| Browser script | Not executed (no Playwright, no static server). See RR-5; the script has since been removed. |
 | Security surface | No CSP meta tag. `innerHTML` is used for the help/pause/result copy and boss cards. Shipped level names are plain text (`Jalan Ruko`, `Pusat Kota`, `Pelabuhan`, `Alun-Alun`) and boss types are the three hero ids, so this is not an exploitable sink in the current data. Not filed as a finding. |
 
 `rex.bigNet` becomes `NaN` on the first update because it is not initialized (`Math.max(0, undefined - dt)`). `bigNet > 0` is false, and Jaring's ult assigns a real number before the graphic is used. No visible effect, so it is not filed.

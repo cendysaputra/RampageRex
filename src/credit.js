@@ -1,7 +1,7 @@
-// Layar kredit: hitam, teks muncul pelan, lalu memudar sebelum opening
+// Layar kredit
 const SHOW = 2300, FADE = 700;
 
-// Tunggu sampai waktu habis atau pemain melewati
+// Tunggu atau lewati
 function wait(ms, skip) {
   return new Promise(resolve => {
     const timer = setTimeout(done, ms);
