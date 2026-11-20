@@ -687,4 +687,16 @@ for (const late of [.1, .3, .6]) {
   assert.equal(done.status, 'won');
 }
 
+// Peluru tidak menembus Rex yang kebal
+{
+  const w = makeWorld(); w.spawnTime = Infinity; w.god = true;
+  w.shots.push({ x: w.rex.x + 30, y: -150, type: 'rocket', vx: -10, vy: 0, life: 3 });
+  w.update(1 / 60, empty);
+  assert.equal(w.shots.length, 0, 'shots stop at an invulnerable Rex');
+  assert.equal(w.rex.hp, w.rex.max, 'and do no damage');
+  const dev = new World(levels[0], 0, { god: true });
+  dev.rex.hp = 1; dev.hurt(999);
+  assert.equal(dev.rex.hp, 1, 'developer god mode starts on');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

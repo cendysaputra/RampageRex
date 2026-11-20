@@ -102,7 +102,7 @@ const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
 // Dunia permainan
 export class World {
   constructor(level,index,options={}){
-    this.lite=!!options.lite;this.upgrades=options.upgrades||[];this.mods=modifiers(this.upgrades);
+    this.lite=!!options.lite;this.god=!!options.god;this.upgrades=options.upgrades||[];this.mods=modifiers(this.upgrades);
     this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.flips=0;this.usedUlti=false;this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp+this.mods.hp,max:rexHp+this.mods.hp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
@@ -184,7 +184,7 @@ export class World {
     else if(name==='heroes'){for(const type of ['perisai','rajawali','jaring']){const e=this.spawn(type,p.x+flank[type]);e.ultCd=firstUlt[type]}this.triggered=new Set(this.level.bosses.map((_,i)=>i))}
     else if(name==='robot'){if(!this.level.boss)return 'Robot hanya ada di Alun-Alun';const e=this.spawn('robot',near(700));e.dir=-p.dir;e.timer=2;this.bossSpawned=true}
     else if(name==='end'){this.devAction('flatten');this.triggered=new Set(this.level.bosses.map((_,i)=>i));for(const e of this.enemies)if(e.hero){e.hp=0;this.defeat(e)}this.bossSpawned=true;p.x=Math.min(this.exitX-60,this.level.length-200)}
-    else if(name==='god'){this.god=!this.god;return this.god?'Kebal: nyala':'Kebal: mati'}
+    else if(name==='god'){this.god=!this.god;this.onGod?.(this.god);return this.god?'Kebal: nyala':'Kebal: mati'}
     else if(name==='cooldown'){for(const k in p.cd)p.cd[k]=0}
     else if(name==='rage')p.rage=100;
     else if(name==='heal')p.hp=p.max;
@@ -258,7 +258,7 @@ export class World {
     // Darah pahlawan
     const max={robot:2600,perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150,tank:520,firetruck:320,firefighter:170,drone:60}[type]*(hero?.7+this.tier*.3:1)*(hero&&this.level.endless?1+this.percent/80:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:type==='drone'?-330:0,dir:-1,hp:max,max,hero,
-      ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(190,380),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
+      ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(270,420),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
   }
   // Mulai serangan
@@ -627,8 +627,9 @@ export class World {
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     // Proyektil
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-      if(!this.immune()&&overlap(box(s.x,s.y,10,10),box(p.x,-12-p.lift,141,290))){s.life=0;this.hurt(s.damage??DAMAGE[s.type]);
-        if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
+      // Peluru kena Rex
+      if(overlap(box(s.x,s.y,10,10),box(p.x,-12-p.lift,141,290))){s.life=0;const landed=this.hurt(s.damage??DAMAGE[s.type]);
+        if(landed&&s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0&&s.y<40);
     // Warga
     for(const c of this.civilians){

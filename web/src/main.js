@@ -217,7 +217,8 @@ async function start(index=0,carried=0,result='',kept=[]){
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());art.setLite(useLite(settings));if(renderer)renderer.stale=true;
     await art.preload(levels[index],ratio=>{el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status',t('Memuat distrik… {n}%',{n:Math.round(ratio*100)}))});
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn()});
+    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn(),god:dev&&getSaved('rex.devgod','1')==='1'});
+    world.onGod=on=>save('rex.devgod',on?'1':'');
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status',t('Siap mengamuk!'));
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -312,7 +313,7 @@ function updateHud(){
   const fury=p.fury>0;if(shown.get('fury')!==fury){shown.set('fury',fury);el('hp').closest('.player-card').toggleAttribute('data-fury',fury)}
   let next='',names='';
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+t(heroNames[e.type])}
-  text('objective',world.phase!=='fight'?t('Jalan ke ujung distrik →'):names?t('Kalahkan {names}',{names}):t(world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan'));
+  text('objective',world.phase==='clear'||world.phase==='exit'?t('Jalan ke ujung distrik →'):names?t('Kalahkan {names}',{names}):t(world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan'));
   if(next!==bossKey){bossKey=next;el('bosses').replaceChildren(...world.enemies.filter(e=>e.hero).map(e=>{
     const card=document.createElement('div');card.innerHTML='<img src="./assets/characters/heroes/'+e.type+'/'+(e.type==='robot'?'master':'portrait')+'.webp" alt="" width="40" height="40"><strong>'+t(heroNames[e.type])+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
   }))}
@@ -393,7 +394,7 @@ if(dev){
     box.lastChild.append(b);
   }
   el('hud').append(box);
-  const badge=document.createElement('span');badge.className='dev-badge';badge.textContent='MODE DEVELOPER · progres tidak disimpan';el('menu').append(badge);
+  const badge=document.createElement('span');badge.className='dev-badge';badge.textContent='MODE DEVELOPER · kebal · progres tidak disimpan';el('menu').append(badge);
 }
 // Debug lokal
 if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get world(){return world}};
