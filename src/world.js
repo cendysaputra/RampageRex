@@ -14,9 +14,18 @@ const abilities = {
   tail: {duration:.62, impact:.26, damage:88, range:[-530,18], height:[-240,0]},
   stomp:{duration:.72, impact:.31, damage:84, range:[-245,245], height:[-115,5]},
   roar: {duration:.9, impact:.23, damage:0},
+  // Lompat gertakan: impact = saat mendarat
+  jump: {duration:1.25, impact:.95, damage:0},
   // Ulti
   ulti: {duration:1.9, impact:1.05, damage:150}
 };
+// Tinggi lompatan Rex (piksel) menurut umur serangan
+export function jumpLift(age){
+  const up=.18,land=.95;if(age<=up||age>=land)return 0;
+  const k=(age-up)/(land-up);return 300*4*k*(1-k);
+}
+// Durasi animasi Rex tumbang sebelum layar hasil
+export const dieTime=2.8;
 // Darah Rex
 const rexHp=400;
 // Damage ke Rex
@@ -24,7 +33,7 @@ const DAMAGE={bullet:4,rocket:26,laser:16,net:9,ram:20,charge:42,dive:38};
 // Pulih darah
 const HEAL={soldier:10,vehicle:16,hero:60};
 // Jeda serangan
-export const cooldowns = {bite:.7, tail:2.2, stomp:3.5, roar:9, ulti:40};
+export const cooldowns = {bite:.7, tail:2.2, stomp:3.5, roar:9, jump:20, ulti:40};
 // Status modul
 export function moduleState(m){
   if (m.hp<=0) return 'rubble';
@@ -54,6 +63,8 @@ export const heroUltis={
 };
 // Darah warga: dua serangan biasa, sama seperti tentara
 const civilianHp=110;
+// Lama terpaku setelah Rex mendarat (raungan: 2,6 dtk)
+const slamStun={troop:4.5,hero:1.6};
 // Durasi Rex berjalan keluar layar, termasuk layar meredup
 export const exitTime=2.6;
 // Batas tentara di layar
@@ -64,7 +75,7 @@ export class World {
   constructor(level,index){
     this.level=level;this.index=index;this.time=0;this.score=0;this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,
-      cd:{bite:0,tail:0,stomp:0,roar:0,ulti:15}};
+      cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
     this.buildings=level.buildings.map(b=>{
       let y=-65;
       const modules=['ground',...Array(b.upper).fill('upper'),'roof'].map(type=>{
@@ -76,7 +87,7 @@ export class World {
     });
     this.props=(level.props||[]).map(prop=>({...prop,hp:150}));
     this.enemies=[];this.civilians=[];this.shots=[];this.effects=[];this.events=[];
-    this.triggered=new Set();this.spawnTime=2;this.squads=0;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
+    this.triggered=new Set();this.spawnTime=2;this.squads=0;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.jumpAt=-9;this.dieAt=0;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
     // Fase akhir: fight -> clear (jalan ke ujung) -> exit (Rex keluar layar)
     this.phase='fight';this.exitX=level.length-420;this.exitAt=0;
     // Musuh makin keras di distrik berikutnya
@@ -138,7 +149,7 @@ export class World {
   // Mulai serangan
   startAttack(key){
     const p=this.rex;if(!abilities[key]||p.attack||p.stun>0||this.status!=='playing')return;
-    if(p.cd[key]>0){if(key==='ulti'||key==='roar')this.say((key==='ulti'?'Ulti':'Raung')+' siap dalam '+Math.ceil(p.cd[key])+' dtk.',.9);return}
+    if(p.cd[key]>0){if(key==='ulti'||key==='roar'||key==='jump')this.say(({ulti:'Ulti',roar:'Raung',jump:'Lompat'})[key]+' siap dalam '+Math.ceil(p.cd[key])+' dtk.',.9);return}
     p.cd[key]=cooldowns[key];
     p.attack={key,age:0,...abilities[key],done:false};
     if(key==='ulti'){this.messageUntil=0;this.sound('ulti');if(this.cast&&!this.cast.done)this.cancelCast()}
@@ -147,6 +158,7 @@ export class World {
   strike(a){
     const p=this.rex;this.sound(a.key);this.shake=Math.max(this.shake,a.key==='bite'?4:9);
     if(a.key==='ulti'){this.quake(a.damage*(p.fury>0?2:1));return}
+    if(a.key==='jump'){this.slam();return}
     if(a.key==='roar'){
       for(const e of this.enemies.filter(e=>e.x>=this.camera-40&&e.x<=this.camera+this.view+40)){
         if(!e.hero)e.stun=2.6;
@@ -200,6 +212,19 @@ export class World {
     c.spin=c.dir*range(6,10);c.angle=0;c.life=1.15;c.hp=0;
     this.score+=40;this.rex.rage=clamp(this.rex.rage+1.5,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
   }
+  // Mendarat dari lompatan: gertakan, tanpa damage, tapi semua di layar terpaku lebih lama dari raungan
+  slam(){
+    const p=this.rex,left=this.camera-60,right=this.camera+this.view+60;
+    this.shake=Math.max(this.shake,18);this.jumpAt=this.time;this.sound('collapse');
+    for(const e of this.enemies){
+      if(e.hp<=0||e.x<left||e.x>right)continue;
+      e.stun=Math.max(e.stun,e.hero?slamStun.hero:slamStun.troop);e.hit=.2;
+      if(e.type==='rajawali'){e.mode='ground';e.timer=4.5}
+    }
+    if(this.cast&&!this.cast.done&&this.cast.hero.x>=left&&this.cast.hero.x<=right)this.cancelCast();
+    for(const c of this.civilians)if(!c.down&&c.x>=left&&c.x<=right){c.stun=Math.max(c.stun||0,1.2);c.vx=0}
+    this.fx('dust',p.x-150,0,2);this.fx('dust',p.x+150,0,2);this.fx('debris',p.x,-20,4);
+  }
   // Gempa ulti
   quake(damage){
     const p=this.rex,left=this.camera-60,right=this.camera+this.view+60;
@@ -232,7 +257,7 @@ export class World {
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
   // Lukai Rex
-  hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti')return;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
+  hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti'||p.lift>40||this.phase==='dying')return;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
   // Mulai ulti pahlawan
   startCast(e){
     this.cast={hero:e,type:e.type,age:0,windup:ultWindup,done:false,...heroUltis[e.type]};
@@ -310,10 +335,11 @@ export class World {
     for(const k of ['stun','slow','fury','hit','bigNet'])p[k]=Math.max(0,p[k]-dt);
     for(const k in p.cd){const before=p.cd[k];p.cd[k]=Math.max(0,before-dt);if(k==='ulti'&&before>0&&!p.cd[k]){this.say('Ulti siap! Tekan R.',2);this.sound('alarm')}}
     if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say('Rage penuh! Damage 2× selama 8 detik.',2.4);this.sound('roar')}
-    const exiting=this.phase==='exit';
+    const exiting=this.phase==='exit',dying=this.phase==='dying';
     if(exiting){p.stun=0;p.slow=0;p.queued=null}
-    const move=exiting?1:Number(input.has('right'))-Number(input.has('left'));
-    p.moving=!!move&&p.stun<=0&&(!p.attack||p.attack.key==='bite');
+    if(dying){p.queued=null;p.attack=null}
+    const move=exiting?1:dying?0:Number(input.has('right'))-Number(input.has('left'));
+    p.moving=!!move&&p.stun<=0&&(!p.attack||p.attack.key==='bite'||p.attack.key==='jump');
     if(p.moving)p.dir=move;
     // Gerak Rex
     p.vx+=((p.moving?move*(p.slow>0?155:365):0)-p.vx)*ease(p.moving?12:16,dt);
@@ -325,12 +351,13 @@ export class World {
     }
     p.stride+=(clamp(Math.abs(p.vx)/240,0,1)-p.stride)*ease(12,dt);
     // Antre serangan
-    if(!exiting)for(const key of ['ulti','bite','tail','stomp','roar'])if(input.has(key)){p.queued=key;p.queuedUntil=this.time+.25;break}
+    if(!exiting&&!dying)for(const key of ['ulti','jump','bite','tail','stomp','roar'])if(input.has(key)){p.queued=key;p.queuedUntil=this.time+.25;break}
     if(p.queued){
       if(this.time>p.queuedUntil)p.queued=null;
       else if(!p.attack&&p.stun<=0){this.startAttack(p.queued);p.queued=null}
     }
     if(p.attack){const a=p.attack;a.age+=dt;if(!a.done&&a.age>=a.impact){a.done=true;this.strike(a)}if(a.age>=a.duration)p.attack=null}
+    p.lift=p.attack?.key==='jump'?jumpLift(p.attack.age):0;
     // Kamera
     this.look+=(p.dir-this.look)*ease(1.6,dt);
     this.camera+=(clamp(p.x-this.view*(.5-.06*this.look),0,Math.max(0,this.level.length-this.view))-this.camera)*ease(6,dt);
@@ -382,6 +409,7 @@ export class World {
     // Musuh
     for(const e of this.enemies){
       if(e.hp<=0)continue;const previousX=e.x;e.shot-=dt;e.hit=Math.max(0,e.hit-dt);
+      if(this.phase==='dying'){e.vx*=Math.pow(.05,dt);this.animateEnemy(e,dt,previousX);continue}
       e.x+=e.vx*dt;e.vx*=Math.pow(.05,dt);
       if(e.lift>0){e.lift=Math.max(0,e.lift+e.vy*dt);e.vy-=850*dt}
       if(e.stun>0){e.stun=Math.max(0,e.stun-dt);this.animateEnemy(e,dt,previousX);continue}
@@ -410,7 +438,7 @@ export class World {
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     // Proyektil
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-      if(overlap(box(s.x,s.y,10,10),box(p.x,-12,141,290))){s.life=0;this.hurt(s.damage??DAMAGE[s.type]);
+      if(overlap(box(s.x,s.y,10,10),box(p.x,-12-p.lift,141,290))){s.life=0;this.hurt(s.damage??DAMAGE[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0&&s.y<40);
     // Warga
@@ -428,7 +456,15 @@ export class World {
     keep(this.effects,f=>f.life>0);this.shake=Math.max(0,this.shake-dt*25);
     for(const b of this.buildings)for(const m of b.modules)m.fall=Math.max(0,m.fall-dt);
     // Menang kalah
-    if(p.hp<=0&&this.phase!=='exit')this.status='lost';
+    if(p.hp<=0&&this.phase!=='exit'&&this.phase!=='dying'){
+      // Rex tumbang dulu, layar hasil menyusul
+      this.phase='dying';this.dieAt=this.time;p.attack=null;p.vx=0;this.shots.length=0;this.rain=null;this.cast=null;
+      this.shake=16;this.messageUntil=0;this.sound('roar');
+    }
+    else if(this.phase==='dying'){
+      if(!this.fellAt&&this.time-this.dieAt>=.85){this.fellAt=this.time;this.shake=22;this.sound('collapse');this.fx('dust',p.x-120*p.dir,0,3);this.fx('dust',p.x+160*p.dir,0,3)}
+      if(this.time-this.dieAt>=dieTime)this.status='lost';
+    }
     else if(this.phase==='fight'&&this.percent+.0001>=this.level.target&&this.triggered.size===this.level.bosses.length&&!this.enemies.some(e=>e.hero)){
       this.phase='clear';this.shots.length=0;this.rain=null;
       for(const e of this.enemies)e.flee=true;

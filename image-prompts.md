@@ -517,6 +517,68 @@ Warna dasar jalan untuk kode (`ground`): ambil warna batu paling bawah gambar.
 
 ---
 
+## 12. Rex — lompat gertakan dan tumbang
+
+Kedua gerakan ini sudah jalan di game dengan pose pinjaman dan gerakan dari kode:
+- **Lompat:** jongkok, lalu melayang dengan pose raung, lalu mendarat dengan pose injak. Tinggi lompatan, gepeng/melar, gelombang kejut, dan debu digambar kode.
+- **Tumbang:** pose injak dimiringkan ke depan, lalu muncul bintang pusing dan judul "REX TUMBANG".
+
+Dua atlas di bawah menggantikan pose pinjaman itu. **Jangan** gambar efek (debu, gelombang, bintang, garis kecepatan, bayangan): semuanya sudah dibuat kode, dan tinggi lompatan juga diatur kode, jadi Rex tetap digambar dengan kaki di garis tanah sel.
+
+Referensi identitas untuk kedua prompt: `assets/characters/rex/master.png` dan atlas `assets/characters/rex/animations/walk.png`. Ikuti cara kerja di `assets/characters/rex/animations/README.md` (simpan PNG asli, catat prompt akhirnya di sana).
+
+### 12.1 Atlas lompat gertakan (8 pose)
+
+Simpan sebagai `assets/characters/rex/animations/jump.png`.
+
+```
+Production transparent PNG sprite animation atlas for this exact Rex dinosaur. Match the red chunky Rex's identity and polished cartoon rendering in both references precisely: red skin with dark crimson spots and dark maroon outlines, cream segmented belly, orange dorsal plates, yellow eye, three red cheek scars, small clawed arms, long tapering tail, warm top rim lighting. Output one square transparent RGBA image, largest available resolution, with EXACTLY TWO equal columns and FOUR equal rows: EIGHT full-body sprites, read left to right then top to bottom. No grid, borders, text, ground, shadows or checkerboard. Every cell has the same fixed camera and the same body scale, hips at 58 percent of the cell width, and at least 32 pixels of fully transparent margin on all sides. Rex faces RIGHT in every frame. Draw every pose with the lowest point of the body near a baseline at 90 percent of the cell height: the jump height is added later by the game, so do not move him up inside the cell.
+
+This is an INTIMIDATION JUMP, a showy hop meant to scare soldiers, ending in a heavy ground-shaking landing:
+(1) anticipation: deep crouch, knees bent hard, body low, tail curled down, head lowered with a smug menacing grin;
+(2) launch: legs extending explosively, toes just leaving the ground, body angled up and forward, tail swinging down for balance;
+(3) rising: legs tucked up under the belly, small arms raised, jaws opening, tail streaming behind;
+(4) peak: body stretched and floating, chest out, jaws wide open in a mocking roar, arms flung out, tail high and curled up;
+(5) falling: legs reaching down ready to land, knees bent, head tilted down looking at the ground, jaws half closed, tail raised high behind;
+(6) LANDING IMPACT: both feet slammed flat on the baseline, knees deeply bent, body squashed low and wide, tail pressed down, head thrust forward with a loud roar;
+(7) rebound: body pushing back up to mid height, mouth closing into a cocky grin;
+(8) settling back into his neutral standing pose, jaw closed.
+
+Eight clearly different, individually clean poses with big readable silhouette changes. No dust, no shockwave, no cracks, no speed lines, no motion blur, no aura. No extra limbs. Smooth confident antialiased linework, consistent proportions, genuine alpha transparency. The whole character, including the full tail and open jaws, stays inside its own cell.
+```
+
+### 12.2 Atlas tumbang (6 pose)
+
+Simpan sebagai `assets/characters/rex/animations/defeat.png`.
+
+```
+Production transparent PNG sprite animation atlas for this exact Rex dinosaur. Match the red chunky Rex's identity and polished cartoon rendering in both references precisely: red skin with dark crimson spots and dark maroon outlines, cream segmented belly, orange dorsal plates, yellow eye, three red cheek scars, small clawed arms, long tapering tail, warm top rim lighting. Output one wide transparent RGBA image, largest available resolution, with EXACTLY THREE equal columns and TWO equal rows: SIX full-body sprites, read left to right then top to bottom. No grid, borders, text, ground, shadows or checkerboard. Every cell has the same fixed camera and the same body scale, and at least 32 pixels of fully transparent margin on all sides. The lowest point of the body always touches a ground line at 90 percent of the cell height, and the point under his hips stays at 58 percent of the cell width. Rex faces RIGHT in every frame.
+
+This is his DEFEAT, a comedic cartoon knockout, not gory and not sad:
+(1) hit reaction: body jerked backward, head snapped up, eyes squeezed shut, mouth open in an "oof", arms flailing;
+(2) staggering: wobbling on one leg, body leaning back, tail swinging for balance, dazed half-closed eyes;
+(3) losing balance forward: knees buckling, body tipping forward, head drooping toward the ground, eyes turning into dizzy spirals;
+(4) collapse: belly and chin hitting the ground, legs folding under him, tail lifting up from the momentum, arms splayed;
+(5) small bounce: body slightly lifted off the ground from the impact, tail tip flopping, tongue lolling out of the side of the mouth;
+(6) knocked out: lying flat on his belly along the ground line, chin resting on the ground, tail limp and stretched out behind, dizzy spiral eyes, tongue out, small arms limp. This last pose is held on screen.
+
+Six clearly different, individually clean poses with big readable silhouette changes. No dizzy stars, no birds, no sweat drops, no dust, no blood, no tears, no motion blur: those are added by the game. No extra limbs. Smooth confident antialiased linework, consistent proportions, genuine alpha transparency. The whole character, including the full tail, stays inside its own cell.
+```
+
+### 12.3 Yang perlu dihubungkan setelah gambar jadi
+
+1. Jalankan `python tools/to-webp.py` untuk membuat salinan WebP.
+2. Tambahkan ke `assets/manifest.json`:
+   - di `assets`: `"characters/rex/animations/jump.png"` dan `"characters/rex/animations/defeat.png"`, masing-masing dengan `width`, `height`, `"pivot": [0, 0]`, `"alpha": true` (tanpa `bounds`);
+   - di `rexAnimations.atlases`: `"jump"` dan `"defeat"` dengan `path` dan baris `frames` `[x, y, lebar, tinggi, pivotX, pivotY]` seperti atlas lain (pivot = titik tanah di bawah pinggul), ditambah `"scale"` bila ukuran badan perlu disamakan dengan atlas jalan;
+   - di `rexAnimations.clips`:
+     - `"jump": {"atlas": "jump", "frames": [0, 1, 2, 3, 4, 5, 6, 7], "contact": 5}`. `contact` adalah pose mendarat (pose ke-6), yang tampil tepat saat gelombang kejut muncul.
+     - `"defeat": {"atlas": "defeat", "frames": [0, 1, 2, 3, 4, 5], "fall": 1.1}`. `fall` adalah detik sampai pose terakhir tercapai; pose terakhir ditahan sampai layar hasil.
+3. Tidak perlu mengubah kode: `src/rex-animation.js` otomatis memakai klip `jump` dan `defeat` bila ada. Begitu klip `defeat` terdaftar, kemiringan buatan kode otomatis mati dan bintang pusing pindah ke posisi kepala yang rebah.
+4. Jalankan `npm run check`, lalu coba lompat (Spasi) dan biarkan Rex kalah di browser pada layar desktop dan portrait. Bila bintang pusing tidak pas di atas kepala, sesuaikan angka `-200` di fungsi `rexRig` pada `src/art.js`.
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).

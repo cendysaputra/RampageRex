@@ -24,7 +24,7 @@ python -m http.server 8000
 
 Lalu buka `http://localhost:8000`. Game membaca modul JavaScript, data level, dan aset lewat HTTP, jadi tidak bisa dibuka langsung sebagai file. Tidak ada paket yang perlu dipasang.
 
-Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya**. Setelah itu tentara kabur dan panah muncul di ujung jalan: bawa Rex ke sana, lalu ia berjalan keluar layar sendiri menuju distrik berikutnya. Kalau HP Rex habis, distrik diulang.
+Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya**. Setelah itu tentara kabur dan panah muncul di ujung jalan: bawa Rex ke sana, lalu ia berjalan keluar layar sendiri menuju distrik berikutnya. Kalau HP Rex habis, Rex terhuyung lalu tumbang dengan bintang di atas kepala, baru kemudian distrik diulang.
 
 ## 🕹️ Kontrol
 
@@ -35,10 +35,11 @@ Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya*
 | 🌀 | **Ekor** ke belakang, melempar tentara dan jeep | `Q` | Klik kanan | 2,2 dtk |
 | 🦶 | **Injak** di sekitar kaki, merusak lantai dasar | `S` | | 3,5 dtk |
 | 📣 | **Raung**, membuat tentara di layar terpaku | `E` | | 9 dtk |
+| 🦖 | **Lompat gertakan**: kebal di udara, saat mendarat semua di layar terpaku 4,5 dtk (pahlawan 1,6 dtk) | `Spasi` | | 20 dtk |
 | 💥 | **Ulti: Amukan Rex**, mengguncang seluruh layar | `R` | | 40 dtk |
 | ⏸️ | Jeda | `Esc` atau `P` | | |
 
-- Chip skill di bawah layar meredup dan menampilkan sisa detik selama cooldown berjalan. Ulti baru bisa dipakai 15 detik setelah distrik dimulai.
+- Chip skill di bawah layar meredup dan menampilkan sisa detik selama cooldown berjalan. Lompat baru bisa dipakai 6 detik dan Ulti 15 detik setelah distrik dimulai.
 - Serangan yang ditekan sedikit terlalu cepat tetap keluar begitu Rex bebas.
 - Meruntuhkan lantai dasar menjatuhkan semua lantai di atasnya.
 - Rex punya 400 darah. Mengalahkan tentara memulihkan sedikit, mengalahkan pahlawan memulihkan lebih banyak.
@@ -70,7 +71,7 @@ Tiap penjaga juga punya **ulti** dengan cut-in panel yang sama seperti Amukan Re
 | 🦅 Rajawali | **Hujan Laser** | Laser berjatuhan dari langit di sekitar Rex selama 1,5 detik |
 | 🕸️ Jaring | **Jaring Raksasa** | Jaring baja menutupi Rex, damage dan memperlambat 5 detik |
 
-Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. **Raung** saat panelnya muncul, atau pakai Ulti Rex, untuk menggagalkannya.
+Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. **Raung** atau **lompat** saat panelnya muncul, atau pakai Ulti Rex, untuk menggagalkannya.
 
 ## 🪖 Tentara dan warga
 

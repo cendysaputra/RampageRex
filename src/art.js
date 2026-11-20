@@ -142,15 +142,38 @@ export class Art {
 }
 
 // Gambar Rex
-function rexRig(c,a,p,t,reduced){
-  const pose=rexPose(p,a.rexAnimations),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
-  c.save();c.translate(p.x,reduced||p.attack?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
+function rexRig(c,a,p,t,reduced,down=-1){
+  const pose=rexPose(p,a.rexAnimations,down),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
+  c.save();c.translate(p.x,reduced||p.attack||down>=0?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
+  // Lompat: jongkok, melar di udara, gepeng saat mendarat
+  if(p.attack?.key==='jump'){
+    const age=p.attack.age,crouch=age<.18?Math.sin(age/.18*Math.PI):0,land=age>.95?Math.max(0,1-(age-.95)/.2):0;
+    const squash=reduced?0:.1*crouch+.14*land-(p.lift>0?.05:0);
+    c.translate(0,-p.lift);c.scale(1+squash*.6,1-squash);
+  }
+  c.save();
+  // Tumbang tanpa atlas: terhuyung, lalu jatuh ke depan bertumpu kaki depan
+  if(down>=0&&!a.rexAnimations.clips.defeat&&!reduced){
+    const wobble=Math.sin(Math.min(down,.6)*18)*.05*(1-smooth(down/.6));
+    const fall=smooth((down-.45)/.4),bounce=down>.85?Math.sin((down-.85)*14)*Math.exp(-(down-.85)*6)*.04:0;
+    c.translate(150,0);c.rotate(wobble+fall*.36+bounce);c.translate(-150,fall*38);c.scale(1+fall*.05,1-fall*.08);
+  }
   a.blend(c,pose.from,pose.to,pose.mix,0,0,a.rexAnimations.width);
   if(p.bigNet>0)a.sprite(c,'fx/steel-net',10,-8,520,1,Math.sin(t*3)*.03);
   else if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
   if(roar>.2){
     c.strokeStyle='#ffe69f';c.lineWidth=4;c.globalAlpha=roar*.8;
     for(let i=0;i<3;i++){c.beginPath();c.arc(270,-280,75+i*44+p.attack.age/p.attack.duration*65,-.75,.75);c.stroke()}
+  }
+  c.restore();
+  // Bintang pusing di atas kepala setelah jatuh
+  if(down>.9){
+    const show=smooth((down-.9)/.3);c.globalAlpha=show;c.fillStyle='#ffd45c';c.strokeStyle='#102321';c.lineWidth=4;c.lineJoin='round';
+    for(let i=0;i<3;i++){
+      const angle=(reduced?0:t*3)+i*Math.PI*2/3,x=320+Math.cos(angle)*70,y=(a.rexAnimations.clips.defeat?-200:-262)+Math.sin(angle)*14;
+      c.beginPath();for(let k=0;k<10;k++){const radius=k%2?8:19,q=-Math.PI/2+k*Math.PI/5;c.lineTo(x+Math.cos(q)*radius,y+Math.sin(q)*radius)}
+      c.closePath();c.stroke();c.fill();
+    }
   }
   c.restore();
 }
@@ -309,9 +332,9 @@ export class Renderer {
         c.strokeStyle='#ff9b40';c.lineWidth=12;c.beginPath();c.moveTo(x,40);c.lineTo(x+34,80);c.lineTo(x,120);c.stroke();
       }c.restore();
     }
-    shadow(g.rex.x-15,2,212);c.save();
+    shadow(g.rex.x-15,2,212*(1-g.rex.lift/700));c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
-    rexRig(c,a,g.rex,t,reduced);c.restore();
+    rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1);c.restore();
     // Warga
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;
@@ -346,6 +369,15 @@ export class Renderer {
       for(const [delay,colour] of [[0,'#fff3c4'],[.18,'#ff9b40']]){
         const k=clamp((wave-delay)/(1-delay),0,1);if(!k)continue;
         c.globalAlpha=(1-k)*.9;c.strokeStyle=colour;c.beginPath();c.ellipse(g.rex.x,-4,80+smooth(k)*view*.75,14+smooth(k)*46,0,0,Math.PI*2);c.stroke();
+      }c.restore();
+    }
+    // Gelombang pendaratan lompat
+    const slam=(t-g.jumpAt)/.8;
+    if(slam>=0&&slam<1){
+      c.save();c.lineWidth=18*(1-slam)+3;
+      for(const [delay,colour] of [[0,'#fff3c4'],[.12,'#3fa39a'],[.24,'#fff3c4']]){
+        const k=clamp((slam-delay)/(1-delay),0,1);if(!k)continue;
+        c.globalAlpha=(1-k)*.85;c.strokeStyle=colour;c.beginPath();c.ellipse(g.rex.x,-4,90+smooth(k)*view*.85,16+smooth(k)*56,0,0,Math.PI*2);c.stroke();
       }c.restore();
     }
     // Gelombang Perisai
@@ -432,6 +464,15 @@ export class Renderer {
       c.font='700 22px "Baloo 2",sans-serif';c.textAlign='right';c.textBaseline='middle';c.lineWidth=6;
       const label=Math.ceil((g.exitX-g.rex.x)/100)+' m';c.strokeText(label,x-26,y);c.fillStyle='#fff0ce';c.fillText(label,x-26,y);
       c.restore();
+    }
+    if(g.phase==='dying'){
+      const down=g.time-g.dieAt,k=smooth((down-1.2)/1.2);
+      if(k>0){
+        c.fillStyle='rgba(11,23,25,'+k*.6+')';c.fillRect(0,0,view,logicalH);
+        c.save();c.globalAlpha=k;c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';
+        c.font=Math.round(Math.min(view*.12,150))+'px Bangers,Impact,sans-serif';c.lineWidth=14;c.strokeStyle='#102321';
+        const y=logicalH*.32-(reduced?0:(1-k)*30);c.strokeText('REX TUMBANG',view/2,y);c.fillStyle='#e8536d';c.fillText('REX TUMBANG',view/2,y);c.restore();
+      }
     }
     if(g.phase==='exit'){
       const k=smooth((g.time-g.exitAt-(exitTime-.9))/.9);

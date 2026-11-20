@@ -4,7 +4,7 @@ import {Sound} from './audio.js';
 import {playOpening} from './opening.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
-const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',
+const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
   KeyJ:'bite',KeyK:'tail',KeyL:'roar'};
 const mouseButtons=['bite',null,'tail'];
 const controls=new Map(),taps=new Set(),input=new Set(),shown=new Map(),snd=new Sound(),panel=el('panel');
@@ -42,7 +42,7 @@ function menu(){
 }
 // Cara main
 function help(){screen='help';modal('Cara main',
-  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Ratakan 100% bangunan dan kalahkan pahlawan distrik. Warga juga bisa dikalahkan. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p><p>Tiga penjaga selalu datang bersama. Saat panel ulti mereka muncul, raung untuk menggagalkannya.</p>',
+  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>Spasi</dt><dd>Lompat gertakan: saat mendarat, semua di layar terpaku lebih lama dari raungan</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Ratakan 100% bangunan dan kalahkan pahlawan distrik. Warga juga bisa dikalahkan. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p><p>Tiga penjaga selalu datang bersama. Saat panel ulti mereka muncul, raung untuk menggagalkannya.</p>',
   [['Kembali',menu]]);
 }
 // Kartu distrik
@@ -143,7 +143,7 @@ document.addEventListener('keydown',e=>{
     e.preventDefault();if(!e.repeat)(screen==='paused'?resume:pause)();return}
   if(screen==='playing'&&keys[e.code]){e.preventDefault();if(!e.repeat)press(e.code,keys[e.code])}
 });
-document.addEventListener('keyup',e=>controls.delete(e.code));
+document.addEventListener('keyup',e=>{if(screen==='playing'&&e.code==='Space')e.preventDefault();controls.delete(e.code)});
 // Input mouse
 const game=el('game');
 game.addEventListener('pointerdown',e=>{
