@@ -10,6 +10,7 @@ import {missions,earned,starText,missionText} from './missions.js';
 import {t,num,setLang,deviceLang,translatePage,languages} from './i18n.js';
 import {makeEndless} from './endless.js';
 import {upgrades,offer} from './upgrades.js';
+import {achievements,loadStats,saveStats,addRun,unlock,progressOf,resetStats} from './achievements.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -28,17 +29,32 @@ function soundLabel(){const btn=document.querySelector('.audio');btn.querySelect
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
 function recordLabel(){el('record').textContent=record?t('Rekor {n}',{n:num(record)}):t('Belum ada rekor')}
-let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,picked=[];
+let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,picked=[],stats=loadStats();
 // Skin aktif
 function activeSkin(){const s=skins[settings.skin];return s&&totalStars(progress)>=s.stars?s.folder:''}
 // Terapkan bahasa
-function applyLang(){setLang(settings.lang);translatePage();soundLabel();recordLabel()}
+function applyLang(){setLang(settings.lang);translatePage();soundLabel();recordLabel();trophyLabel()}
 // Terapkan pengaturan
 function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad}
 applySettings();setLang(settings.lang);translatePage();
+// Label pencapaian
+function trophyLabel(){el('trophies').textContent=t('Pencapaian {n}/{total}',{n:stats.unlocked.length,total:achievements.length})}
+// Daftar pencapaian
+function showTrophies(){
+  if(screen!=='menu')return;screen='trophies';
+  modal(t('Pencapaian'),'<ul class="trophies">'+achievements.map(a=>{
+    const done=stats.unlocked.includes(a.id),k=progressOf(a,stats,progress),value=a.goal?Math.min(a.goal,Math.floor(a.value(stats,progress))):0;
+    return '<li'+(done?' class="done"':'')+'><b>'+(done?'★ ':'☆ ')+t(a.name)+'</b><small>'+t(a.text)+(a.goal&&!done?' · '+num(value)+'/'+num(a.goal):'')+'</small><i style="transform:scaleX('+k.toFixed(3)+')"></i></li>';
+  }).join('')+'</ul>',[[t('Kembali'),menu]]);
+}
+// Catat pencapaian
+function recordTrophies(){
+  addRun(stats,world.runStats());const fresh=unlock(stats,progress);saveStats(stats);trophyLabel();
+  return fresh.length?' · '+t('Pencapaian baru: {names}',{names:fresh.map(a=>t(a.name)).join(', ')}):'';
+}
 // Tombol distrik
 function districtLabel(){el('districts').hidden=progress.unlocked<2}
-soundLabel();recordLabel();districtLabel();
+soundLabel();recordLabel();districtLabel();trophyLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
 // Data level
@@ -150,7 +166,7 @@ function openSettings(paused=false){
     const wipe=document.createElement('button');wipe.type='button';wipe.className='danger';wipe.textContent=t('Hapus progres');
     wipe.onclick=()=>{
       if(!wipe.dataset.armed){wipe.dataset.armed='1';wipe.textContent=t('Yakin? Tekan lagi untuk menghapus');return}
-      progress=resetProgress();record=0;save('rex.best',0);recordLabel();districtLabel();wipe.textContent=t('Progres dihapus');wipe.disabled=true;
+      progress=resetProgress();stats=resetStats();trophyLabel();record=0;save('rex.best',0);recordLabel();districtLabel();wipe.textContent=t('Progres dihapus');wipe.disabled=true;
     };
     form.append(wipe);
   }
@@ -227,7 +243,8 @@ function finish(){
   // Akhir tanpa akhir
   if(levelIndex===ENDLESS){
     const best=world.score>progress.endless;if(best){progress.endless=world.score;saveProgress(progress)}
-    modal(t(best?'Rekor baru!':'Rex tumbang'),'<p>'+t('Mode Tanpa Akhir · skor {score} · rekor {best} · kombo terbaik {combo}',{score:num(world.score),best:num(progress.endless),combo:world.maxCombo})+'</p>',
+    const trophy=recordTrophies();
+    modal(t(best?'Rekor baru!':'Rex tumbang'),'<p>'+t('Mode Tanpa Akhir · skor {score} · rekor {best} · kombo terbaik {combo}',{score:num(world.score),best:num(progress.endless),combo:world.maxCombo})+'</p>'+(trophy?'<p class="trophy-new">'+trophy.slice(3)+'</p>':''),
       [[t('Coba lagi'),()=>start(ENDLESS)],[t('Menu utama'),menu]]);
     return;
   }
@@ -235,11 +252,12 @@ function finish(){
   // Simpan progres
   const stars=earned(world,levelIndex);recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress);districtLabel();
   if(score>record){record=score;save('rex.best',record);recordLabel()}
+  const trophy=recordTrophies();
   const more=win&&levelIndex<ENDLESS-1;
   // Lanjut distrik
-  if(more){el('hud').hidden=true;chooseUpgrade(levelIndex+1,score,t('{name} rata {stars} · Skor {score}',{name:t(world.level.name),stars:starText(stars),score:num(score)}));return}
+  if(more){el('hud').hidden=true;chooseUpgrade(levelIndex+1,score,t('{name} rata {stars} · Skor {score}',{name:t(world.level.name),stars:starText(stars),score:num(score)})+trophy);return}
   modal(t(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang'),
-    '<p>'+t('{name} · destruksi {pct}% · Skor {score}',{name:t(world.level.name),pct:Math.floor(world.percent),score:num(score)})+'</p>'+missionList(stars),
+    '<p>'+t('{name} · destruksi {pct}% · Skor {score}',{name:t(world.level.name),pct:Math.floor(world.percent),score:num(score)})+'</p>'+missionList(stars)+(trophy?'<p class="trophy-new">'+trophy.slice(3)+'</p>':''),
     [[more?t('Lanjut ke distrik {n}',{n:levelIndex+2}):t(win?'Main dari awal':'Coba lagi'),()=>more?start(levelIndex+1,score,'',picked):win?start():start(levelIndex,previousScore,'',picked)],[t('Menu utama'),menu]]);
 }
 let bossKey='';
@@ -315,7 +333,7 @@ document.querySelectorAll('[data-action]').forEach(b=>{
   for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,e=>controls.delete(e.pointerId));
 });
 // Batal dialog
-panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='select'||screen==='settings')menu();else if(screen==='settings-paused'||screen==='controls'){screen='playing';pause()}});
+panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='select'||screen==='settings'||screen==='trophies')menu();else if(screen==='settings-paused'||screen==='controls'){screen='playing';pause()}});
 // Jeda otomatis
 window.addEventListener('blur',()=>{clearInput();pause()});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();pause()}});
 // Tombol menu
@@ -326,7 +344,7 @@ el('start').onclick=async()=>{
   await playOpening(el('opening'),snd);
   await start();
 };
-el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
+el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('trophies').onclick=showTrophies;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);
 // Debug lokal
 if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get world(){return world}};

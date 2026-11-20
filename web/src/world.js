@@ -99,7 +99,7 @@ const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
 export class World {
   constructor(level,index,options={}){
     this.lite=!!options.lite;this.upgrades=options.upgrades||[];this.mods=modifiers(this.upgrades);
-    this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.lost=0;this.total=0;
+    this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.flips=0;this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp+this.mods.hp,max:rexHp+this.mods.hp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
     this.buildings=level.buildings.map(b=>{
@@ -157,6 +157,14 @@ export class World {
   addScore(points){
     this.combo++;this.comboTime=comboWindow+this.mods.comboWindow;this.maxCombo=Math.max(this.maxCombo,this.combo);
     this.score+=Math.round(points*this.multiplier);
+  }
+  // Statistik permainan
+  runStats(){
+    const props={};for(const p of this.props)if(p.hp<=0)props[p.type]=(props[p.type]||0)+1;
+    const soldiers=Object.entries(this.kills).filter(([k])=>!['perisai','rajawali','jaring','robot','turret'].includes(k)).reduce((n,[,v])=>n+v,0);
+    return {buildings:this.buildings.filter(b=>b.modules[0].hp<=0).length,props,soldiers,civilians:this.civiliansDown,
+      heroes:['perisai','rajawali','jaring'].reduce((n,k)=>n+(this.kills[k]||0),0),robot:this.kills.robot||0,tanks:this.flips,drones:this.kills.drone||0,
+      cancelled:this.cancelled,combo:this.maxCombo};
   }
   // Persen hancur
   get percent(){return 100*this.lost/this.total}
@@ -276,7 +284,7 @@ export class World {
       // Lapis baja tank
       const armour=e.type==='tank'&&!(e.flipped>0)&&a.key!=='tail'?.4:e.flipped>0?1.5:1;
       e.hp-=damage*(counter?2:1)*armour;e.hit=.2;
-      if(a.key==='tail'&&e.type==='tank'){e.flipped=4;e.stun=4;e.vx=-p.dir*260;this.say(t('Tank terbalik!'),1.2)}
+      if(a.key==='tail'&&e.type==='tank'){if(!(e.flipped>0))this.flips++;e.flipped=4;e.stun=4;e.vx=-p.dir*260;this.say(t('Tank terbalik!'),1.2)}
       else if(a.key==='tail'&&!e.hero){const fling=e.type==='jeep'||e.type==='firetruck';e.vx=-p.dir*(fling?920:420);e.stun=.65;if(fling){e.lift=1;e.vy=370}}
       if(e.hp<=0)this.defeat(e);
       else if(!e.hero&&a.key!=='tail')this.stagger(e,p.x);

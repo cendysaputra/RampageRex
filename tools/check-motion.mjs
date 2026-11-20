@@ -11,6 +11,7 @@ import { totalStars } from '../web/src/progress.js';
 import { t, setLang, keys as i18nKeys } from '../web/src/i18n.js';
 import { makeEndless } from '../web/src/endless.js';
 import { upgrades, offer, modifiers, MAX_STACK } from '../web/src/upgrades.js';
+import { achievements, loadStats, saveStats, addRun, unlock } from '../web/src/achievements.js';
 
 const levels = await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -553,7 +554,7 @@ for (const late of [.1, .3, .6]) {
   const known = new Set(i18nKeys);
   const extra = [...levels.map(l => l.name), 'Tanpa Akhir', ...missions.flat().map(m => m.text), ...tutorialSteps.flatMap(s => [s.key, s.touch]),
     ...Object.values(heroNamesCheck), ...Object.values(hintsCheck), ...Object.values(heroUltisCheck).map(u => u.name),
-    ...Object.values(difficultiesCheck).map(d => d.label), ...Object.values(skinsCheck).map(s => s.label), ...Object.values(graphicsCheck), ...Object.values(padSizesCheck), ...Object.values(upgrades).flatMap(u => [u.name, u.text])];
+    ...Object.values(difficultiesCheck).map(d => d.label), ...Object.values(skinsCheck).map(s => s.label), ...Object.values(graphicsCheck), ...Object.values(padSizesCheck), ...Object.values(upgrades).flatMap(u => [u.name, u.text]), ...achievements.flatMap(a => [a.name, a.text])];
   for (const src of sources) for (const m of src.matchAll(/line: '((?:[^'\\]|\\.)+)'/g)) extra.push(m[1]);
   const missing = [...used, ...extra].filter(k => k && !known.has(k) && /[a-z]{3}/i.test(k) && !['Rage', 'REX', 'Ulti', 'Normal', 'Batik', 'Mecha', 'Perisai', 'Rajawali', 'Jaring'].includes(k));
   assert.deepEqual([...new Set(missing)], [], 'every visible string has an English translation');
@@ -578,6 +579,28 @@ for (const late of [.1, .3, .6]) {
   for (const w of [biter, base]) { w.spawnTime = Infinity; const e = w.spawn('infantry', w.rex.x + 150); e.hp = 1e6; w.rex.cd.bite = 0; w.startAttack('bite'); for (let i = 0; i < 20; i++) w.update(1 / 60, empty); w.bitten = 1e6 - e.hp; }
   assert.ok(Math.abs(biter.bitten / base.bitten - 1.25) < 1e-6, 'bite damage rises 25%');
   assert.equal(modifiers(['irama']).comboWindow, 1);
+}
+
+// Pencapaian
+{
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  const stats = loadStats(storage), progress = loadProgress({ getItem: () => null });
+  assert.deepEqual(unlock(stats, progress), [], 'nothing unlocks at the start');
+  const world = makeWorld();
+  world.spawnTime = Infinity;
+  world.damageProp(world.props.find(p => p.type === 'spbu'), Infinity);
+  const tank = world.spawn('tank', world.rex.x - 200); world.rex.cd.tail = 0; world.startAttack('tail');
+  for (let i = 0; i < 20; i++) world.update(1 / 60, empty);
+  const run = world.runStats();
+  assert.equal(run.props.spbu, 1); assert.equal(run.tanks, 1);
+  for (let i = 0; i < 10; i++) addRun(stats, run);
+  progress.cleared[0] = true;
+  const fresh = unlock(stats, progress).map(a => a.id);
+  assert.ok(fresh.includes('langkah') && fresh.includes('spbu'), 'clearing district 1 and ten SPBU blasts unlock their achievements');
+  assert.deepEqual(unlock(stats, progress), [], 'achievements unlock only once');
+  saveStats(stats, storage);
+  assert.deepEqual(loadStats(storage).unlocked, stats.unlocked);
+  assert.equal(new Set(achievements.map(a => a.id)).size, achievements.length);
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

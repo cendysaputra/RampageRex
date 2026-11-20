@@ -93,6 +93,10 @@ Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk mem
 
 Setiap kali distrik selesai, pilih **1 dari 3 upgrade** yang berlaku sampai kampanye berakhir, misalnya **Taring Baja** (gigitan +25%), **Sisik Tebal** (darah +60), atau **Amarah Purba** (cooldown ulti −25%). Ada 10 jenis upgrade, dan masing-masing bisa ditumpuk sampai 3 kali. Upgrade aktif terlihat di layar jeda. Memilih distrik langsung dari **Pilih distrik** memulai tanpa upgrade.
 
+### Pencapaian
+
+Ada 15 pencapaian yang dihitung dari semua permainan, misalnya **Pemburu Angkot** (hancurkan 40 angkot), **Tank Terbalik** (balikkan 25 tank dengan ekor), dan **Besi Tua** (kalahkan Robot Penjaga). Daftar dan kemajuannya bisa dibuka dari tombol **Pencapaian** di bagian bawah menu. Pencapaian baru diumumkan di akhir distrik.
+
 ### Mode Tanpa Akhir
 
 Setelah Jalan Ruko selesai, **Pilih distrik** membuka **∞ · Tanpa Akhir**: jalan sangat panjang yang menyambung kedelapan distrik. Penjaga datang bergelombang di setiap 12% kehancuran dengan darah yang makin tebal, dan serangan musuh makin sakit seiring kota hancur. Permainan berakhir saat Rex tumbang, dan skor terbaiknya tercatat sebagai rekor.

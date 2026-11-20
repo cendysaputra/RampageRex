@@ -82,6 +82,16 @@ const en = {
   'Paru-paru Besar': 'Big Lungs', 'Cooldown raung −30%': 'Roar cooldown −30%', 'Kaki Pegas': 'Spring Legs', 'Cooldown lompat −30%': 'Jump cooldown −30%',
   'Amarah Purba': 'Primal Fury', 'Cooldown ulti −25%': 'Ulti cooldown −25%', 'Perut Rakus': 'Greedy Gut', 'Pulih darah dari musuh +50%': 'Health from defeated enemies +50%',
   'Murka': 'Wrath', 'Rage terisi 30% lebih cepat': 'Rage fills 30% faster', 'Irama Amuk': 'Rampage Rhythm', 'Kombo bertahan 1 detik lebih lama': 'Combos last 1 second longer',
+  // Pencapaian
+  'Pencapaian': 'Achievements', 'Pencapaian {n}/{total}': 'Achievements {n}/{total}', 'Pencapaian baru: {names}': 'New achievement: {names}',
+  'Langkah Pertama': 'First Steps', 'Selesaikan Jalan Ruko': 'Clear Ruko Street', 'Penakluk Kota': 'City Conqueror', 'Selesaikan kedelapan distrik': 'Clear all eight districts',
+  'Bintang Kota': 'City Star', 'Kumpulkan 15 bintang': 'Collect 15 stars', 'Langit Penuh Bintang': 'Starry Sky', 'Kumpulkan semua 24 bintang': 'Collect all 24 stars',
+  'Besi Tua': 'Scrap Metal', 'Kalahkan Robot Penjaga': 'Defeat the Robot Guardian', 'Tukang Gusur': 'Demolition Crew', 'Runtuhkan 200 bangunan': 'Bring down 200 buildings',
+  'Teror Barak': 'Barracks Terror', 'Kalahkan 500 tentara': 'Defeat 500 soldiers', 'Kota Sepi': 'Ghost Town', 'Kalahkan 300 warga': 'Defeat 300 civilians',
+  'Pemburu Angkot': 'Angkot Hunter', 'Hancurkan 40 angkot': 'Wreck 40 angkots', 'Pom Bensin Meledak': 'Gas Station Boom', 'Ledakkan 10 SPBU': 'Blow up 10 petrol stations',
+  'Tank Terbalik': 'Tank Flipper', 'Balikkan 25 tank dengan ekor': 'Flip 25 tanks with your tail', 'Langit Bersih': 'Clear Skies', 'Jatuhkan 30 drone': 'Down 30 drones',
+  'Penggagal Ulti': 'Ulti Breaker', 'Gagalkan 20 ulti pahlawan': 'Cancel 20 hero ultis', 'Kombo Maut': 'Deadly Combo', 'Capai kombo 60 dalam satu distrik': 'Reach a 60 combo in one district',
+  'Tak Kenal Lelah': 'Relentless', 'Raih 50.000 skor di Mode Tanpa Akhir': 'Score 50,000 in Endless mode',
   // Pesan permainan
   '{name} · Hancurkan {n}% kota': '{name} · Wreck {n}% of the city', 'SPBU meledak!': 'Petrol station exploded!',
   'Rex makan! +{n} darah': 'Rex eats! +{n} health', 'Rex sudah kenyang.': 'Rex is full.', '{skill} siap dalam {n} dtk.': '{skill} ready in {n}s.',
