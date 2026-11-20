@@ -5,6 +5,8 @@
 - **Date:** 2026-11-20
 - **Re-checked:** `main` at `6342f7d`, 2026-11-20
 
+Since this audit, the game moved into `web/` (`src/` is now `web/src/`, and so on). File and line references below point to the layout at the audited commit.
+
 `staging` (`0a3078406871eb45f6cecf966de5433ff5b4d7ab`, 2026-11-17) is still the initial README. `main` is the playable browser game. The planned Tauri wrapper is not in the repo: there is no Rust crate, `tauri.conf`, capability file, IPC command, updater, or filesystem/shell permission. The game is static HTML, CSS, and ES modules on a canvas.
 
 ## Status

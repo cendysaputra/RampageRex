@@ -1,5 +1,7 @@
 # Rex: generated animation art
 
+Atlases live in `web/assets/characters/rex/animations/`.
+
 Generated with the built-in imagegen tool on 18 November 2026, using Rex's original `master.png` from commit `5146c71` as the identity reference. The PNG outputs were removed from the working tree after conversion and remain in git history. WebP copies use the repository's existing quality-90 conversion settings.
 
 | File | Poses, reading left to right and top to bottom |
@@ -8,7 +10,7 @@ Generated with the built-in imagegen tool on 18 November 2026, using Rex's origi
 | `bite-roar.png` | Four bite poses followed by four roar poses |
 | `tail-stomp.png` | Four tail swipe poses followed by four stomp poses |
 
-The updated menu illustration is `../master.png`. `assets/manifest.json` contains the actual source rectangles, ground pivots and scale correction for all 24 poses. The generated sheets have uneven row spacing, so the runtime reads those rectangles instead of assuming an exact grid. Idle uses the neutral tail recovery pose.
+The updated menu illustration is `web/assets/characters/rex/master.webp`. `web/assets/manifest.json` contains the actual source rectangles, ground pivots and scale correction for all 24 poses. The generated sheets have uneven row spacing, so the runtime reads those rectangles instead of assuming an exact grid. Idle uses the neutral tail recovery pose.
 
 ## Prompts used
 
@@ -37,7 +39,7 @@ Refine the first reference into the updated master PNG illustration of this SAME
 Generated with the built-in imagegen tool on 18 November 2026, using the current master and walk atlas as identity references. WebP copies use quality 90 and method 6; the PNG outputs were removed from the working tree afterwards and remain in git history.
 
 - `ulti.png`: eight poses, from crouch through rearing, drop, impact (index 5), rebound and recovery.
-- `../../../fx/ulti-cutin.png`: transparent close-up for the left banner.
+- `web/assets/fx/ulti-cutin.webp`: transparent close-up for the left banner.
 
 The atlas uses measured source rectangles rather than equal row boundaries; the second row starts higher on the right. Ground pivots align planted feet, and scale 1.18 matches the existing walking sprites. No gameplay timing or cooldown changes are needed.
 
@@ -74,4 +76,4 @@ Added on 20 November 2026 from the `Rex-12` package (prompts in `image-prompts.m
 - `jump.webp`: eight poses: crouch, launch, rising, roaring peak, falling, landing (index 5, the `contact` frame where the shockwave fires), rebound and settle.
 - `knockdown.webp`: six poses from the hit reaction to lying knocked out. The runtime clip is named `defeat` and plays with the package's `frameMs` timings (85, 105, 125, 105, 120 and 390 ms), then holds the last pose until the result dialog.
 
-Both atlases use scale 1.08 to match the walking body size. The package drew the jump height into the cells; the manifest moves each jump frame's pivot to the soles of the feet instead, because the game already lifts Rex in code (`jumpLift` in `src/world.js`) and uses that height for the airborne damage immunity.
+Both atlases use scale 1.08 to match the walking body size. The package drew the jump height into the cells; the manifest moves each jump frame's pivot to the soles of the feet instead, because the game already lifts Rex in code (`jumpLift` in `web/src/world.js`) and uses that height for the airborne damage immunity.
