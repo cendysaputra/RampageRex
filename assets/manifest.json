@@ -3340,6 +3340,51 @@
       ],
       "alpha": true,
       "logicalHeight": 199
+    },
+    "props/mobil-sppg.png": {
+      "width": 960,
+      "height": 500,
+      "bounds": {
+        "x": 66,
+        "y": 46,
+        "width": 828,
+        "height": 444
+      },
+      "pivot": [
+        480,
+        490
+      ],
+      "alpha": true
+    },
+    "props/mobil-sppg-damaged.png": {
+      "width": 960,
+      "height": 500,
+      "bounds": {
+        "x": 68,
+        "y": 57,
+        "width": 824,
+        "height": 433
+      },
+      "pivot": [
+        480,
+        490
+      ],
+      "alpha": true
+    },
+    "props/mobil-sppg-wreck.png": {
+      "width": 960,
+      "height": 500,
+      "bounds": {
+        "x": 19,
+        "y": 185,
+        "width": 921,
+        "height": 305
+      },
+      "pivot": [
+        480,
+        490
+      ],
+      "alpha": true
     }
   },
   "missing": [],

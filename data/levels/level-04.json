@@ -170,6 +170,10 @@
       "type": "food-cart"
     },
     {
+      "x": 1750,
+      "type": "mobil-sppg"
+    },
+    {
       "x": 2233.5,
       "type": "electric-pole"
     },

@@ -132,7 +132,7 @@ Sebelum Rex datang, warga beraktivitas di jalan: mengobrol, menunggu di depan to
 | 3 | **Pelabuhan** | Gudang, kontainer, dan derek pelabuhan |
 | 4 | **Alun-Alun** | Pusat kota di malam hari, tempat pertarungan terakhir |
 
-Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang. Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal.
+Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang, dengan truk SPPG terparkir di depannya. Truk, angkot, gerobak, tiang listrik, dan properti jalan lain juga bisa diremukkan untuk tambahan skor. Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal.
 
 <p align="center">
   <img src="docs/screenshots/knockout.webp" alt="Rex tumbang dengan bintang di atas kepala" width="49%">
