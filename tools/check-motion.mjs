@@ -663,4 +663,28 @@ for (const late of [.1, .3, .6]) {
   assert.ok(zap.bolts > 0 && plain.bolts === 0, 'ThunderRex skills throw lightning');
 }
 
+// Aksi developer
+{
+  const w = makeWorld();
+  w.devAction('flatten');
+  assert.ok(w.percent > 99.9, 'flatten wrecks the district');
+  w.devAction('heroes');
+  assert.equal(w.enemies.filter(e => e.hero).length, 3);
+  assert.equal(w.devAction('god'), 'Kebal: nyala');
+  const hp = w.rex.hp; w.hurt(100);
+  assert.equal(w.rex.hp, hp, 'god mode blocks damage');
+  w.devAction('cooldown');
+  assert.ok(Object.values(w.rex.cd).every(v => v === 0));
+  w.devAction('tank');
+  assert.ok(w.enemies.some(e => e.type === 'tank'));
+  assert.equal(w.devAction('robot'), 'Robot hanya ada di Alun-Alun');
+  const end = new World(levels[0], 0); end.spawnTime = Infinity; end.devAction('end');
+  for (let i = 0; i < 5; i++) end.update(1 / 60, empty);
+  assert.equal(end.phase, 'clear', 'skip to end clears the district');
+  const boss = new World(levels[7], 7); boss.devAction('robot');
+  assert.ok(boss.enemies.some(e => e.type === 'robot'));
+  const done = makeWorld(); done.devAction('win');
+  assert.equal(done.status, 'won');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

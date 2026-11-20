@@ -30,15 +30,19 @@ function soundLabel(){const btn=document.querySelector('.audio');btn.querySelect
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
 function recordLabel(){el('record').textContent=record?t('Rekor {n}',{n:num(record)}):t('Belum ada rekor')}
+// Mode developer
+const devParam=new URLSearchParams(location.search).get('dev');
+if(devParam==='1')save('rex.dev','1');else if(devParam==='0')save('rex.dev','');
+const dev=getSaved('rex.dev','')==='1';
 let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,picked=[],stats=loadStats(),daily=null,dailyRecord=loadDaily();
 // Skin aktif
 // Skin langka
 function hasThunder(){return getSaved('rex.thunder','')==='1'}
 // Boleh dipakai
-function skinOpen(s){return s.rare?hasThunder():totalStars(progress)>=s.stars}
+function skinOpen(s){return dev||(s.rare?hasThunder():totalStars(progress)>=s.stars)}
 function activeSkin(){const s=skins[settings.skin];return s&&skinOpen(s)&&art?.hasSkin(s.folder)?s.folder:''}
 // Efek petir aktif
-function thunderOn(){return settings.skin==='thunder'&&hasThunder()}
+function thunderOn(){return settings.skin==='thunder'&&(dev||hasThunder())}
 // Terapkan bahasa
 function applyLang(){setLang(settings.lang);translatePage();soundLabel();recordLabel();trophyLabel()}
 // Terapkan pengaturan
@@ -58,11 +62,12 @@ function showTrophies(){
 }
 // Catat pencapaian
 function recordTrophies(){
+  if(dev)return '';
   addRun(stats,world.runStats());const fresh=unlock(stats,progress);saveStats(stats);trophyLabel();
   return fresh.length?' · '+t('Pencapaian baru: {names}',{names:fresh.map(a=>t(a.name)).join(', ')}):'';
 }
 // Tombol distrik
-function districtLabel(){el('districts').hidden=progress.unlocked<2}
+function districtLabel(){el('districts').hidden=!dev&&progress.unlocked<2}
 soundLabel();recordLabel();districtLabel();trophyLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
@@ -113,7 +118,7 @@ async function chooseDistrict(){
     b.append(name,note);b.onclick=()=>{daily=mission;start(mission.district)};list.append(b);
   }
   for(const [i,level] of levels.entries()){
-    const endless=i===ENDLESS,open=endless?progress.cleared[0]:i<progress.unlocked,b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
+    const endless=i===ENDLESS,open=dev||(endless?progress.cleared[0]:i<progress.unlocked),b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
     b.type='button';b.className='district';b.disabled=!open;
     name.textContent=(endless?'∞':i+1)+' · '+t(level.name);
     note.textContent=endless?(open?(progress.endless?t('Rekor {n}',{n:num(progress.endless)}):t('Bertahan selama mungkin')):t('Terbuka setelah Jalan Ruko selesai'))
@@ -259,7 +264,7 @@ function finish(){
   screen='result';
   // Akhir tanpa akhir
   if(levelIndex===ENDLESS){
-    const best=world.score>progress.endless;if(best){progress.endless=world.score;saveProgress(progress)}
+    const best=world.score>progress.endless&&!dev;if(best){progress.endless=world.score;saveProgress(progress)}
     const trophy=recordTrophies();
     modal(t(best?'Rekor baru!':'Rex tumbang'),'<p>'+t('Mode Tanpa Akhir · skor {score} · rekor {best} · kombo terbaik {combo}',{score:num(world.score),best:num(progress.endless),combo:world.maxCombo})+'</p>'+(trophy?'<p class="trophy-new">'+trophy.slice(3)+'</p>':''),
       [[t('Coba lagi'),()=>start(ENDLESS)],[t('Menu utama'),menu]]);
@@ -267,12 +272,12 @@ function finish(){
   }
   const win=world.status==='won',score=previousScore+world.score;
   // Simpan progres
-  const stars=earned(world,levelIndex);recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress);districtLabel();
-  if(score>record){record=score;save('rex.best',record);recordLabel()}
+  const stars=earned(world,levelIndex);if(!dev){recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress)}districtLabel();
+  if(score>record&&!dev){record=score;save('rex.best',record);recordLabel()}
   const trophy=recordTrophies();
   // Hasil misi harian
   if(daily){
-    const ok=passed(daily,world);if(ok)completeDaily(dailyRecord);const mission=daily;daily=null;
+    const ok=passed(daily,world);if(ok&&!dev)completeDaily(dailyRecord);const mission=daily;daily=null;
     modal(t(ok?'Misi harian berhasil!':win?'Misi harian gagal':'Rex tumbang'),
       '<p>'+t('{name} · destruksi {pct}% · Skor {score}',{name:t(world.level.name),pct:Math.floor(world.percent),score:num(score)})+'</p><p>'+t('Misi harian')+': '+t(missionTemplate(mission),{name:t(world.level.name),n:num(mission.n)})+'</p>'
       +(ok?'<p class="trophy-new">'+t('{n} hari beruntun',{n:dailyRecord.streak})+'</p>':'')+(trophy?'<p class="trophy-new">'+trophy.slice(3)+'</p>':''),
@@ -331,7 +336,7 @@ function frame(now){
     }
     if(guide&&world.status==='playing'){guide.update(world);showGuide()}
     // Simpan ThunderRex
-    if(world.thunderUnlocked&&!hasThunder()){save('rex.thunder','1');buzz(settings,'ulti')}
+    if(world.thunderUnlocked&&!hasThunder()&&!dev){save('rex.thunder','1');buzz(settings,'ulti')}
     for(const name of world.events.splice(0)){snd.play(name);buzz(settings,name)}
     renderer.render(world);updateHud();if(world.status!=='playing')finish();
   }
@@ -374,6 +379,22 @@ el('start').onclick=async()=>{
 };
 el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('trophies').onclick=showTrophies;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);
+// Panel developer
+if(dev){
+  document.documentElement.dataset.dev='1';
+  const actions=[['win','Menang instan'],['end','Ratakan & ke ujung'],['flatten','Ratakan kota'],['heroes','Panggil 3 penjaga'],['robot','Panggil robot'],
+    ['lose','Kalah'],['god','Kebal'],['heal','Darah penuh'],['cooldown','Cooldown nol'],['rage','Rage penuh'],['rain','Hujan'],['strike','Sambar petir'],
+    ['infantry','+ Infanteri'],['bazooka','+ Bazooka'],['jeep','+ Jeep'],['helicopter','+ Helikopter'],['tank','+ Tank'],['firetruck','+ Truk pemadam'],['firefighter','+ Pemadam'],['drone','+ Drone']];
+  const box=document.createElement('details');box.id='dev';
+  box.innerHTML='<summary>DEV</summary><div></div>';
+  for(const [key,label] of actions){
+    const b=document.createElement('button');b.type='button';b.textContent=label;
+    b.onclick=()=>{if(screen!=='playing'||!world)return;const note=world.devAction(key);if(note)world.say(note,1.6)};
+    box.lastChild.append(b);
+  }
+  el('hud').append(box);
+  const badge=document.createElement('span');badge.className='dev-badge';badge.textContent='MODE DEVELOPER · progres tidak disimpan';el('menu').append(badge);
+}
 // Debug lokal
 if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get world(){return world}};
 // Mode offline

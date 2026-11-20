@@ -175,6 +175,24 @@ export class World {
       heroes:['perisai','rajawali','jaring'].reduce((n,k)=>n+(this.kills[k]||0),0),robot:this.kills.robot||0,tanks:this.flips,drones:this.kills.drone||0,
       cancelled:this.cancelled,combo:this.maxCombo};
   }
+  // Aksi developer
+  devAction(name){
+    const p=this.rex,near=dx=>p.x+p.dir*dx;
+    if(name==='win')this.status='won';
+    else if(name==='lose'){this.god=false;p.hp=0}
+    else if(name==='flatten'){for(const b of this.buildings)this.damageModule(b,0,Infinity);for(const prop of this.props)this.damageProp(prop,Infinity)}
+    else if(name==='heroes'){for(const type of ['perisai','rajawali','jaring']){const e=this.spawn(type,p.x+flank[type]);e.ultCd=firstUlt[type]}this.triggered=new Set(this.level.bosses.map((_,i)=>i))}
+    else if(name==='robot'){if(!this.level.boss)return 'Robot hanya ada di Alun-Alun';const e=this.spawn('robot',near(700));e.dir=-p.dir;e.timer=2;this.bossSpawned=true}
+    else if(name==='end'){this.devAction('flatten');this.triggered=new Set(this.level.bosses.map((_,i)=>i));for(const e of this.enemies)if(e.hero){e.hp=0;this.defeat(e)}this.bossSpawned=true;p.x=Math.min(this.exitX-60,this.level.length-200)}
+    else if(name==='god'){this.god=!this.god;return this.god?'Kebal: nyala':'Kebal: mati'}
+    else if(name==='cooldown'){for(const k in p.cd)p.cd[k]=0}
+    else if(name==='rage')p.rage=100;
+    else if(name==='heal')p.hp=p.max;
+    else if(name==='rain'){this.weather=this.weather==='rain'?'':'rain';return this.weather?'Hujan: nyala':'Hujan: mati'}
+    else if(name==='strike'){this.weather='rain';this.strikeRexAt=this.time}
+    else if(['infantry','bazooka','jeep','helicopter','tank','firetruck','firefighter','drone'].includes(name)){const e=this.spawn(name,near(600));e.dir=-p.dir}
+    return '';
+  }
   // Persen hancur
   get percent(){return 100*this.lost/this.total}
   // Tampilkan pesan
@@ -376,7 +394,7 @@ export class World {
   // Lukai Rex
   hurt(amount,stun=0){const p=this.rex;if(this.immune())return false;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;this.sound('hurt');if(p.fury<=0)p.stun=Math.max(p.stun,stun);return true}
   // Rex kebal
-  immune(){const p=this.rex;return p.attack?.key==='ulti'||p.lift>0||this.phase==='dying'}
+  immune(){const p=this.rex;return this.god||p.attack?.key==='ulti'||p.lift>0||this.phase==='dying'}
   // Mulai ulti pahlawan
   startCast(e){
     this.cast={hero:e,type:e.type,age:0,windup:ultWindup,done:false,...heroUltis[e.type]};

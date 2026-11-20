@@ -291,3 +291,11 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
   #credit.showing p{animation:credit-fade .4s forwards}
   @keyframes credit-fade{to{opacity:1}}
 }
+
+/* Mode developer */
+#dev{position:absolute;left:clamp(8px,2vw,28px);top:clamp(200px,31vh,270px);pointer-events:auto;max-width:min(360px,90vw);z-index:5}
+#dev summary{display:inline-block;padding:4px 12px;font:400 18px/1 var(--shout);letter-spacing:.06em;color:var(--ink);background:#ff5c8a;cursor:pointer;clip-path:var(--slant-sm);list-style:none}
+#dev summary::-webkit-details-marker{display:none}
+#dev div{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding:10px;background:#13201fe6}
+#dev button{padding:5px 10px;font-size:12px;background:#1d302e}
+.dev-badge{position:absolute;left:50%;top:clamp(14px,3vh,30px);transform:translateX(-50%);padding:4px 14px;font-weight:800;font-size:13px;color:var(--ink);background:#ff5c8a;clip-path:var(--slant-sm);white-space:nowrap}
