@@ -6,7 +6,7 @@
 
 **Game 2D di browser: kamu jadi Rex, dan kota Ruko Senja ada di depanmu.**
 
-Ratakan bangunan lantai demi lantai, hadapi gerombolan tentara, dan kalahkan tiga pahlawan penjaga kota di empat distrik.
+Ratakan bangunan lantai demi lantai, hadapi gerombolan tentara, dan kalahkan tiga pahlawan penjaga kota di delapan distrik.
 
 Bisa dimainkan dengan keyboard, mouse, atau layar sentuh.
 
@@ -70,11 +70,15 @@ Setiap distrik punya tiga misi bintang:
 | Distrik | ★ | ★★ | ★★★ |
 | --- | --- | --- | --- |
 | Jalan Ruko | Ratakan distrik | Selesai dalam 7 menit | Capai kombo 25 |
+| Pasar Tradisional | Ratakan distrik | Selesai dalam 7 menit | Kalahkan 25 warga |
 | Pusat Kota | Ratakan distrik | Selesai dalam 8 menit | Gagalkan 2 ulti pahlawan |
+| Stasiun Kereta | Ratakan distrik | Selesai dalam 8 menit | Hancurkan semua gerbong |
 | Pelabuhan | Ratakan distrik | Selesai dalam 8 menit | Hancurkan semua properti jalan |
-| Alun-Alun | Ratakan distrik | Selesai dalam 9 menit | Selesai dengan darah ≥ 50% |
+| Jembatan Tol | Ratakan distrik | Selesai dalam 8 menit | Kalahkan 15 tentara |
+| Pantai | Ratakan distrik | Selesai dalam 9 menit | Capai kombo 40 |
+| Alun-Alun | Ratakan distrik | Selesai dalam 10 menit | Selesai dengan darah ≥ 50% |
 
-Bintang dari permainan yang berbeda tetap terkumpul.
+Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk membuka **skin Rex** di Pengaturan: **Batik** (4 ★), **Hutan** (8 ★), dan **Mecha** (12 ★). Skin berlaku untuk semua gerakan Rex dan cut-in ulti-nya.
 
 ### Tips
 
@@ -87,7 +91,7 @@ Bintang dari permainan yang berbeda tetap terkumpul.
 
 ### Mode Tanpa Akhir
 
-Setelah Jalan Ruko selesai, **Pilih distrik** membuka **∞ · Tanpa Akhir**: jalan sangat panjang yang menyambung keempat distrik dua kali. Penjaga datang bergelombang di setiap 12% kehancuran dengan darah yang makin tebal, dan serangan musuh makin sakit seiring kota hancur. Permainan berakhir saat Rex tumbang, dan skor terbaiknya tercatat sebagai rekor.
+Setelah Jalan Ruko selesai, **Pilih distrik** membuka **∞ · Tanpa Akhir**: jalan sangat panjang yang menyambung kedelapan distrik. Penjaga datang bergelombang di setiap 12% kehancuran dengan darah yang makin tebal, dan serangan musuh makin sakit seiring kota hancur. Permainan berakhir saat Rex tumbang, dan skor terbaiknya tercatat sebagai rekor.
 
 ## Para penjaga kota
 
@@ -118,6 +122,10 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul
   <img src="docs/screenshots/hero-ulti.webp" alt="Cut-in ulti Hujan Laser milik Rajawali" width="70%">
 </p>
 
+### Bos final: Robot Penjaga
+
+Di **Alun-Alun**, setelah kota rata dan ketiga penjaga kalah, mereka bergabung menjadi **Robot Penjaga** setinggi Rex. Robot ini memukul dengan perisai setelah ancang-ancang, menembakkan jaring dari jauh, dan punya ulti **Mega Penjaga** berupa gelombang kejut yang membuat Rex terpaku dan melambat. Seperti ulti penjaga lain, ulti ini bisa digagalkan dengan **raung**, **lompat**, atau Ulti Rex. Kota baru ditaklukkan setelah robotnya tumbang.
+
 ## Tentara
 
 <table>
@@ -130,6 +138,15 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul
 </table>
 
 Tentara datang beregu dari depan dan belakang sampai belasan orang di layar, jadi Rex selalu dikeroyok. Makin hancur kotanya, makin besar regunya dan makin berat senjatanya. Helikopter hanya bisa digigit saat terbang rendah.
+
+Distrik selanjutnya menurunkan pasukan baru:
+
+| Musuh | Muncul mulai | Cara menghadapinya |
+| --- | --- | --- |
+| **Petugas pemadam** | Pasar Tradisional | Semprotannya mengikis Rage, kalahkan dari dekat |
+| **Drone** | Pusat Kota | Datang bertiga dari udara; satu **raungan** menjatuhkan semuanya |
+| **Truk pemadam** | Stasiun Kereta | Melaju sambil menyemprot dan memadamkan mode Rage; lempar dengan **ekor** |
+| **Tank** | Pelabuhan | Kebal gigitan dan injakan; **ekor** membalikkannya, lalu serang saat terbalik |
 
 ## Warga
 
@@ -148,16 +165,20 @@ Sebelum Rex datang, warga beraktivitas di jalan: mengobrol, menunggu di depan to
   <img src="docs/screenshots/street-life.webp" alt="Warga beraktivitas di depan Kopdes Merah Putih di Pusat Kota" width="70%">
 </p>
 
-## Empat distrik
+## Delapan distrik
 
 | | Distrik | Suasana |
 | :-: | --- | --- |
 | 1 | **Jalan Ruko** | Deretan ruko, warung, dan angkot saat senja |
-| 2 | **Pusat Kota** | Gedung perkantoran dan Tugu Kujang di kejauhan |
-| 3 | **Pelabuhan** | Gudang, kontainer, dan derek pelabuhan |
-| 4 | **Alun-Alun** | Pusat kota di malam hari, tempat pertarungan terakhir |
+| 2 | **Pasar Tradisional** | Los pasar beratap seng, lapak sayur, dan becak di pagi hari |
+| 3 | **Pusat Kota** | Gedung perkantoran dan Tugu Kujang di kejauhan |
+| 4 | **Stasiun Kereta** | Peron, gerbong, dan menara sinyal di siang hari |
+| 5 | **Pelabuhan** | Gudang, kontainer, dan derek pelabuhan |
+| 6 | **Jembatan Tol** | Jalan layang, gerbang tol, dan truk kontainer saat sore |
+| 7 | **Pantai** | Laut, perahu nelayan, dan pohon kelapa saat senja |
+| 8 | **Alun-Alun** | Pusat kota di malam hari, tempat pertarungan terakhir |
 
-Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang, dengan truk SPPG terparkir di depannya. Truk, angkot, gerobak, tiang listrik, dan properti jalan lain juga bisa diremukkan untuk tambahan skor. Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal.
+Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang, dengan truk SPPG terparkir di depannya. Truk, angkot, gerobak, tiang listrik, dan properti jalan lain juga bisa diremukkan untuk tambahan skor. Ada dua bangunan spesial di setiap distrik: **SPBU** meledak saat hancur dan merusak bangunan, tentara, dan warga di sekitarnya (Rex aman), sedangkan **warung makan** memulihkan 60 darah Rex. Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal, dan tentara makin banyak menjelang Alun-Alun.
 
 <p align="center">
   <img src="docs/screenshots/knockout.webp" alt="Rex tumbang dengan bintang di atas kepala" width="49%">

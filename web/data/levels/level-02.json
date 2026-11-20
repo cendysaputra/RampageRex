@@ -1,241 +1,216 @@
 {
-  "name": "Pusat Kota",
-  "setting": "office",
+  "name": "Pasar Tradisional",
+  "setting": "market",
   "target": 100,
   "bosses": [
     {
-      "at": 35,
+      "at": 30,
       "type": "perisai"
     },
     {
-      "at": 35,
+      "at": 30,
       "type": "rajawali"
     },
     {
-      "at": 35,
+      "at": 30,
       "type": "jaring"
     }
   ],
-  "length": 14090,
+  "length": 13400,
   "start": 380,
   "buildings": [
     {
       "x": 760,
-      "width": 430,
-      "upper": 2,
-      "color": "mint"
-    },
-    {
-      "x": 1450,
-      "width": 540,
+      "width": 500,
       "upper": 1,
       "color": "pink"
     },
     {
-      "x": 1955,
+      "x": 1520,
       "width": 430,
       "upper": 0,
       "color": "kopdes"
     },
     {
-      "x": 2470,
-      "width": 470,
-      "upper": 2,
-      "color": "blue"
+      "x": 2430,
+      "width": 540,
+      "upper": 1,
+      "color": "mustard"
     },
     {
-      "x": 3025,
-      "width": 500,
-      "upper": 2,
-      "color": "mustard"
+      "x": 3055,
+      "width": 470,
+      "upper": 1,
+      "color": "mint"
     },
     {
       "x": 3825,
-      "width": 430,
-      "upper": 1,
-      "color": "mint"
-    },
-    {
-      "x": 4515,
-      "width": 540,
-      "upper": 2,
+      "width": 500,
+      "upper": 0,
       "color": "pink"
     },
     {
-      "x": 5535,
-      "width": 470,
+      "x": 4585,
+      "width": 430,
       "upper": 2,
       "color": "blue"
     },
     {
-      "x": 6090,
-      "width": 500,
+      "x": 5495,
+      "width": 540,
       "upper": 1,
       "color": "mustard"
+    },
+    {
+      "x": 6120,
+      "width": 470,
+      "upper": 0,
+      "color": "mint"
     },
     {
       "x": 6890,
-      "width": 430,
-      "upper": 2,
-      "color": "mint"
-    },
-    {
-      "x": 7580,
-      "width": 540,
-      "upper": 2,
+      "width": 500,
+      "upper": 1,
       "color": "pink"
     },
     {
-      "x": 8600,
-      "width": 470,
+      "x": 7650,
+      "width": 430,
       "upper": 1,
       "color": "blue"
     },
     {
-      "x": 9155,
-      "width": 500,
-      "upper": 2,
+      "x": 8560,
+      "width": 540,
+      "upper": 0,
       "color": "mustard"
+    },
+    {
+      "x": 9185,
+      "width": 470,
+      "upper": 2,
+      "color": "mint"
     },
     {
       "x": 9955,
-      "width": 430,
-      "upper": 2,
-      "color": "mint"
-    },
-    {
-      "x": 10645,
-      "width": 540,
+      "width": 500,
       "upper": 1,
       "color": "pink"
     },
     {
-      "x": 11665,
-      "width": 470,
-      "upper": 2,
+      "x": 10715,
+      "width": 430,
+      "upper": 0,
       "color": "blue"
     },
     {
-      "x": 12220,
-      "width": 500,
-      "upper": 2,
+      "x": 11625,
+      "width": 540,
+      "upper": 1,
       "color": "mustard"
     },
     {
-      "x": 13020,
-      "width": 430,
+      "x": 12250,
+      "width": 470,
       "upper": 1,
       "color": "mint"
     }
   ],
   "props": [
     {
-      "x": 838,
-      "type": "street-lamp"
+      "x": 650,
+      "type": "lapak-sayur"
     },
     {
-      "x": 3903,
-      "type": "street-lamp"
+      "x": 1238,
+      "type": "becak"
     },
     {
-      "x": 6968,
-      "type": "street-lamp"
-    },
-    {
-      "x": 10033,
-      "type": "street-lamp"
-    },
-    {
-      "x": 523.5,
-      "type": "electric-pole"
-    },
-    {
-      "x": 1153.0,
-      "type": "tree"
-    },
-    {
-      "x": 1700,
+      "x": 1935,
       "type": "mobil-sppg"
     },
     {
-      "x": 2211.5,
-      "type": "tent-stall"
+      "x": 2324,
+      "type": "tumpukan-karung"
     },
     {
-      "x": 2750.0,
+      "x": 2927,
+      "type": "lapak-sayur"
+    },
+    {
+      "x": 3671,
       "type": "food-cart"
     },
     {
-      "x": 3588.5,
-      "type": "electric-pole"
+      "x": 4317,
+      "type": "street-lamp"
     },
     {
-      "x": 4218.0,
-      "type": "billboard"
+      "x": 4824,
+      "type": "spbu"
     },
     {
-      "x": 5276.5,
-      "type": "angkot"
-    },
-    {
-      "x": 5815.0,
-      "type": "electric-pole"
-    },
-    {
-      "x": 6653.5,
-      "type": "tree"
-    },
-    {
-      "x": 7283.0,
+      "x": 5274,
       "type": "tent-stall"
     },
     {
-      "x": 8341.5,
+      "x": 5962,
+      "type": "becak"
+    },
+    {
+      "x": 6630,
+      "type": "electric-pole"
+    },
+    {
+      "x": 7208,
+      "type": "lapak-sayur"
+    },
+    {
+      "x": 7772,
+      "type": "warung-makan"
+    },
+    {
+      "x": 8089,
+      "type": "becak"
+    },
+    {
+      "x": 8869,
+      "type": "tumpukan-karung"
+    },
+    {
+      "x": 9630,
+      "type": "lapak-sayur"
+    },
+    {
+      "x": 10450,
       "type": "food-cart"
     },
     {
-      "x": 8880.0,
-      "type": "electric-pole"
+      "x": 11200,
+      "type": "street-lamp"
     },
     {
-      "x": 9718.5,
-      "type": "billboard"
-    },
-    {
-      "x": 10348.0,
-      "type": "angkot"
-    },
-    {
-      "x": 11406.5,
-      "type": "electric-pole"
-    },
-    {
-      "x": 11945.0,
-      "type": "tree"
-    },
-    {
-      "x": 12783.5,
+      "x": 11987,
       "type": "tent-stall"
     }
   ],
   "spawns": [
     1040,
-    1210,
-    2230,
-    2785,
+    1280,
+    2190,
+    2815,
     3585,
-    4275,
-    5295,
-    5850,
+    4345,
+    5255,
+    5880,
     6650,
-    7340,
-    8360,
-    8915,
+    7410,
+    8320,
+    8945,
     9715,
-    10405,
-    11425,
-    11980,
-    12780,
-    13470
+    10475,
+    11385,
+    12010,
+    12780
   ]
 }

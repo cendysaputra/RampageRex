@@ -3305,6 +3305,1125 @@
         490
       ],
       "alpha": true
+    },
+    "characters/rex/skins/batik/walk.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/bite-roar.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/tail-stomp.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/ulti.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/jump.png": {
+      "width": 1254,
+      "height": 2080,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/knockdown.png": {
+      "width": 1254,
+      "height": 1125,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/batik/ulti-cutin.png": {
+      "width": 1672,
+      "height": 941,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/walk.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/bite-roar.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/tail-stomp.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/ulti.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/jump.png": {
+      "width": 1254,
+      "height": 2080,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/knockdown.png": {
+      "width": 1254,
+      "height": 1125,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/hutan/ulti-cutin.png": {
+      "width": 1672,
+      "height": 941,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/walk.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/bite-roar.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/tail-stomp.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/ulti.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/jump.png": {
+      "width": 1254,
+      "height": 2080,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/knockdown.png": {
+      "width": 1254,
+      "height": 1125,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/mecha/ulti-cutin.png": {
+      "width": 1672,
+      "height": 941,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "props/lapak-sayur.png": {
+      "width": 512,
+      "height": 326,
+      "bounds": {
+        "x": 40,
+        "y": 10,
+        "width": 431,
+        "height": 311
+      },
+      "pivot": [
+        256,
+        321
+      ],
+      "alpha": true
+    },
+    "props/lapak-sayur-damaged.png": {
+      "width": 512,
+      "height": 326,
+      "bounds": {
+        "x": 40,
+        "y": 7,
+        "width": 431,
+        "height": 314
+      },
+      "pivot": [
+        256,
+        321
+      ],
+      "alpha": true
+    },
+    "props/lapak-sayur-wreck.png": {
+      "width": 512,
+      "height": 326,
+      "bounds": {
+        "x": 6,
+        "y": 187,
+        "width": 500,
+        "height": 134
+      },
+      "pivot": [
+        256,
+        321
+      ],
+      "alpha": true
+    },
+    "props/becak.png": {
+      "width": 512,
+      "height": 314,
+      "bounds": {
+        "x": 45,
+        "y": 7,
+        "width": 422,
+        "height": 302
+      },
+      "pivot": [
+        256,
+        309
+      ],
+      "alpha": true
+    },
+    "props/becak-damaged.png": {
+      "width": 512,
+      "height": 314,
+      "bounds": {
+        "x": 46,
+        "y": 7,
+        "width": 420,
+        "height": 302
+      },
+      "pivot": [
+        256,
+        309
+      ],
+      "alpha": true
+    },
+    "props/becak-wreck.png": {
+      "width": 512,
+      "height": 314,
+      "bounds": {
+        "x": 6,
+        "y": 121,
+        "width": 500,
+        "height": 188
+      },
+      "pivot": [
+        256,
+        309
+      ],
+      "alpha": true
+    },
+    "props/tumpukan-karung.png": {
+      "width": 522,
+      "height": 174,
+      "bounds": {
+        "x": 51,
+        "y": 13,
+        "width": 420,
+        "height": 156
+      },
+      "pivot": [
+        261,
+        169
+      ],
+      "alpha": true
+    },
+    "props/tumpukan-karung-damaged.png": {
+      "width": 522,
+      "height": 174,
+      "bounds": {
+        "x": 45,
+        "y": 7,
+        "width": 432,
+        "height": 162
+      },
+      "pivot": [
+        261,
+        169
+      ],
+      "alpha": true
+    },
+    "props/tumpukan-karung-wreck.png": {
+      "width": 522,
+      "height": 174,
+      "bounds": {
+        "x": 6,
+        "y": 65,
+        "width": 510,
+        "height": 104
+      },
+      "pivot": [
+        261,
+        169
+      ],
+      "alpha": true
+    },
+    "props/gerbong.png": {
+      "width": 672,
+      "height": 207,
+      "bounds": {
+        "x": 13,
+        "y": 7,
+        "width": 645,
+        "height": 195
+      },
+      "pivot": [
+        336,
+        202
+      ],
+      "alpha": true
+    },
+    "props/gerbong-damaged.png": {
+      "width": 672,
+      "height": 207,
+      "bounds": {
+        "x": 13,
+        "y": 7,
+        "width": 645,
+        "height": 195
+      },
+      "pivot": [
+        336,
+        202
+      ],
+      "alpha": true
+    },
+    "props/gerbong-wreck.png": {
+      "width": 672,
+      "height": 207,
+      "bounds": {
+        "x": 6,
+        "y": 113,
+        "width": 660,
+        "height": 89
+      },
+      "pivot": [
+        336,
+        202
+      ],
+      "alpha": true
+    },
+    "props/bangku-peron.png": {
+      "width": 549,
+      "height": 182,
+      "bounds": {
+        "x": 66,
+        "y": 7,
+        "width": 416,
+        "height": 170
+      },
+      "pivot": [
+        274,
+        177
+      ],
+      "alpha": true
+    },
+    "props/bangku-peron-damaged.png": {
+      "width": 549,
+      "height": 182,
+      "bounds": {
+        "x": 66,
+        "y": 7,
+        "width": 416,
+        "height": 170
+      },
+      "pivot": [
+        274,
+        177
+      ],
+      "alpha": true
+    },
+    "props/bangku-peron-wreck.png": {
+      "width": 549,
+      "height": 182,
+      "bounds": {
+        "x": 6,
+        "y": 94,
+        "width": 537,
+        "height": 83
+      },
+      "pivot": [
+        274,
+        177
+      ],
+      "alpha": true
+    },
+    "props/menara-sinyal.png": {
+      "width": 479,
+      "height": 235,
+      "bounds": {
+        "x": 152,
+        "y": 7,
+        "width": 174,
+        "height": 223
+      },
+      "pivot": [
+        239,
+        230
+      ],
+      "alpha": true
+    },
+    "props/menara-sinyal-damaged.png": {
+      "width": 479,
+      "height": 235,
+      "bounds": {
+        "x": 152,
+        "y": 7,
+        "width": 174,
+        "height": 223
+      },
+      "pivot": [
+        239,
+        230
+      ],
+      "alpha": true
+    },
+    "props/menara-sinyal-wreck.png": {
+      "width": 479,
+      "height": 235,
+      "bounds": {
+        "x": 6,
+        "y": 156,
+        "width": 467,
+        "height": 74
+      },
+      "pivot": [
+        239,
+        230
+      ],
+      "alpha": true
+    },
+    "props/gerbang-tol.png": {
+      "width": 437,
+      "height": 336,
+      "bounds": {
+        "x": 13,
+        "y": 7,
+        "width": 410,
+        "height": 324
+      },
+      "pivot": [
+        218,
+        331
+      ],
+      "alpha": true
+    },
+    "props/gerbang-tol-damaged.png": {
+      "width": 437,
+      "height": 336,
+      "bounds": {
+        "x": 14,
+        "y": 7,
+        "width": 408,
+        "height": 324
+      },
+      "pivot": [
+        218,
+        331
+      ],
+      "alpha": true
+    },
+    "props/gerbang-tol-wreck.png": {
+      "width": 437,
+      "height": 336,
+      "bounds": {
+        "x": 6,
+        "y": 212,
+        "width": 425,
+        "height": 119
+      },
+      "pivot": [
+        218,
+        331
+      ],
+      "alpha": true
+    },
+    "props/truk-kontainer.png": {
+      "width": 483,
+      "height": 218,
+      "bounds": {
+        "x": 13,
+        "y": 7,
+        "width": 456,
+        "height": 206
+      },
+      "pivot": [
+        241,
+        213
+      ],
+      "alpha": true
+    },
+    "props/truk-kontainer-damaged.png": {
+      "width": 483,
+      "height": 218,
+      "bounds": {
+        "x": 14,
+        "y": 7,
+        "width": 454,
+        "height": 206
+      },
+      "pivot": [
+        241,
+        213
+      ],
+      "alpha": true
+    },
+    "props/truk-kontainer-wreck.png": {
+      "width": 483,
+      "height": 218,
+      "bounds": {
+        "x": 6,
+        "y": 93,
+        "width": 471,
+        "height": 120
+      },
+      "pivot": [
+        241,
+        213
+      ],
+      "alpha": true
+    },
+    "props/pembatas-beton.png": {
+      "width": 467,
+      "height": 169,
+      "bounds": {
+        "x": 49,
+        "y": 7,
+        "width": 369,
+        "height": 157
+      },
+      "pivot": [
+        233,
+        164
+      ],
+      "alpha": true
+    },
+    "props/pembatas-beton-damaged.png": {
+      "width": 467,
+      "height": 169,
+      "bounds": {
+        "x": 48,
+        "y": 7,
+        "width": 371,
+        "height": 157
+      },
+      "pivot": [
+        233,
+        164
+      ],
+      "alpha": true
+    },
+    "props/pembatas-beton-wreck.png": {
+      "width": 467,
+      "height": 169,
+      "bounds": {
+        "x": 6,
+        "y": 79,
+        "width": 455,
+        "height": 85
+      },
+      "pivot": [
+        233,
+        164
+      ],
+      "alpha": true
+    },
+    "props/perahu-nelayan.png": {
+      "width": 528,
+      "height": 260,
+      "bounds": {
+        "x": 34,
+        "y": 7,
+        "width": 459,
+        "height": 248
+      },
+      "pivot": [
+        264,
+        255
+      ],
+      "alpha": true
+    },
+    "props/perahu-nelayan-damaged.png": {
+      "width": 528,
+      "height": 260,
+      "bounds": {
+        "x": 42,
+        "y": 8,
+        "width": 444,
+        "height": 247
+      },
+      "pivot": [
+        264,
+        255
+      ],
+      "alpha": true
+    },
+    "props/perahu-nelayan-wreck.png": {
+      "width": 528,
+      "height": 260,
+      "bounds": {
+        "x": 6,
+        "y": 162,
+        "width": 516,
+        "height": 93
+      },
+      "pivot": [
+        264,
+        255
+      ],
+      "alpha": true
+    },
+    "props/pohon-kelapa.png": {
+      "width": 535,
+      "height": 367,
+      "bounds": {
+        "x": 90,
+        "y": 7,
+        "width": 354,
+        "height": 355
+      },
+      "pivot": [
+        267,
+        362
+      ],
+      "alpha": true
+    },
+    "props/pohon-kelapa-damaged.png": {
+      "width": 535,
+      "height": 367,
+      "bounds": {
+        "x": 95,
+        "y": 10,
+        "width": 345,
+        "height": 352
+      },
+      "pivot": [
+        267,
+        362
+      ],
+      "alpha": true
+    },
+    "props/pohon-kelapa-wreck.png": {
+      "width": 535,
+      "height": 367,
+      "bounds": {
+        "x": 6,
+        "y": 244,
+        "width": 523,
+        "height": 118
+      },
+      "pivot": [
+        267,
+        362
+      ],
+      "alpha": true
+    },
+    "props/warung-pantai.png": {
+      "width": 537,
+      "height": 281,
+      "bounds": {
+        "x": 57,
+        "y": 7,
+        "width": 423,
+        "height": 269
+      },
+      "pivot": [
+        268,
+        276
+      ],
+      "alpha": true
+    },
+    "props/warung-pantai-damaged.png": {
+      "width": 537,
+      "height": 281,
+      "bounds": {
+        "x": 58,
+        "y": 10,
+        "width": 421,
+        "height": 266
+      },
+      "pivot": [
+        268,
+        276
+      ],
+      "alpha": true
+    },
+    "props/warung-pantai-wreck.png": {
+      "width": 537,
+      "height": 281,
+      "bounds": {
+        "x": 6,
+        "y": 136,
+        "width": 525,
+        "height": 140
+      },
+      "pivot": [
+        268,
+        276
+      ],
+      "alpha": true
+    },
+    "props/spbu.png": {
+      "width": 651,
+      "height": 328,
+      "bounds": {
+        "x": 47,
+        "y": 7,
+        "width": 557,
+        "height": 316
+      },
+      "pivot": [
+        325,
+        323
+      ],
+      "alpha": true
+    },
+    "props/spbu-damaged.png": {
+      "width": 651,
+      "height": 328,
+      "bounds": {
+        "x": 46,
+        "y": 8,
+        "width": 559,
+        "height": 315
+      },
+      "pivot": [
+        325,
+        323
+      ],
+      "alpha": true
+    },
+    "props/spbu-wreck.png": {
+      "width": 651,
+      "height": 328,
+      "bounds": {
+        "x": 6,
+        "y": 178,
+        "width": 639,
+        "height": 145
+      },
+      "pivot": [
+        325,
+        323
+      ],
+      "alpha": true
+    },
+    "props/warung-makan.png": {
+      "width": 686,
+      "height": 309,
+      "bounds": {
+        "x": 31,
+        "y": 7,
+        "width": 624,
+        "height": 297
+      },
+      "pivot": [
+        343,
+        304
+      ],
+      "alpha": true
+    },
+    "props/warung-makan-damaged.png": {
+      "width": 686,
+      "height": 309,
+      "bounds": {
+        "x": 32,
+        "y": 7,
+        "width": 622,
+        "height": 297
+      },
+      "pivot": [
+        343,
+        304
+      ],
+      "alpha": true
+    },
+    "props/warung-makan-wreck.png": {
+      "width": 686,
+      "height": 309,
+      "bounds": {
+        "x": 6,
+        "y": 137,
+        "width": 674,
+        "height": 167
+      },
+      "pivot": [
+        343,
+        304
+      ],
+      "alpha": true
+    },
+    "backgrounds/market/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/market/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/market/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/market/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#3b4248"
+    },
+    "backgrounds/station/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/station/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/station/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/station/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#364246"
+    },
+    "backgrounds/toll/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/toll/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/toll/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/toll/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#6a6869"
+    },
+    "backgrounds/beach/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/beach/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/beach/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/beach/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#364d4d"
+    },
+    "characters/soldiers/tank.png": {
+      "width": 900,
+      "height": 520,
+      "bounds": {
+        "x": 96,
+        "y": 3,
+        "width": 707,
+        "height": 513
+      },
+      "pivot": [
+        450,
+        516
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/firetruck.png": {
+      "width": 900,
+      "height": 520,
+      "bounds": {
+        "x": 4,
+        "y": 34,
+        "width": 892,
+        "height": 482
+      },
+      "pivot": [
+        450,
+        516
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/drone.png": {
+      "width": 320,
+      "height": 200,
+      "bounds": {
+        "x": 4,
+        "y": 89,
+        "width": 312,
+        "height": 107
+      },
+      "pivot": [
+        160,
+        142
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/firefighter/frames/aim.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 4,
+        "y": 67,
+        "width": 348,
+        "height": 347
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/firefighter/frames/run-a.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 4,
+        "y": 77,
+        "width": 348,
+        "height": 337
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/firefighter/frames/run-b.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 39,
+        "y": 77,
+        "width": 277,
+        "height": 337
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/firefighter/frames/knockback.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 44,
+        "y": 66,
+        "width": 267,
+        "height": 348
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/heroes/robot/atlas.png": {
+      "width": 1280,
+      "height": 2048,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/heroes/robot/cutin.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/heroes/robot/master.png": {
+      "width": 969,
+      "height": 1514,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
     }
   },
   "review": [],
@@ -3312,5 +4431,86 @@
     "rexHeight": 938,
     "civilianHeight": 199,
     "heroHeight": 223
+  },
+  "robot": {
+    "path": "characters/heroes/robot/atlas",
+    "frames": [
+      [
+        0,
+        0,
+        640,
+        512,
+        283,
+        461
+      ],
+      [
+        640,
+        0,
+        640,
+        512,
+        302,
+        461
+      ],
+      [
+        0,
+        512,
+        640,
+        512,
+        321,
+        461
+      ],
+      [
+        640,
+        512,
+        640,
+        512,
+        319,
+        461
+      ],
+      [
+        0,
+        1024,
+        640,
+        512,
+        363,
+        461
+      ],
+      [
+        640,
+        1024,
+        640,
+        512,
+        406,
+        461
+      ],
+      [
+        0,
+        1536,
+        640,
+        512,
+        271,
+        461
+      ],
+      [
+        640,
+        1536,
+        640,
+        512,
+        319,
+        461
+      ]
+    ],
+    "poses": {
+      "idle": 0,
+      "walk": [
+        1,
+        2
+      ],
+      "windup": 3,
+      "punch": 4,
+      "net": 5,
+      "hit": 6,
+      "down": 7
+    }
   }
 }

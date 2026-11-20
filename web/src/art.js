@@ -2,15 +2,17 @@ import { clamp, moduleState, exitTime } from './world.js';
 import { attackPose, smooth } from './motion.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
-const propWidths={'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
+const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
-const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64,samples=1.6;
+const people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
-  ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/',people.bazooka],
+  ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/tank',vehicles.tank],['characters/soldiers/firetruck',vehicles.firetruck],['characters/soldiers/drone',vehicles.drone],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 // Warna ulti pahlawan
-const castColors={perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
+const castColors={robot:['#f2b33d','#24365c','#8ff4ff'],perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
+// Lebar robot
+const robotWidth=544;
 const backdropLayers=['sky','far-city','mid-city','street'];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
@@ -31,7 +33,8 @@ function cropRect(meta,path){
 export class Art {
   constructor(manifest){
     this.meta={...manifest.assets};this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
-    this.rexAnimations=manifest.rexAnimations;
+    this.rexAnimations=manifest.rexAnimations;this.robot=manifest.robot;this.cutin='fx/ulti-cutin';this.skin='';
+    this.basePaths=Object.fromEntries(Object.entries(this.rexAnimations.atlases).map(([k,d])=>[k,d.path]));
     this.crops=new Map(Object.entries(this.meta).map(([path,m])=>[path.slice(0,-4),cropRect(m,path)]));
   }
   // Muat gambar
@@ -72,7 +75,11 @@ export class Art {
   // Pramuat level
   async preload(level){
     const heroes=level.bosses.flatMap(b=>['characters/heroes/'+b.type+'/parts/','characters/heroes/'+b.type+'/portrait']);
+    // Aset bos
+    if(level.boss)heroes.push('characters/heroes/'+level.boss+'/atlas','characters/heroes/'+level.boss+'/cutin');
     const backdrops=backdropLayers.map(name=>this.backdrop(level.setting,name));
+    // Atlas Rex
+    const rexPaths=[...Object.values(this.rexAnimations.atlases).map(d=>d.path),this.cutin];
     // Aset terpakai
     const colors=[...new Set(level.buildings.map(b=>b.color))],props=[...new Set((level.props||[]).map(p=>p.type))];
     // Lepas latar
@@ -82,11 +89,35 @@ export class Art {
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
       backdrops.includes(k)||k.startsWith('buildings/ruko-01/damage/')||colors.some(c=>k.startsWith('buildings/ruko-01/colors/')&&k.endsWith('-'+c))
       ||props.some(t=>k==='props/'+t||k==='props/'+t+'-damaged'||k==='props/'+t+'-wreck')
-      ||k.startsWith('characters/rex/animations/')
-      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net','fx/ulti-cutin'].includes(k));
+      ||rexPaths.includes(k)
+      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','characters/soldiers/tank','characters/soldiers/firetruck','characters/soldiers/drone','fx/steel-net'].includes(k));
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
     await(this.rexFramesReady??=this.prepareRexFrames());
+    if(level.boss)await(this.robotReady??=this.prepareRobot());
+  }
+  // Potong robot
+  async prepareRobot(){
+    const def=this.robot;if(!def)return;
+    const source=this.images.get(def.path);if(!source)return;
+    for(const [index,[x,y,width,height,px,py]] of def.frames.entries()){
+      let picture;
+      if(typeof createImageBitmap==='function'){try{picture=await createImageBitmap(source,x,y,width,height)}catch{}}
+      if(!picture){picture=document.createElement('canvas');picture.width=width;picture.height=height;picture.getContext('2d').drawImage(source,x,y,width,height,0,0,width,height)}
+      const path='characters/heroes/robot/frame-'+index;
+      this.meta[path+'.png']={width,height,pivot:[px,py],alpha:true};this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
+    }
+    this.images.delete(def.path);source.close?.();
+  }
+  // Ganti skin
+  useSkin(skin=''){
+    if(skin===this.skin)return;
+    for(const [path,image] of this.images)if(path.startsWith('characters/rex/animation-frames/')||path===this.cutin){image.close?.();this.images.delete(path);this.loading.delete(path)}
+    for(const [key,base] of Object.entries(this.basePaths)){
+      const atlas=this.rexAnimations.atlases[key];this.loading.delete(atlas.path);
+      atlas.path=skin?'characters/rex/skins/'+skin+'/'+base.split('/').pop():base;
+    }
+    this.skin=skin;this.cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin';this.rexFramesReady=null;
   }
   // Potong atlas
   async prepareRexFrames(){
@@ -190,6 +221,16 @@ function rexRig(c,a,p,t,reduced,down=-1){
   }
   c.restore();
 }
+// Pancaran air
+function spray(c,x1,y1,x2,y2,t,reduced){
+  c.save();c.lineCap='round';
+  const mx=(x1+x2)/2,my=Math.min(y1,y2)-90;
+  for(const [w,col] of [[16,'#dff6ff99'],[7,'#9fdcff']]){
+    c.strokeStyle=col;c.lineWidth=w;c.setLineDash(reduced?[]:[26,12]);c.lineDashOffset=reduced?0:-t*260;
+    c.beginPath();c.moveTo(x1,y1);c.quadraticCurveTo(mx,my,x2,y2);c.stroke();
+  }
+  c.restore();
+}
 // Balon obrolan kecil
 function speech(c,x,y,t,reduced){
   c.save();c.fillStyle='#fff0ce';c.strokeStyle='#102321';c.lineWidth=3;c.lineJoin='round';
@@ -202,6 +243,15 @@ function speech(c,x,y,t,reduced){
 function exclaim(c,x,y,k){
   c.save();c.globalAlpha=clamp(k*2,0,1);c.font='42px Bangers,Impact,sans-serif';c.textAlign='center';c.textBaseline='bottom';
   c.lineJoin='round';c.lineWidth=7;c.strokeStyle='#102321';c.strokeText('!',x,y-(1-k)*12);c.fillStyle='#ffd45c';c.fillText('!',x,y-(1-k)*12);c.restore();
+}
+// Gambar robot
+function robotRig(c,a,e,t,reduced){
+  const poses=a.robot.poses,mode=e.mode;
+  const index=e.hit>0?poses.hit:mode==='windup'?poses.windup:mode==='punch'?poses.punch:mode==='net'?poses.net
+    :e.stride>.15?poses.walk[Math.sin(e.walk)>=0?0:1]:poses.idle;
+  const shake=mode==='windup'&&!reduced?Math.sin(t*60)*2:0;
+  // Menghadap kiri asli
+  a.sprite(c,'characters/heroes/robot/frame-'+index,e.x+shake,0,robotWidth,-e.dir);
 }
 // Gambar pahlawan
 function heroRig(c,a,e){
@@ -294,7 +344,7 @@ export class Renderer {
     tile('mid-city',.48,-334,269,1800);
     if(g.index&&!own){c.fillStyle='rgba(43,23,64,'+g.index*.105+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
     // Langit menggelap
-    const dusk=clamp(g.percent/100,0,1)*(g.index===3?.18:.34);
+    const dusk=clamp(g.percent/100,0,1)*(g.level.setting==='square'?.18:.34);
     if(dusk>.005){c.fillStyle='rgba(26,14,48,'+dusk.toFixed(3)+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
     c.fillStyle=this.ground;c.fillRect(-30,-64,view+60,logicalH-floor+130);
     tile('street',1,-66,235,1750);
@@ -320,7 +370,7 @@ export class Renderer {
     const shadow=(x,y,w)=>{c.fillStyle='#0c211e51';c.beginPath();c.ellipse(x,y,w,Math.max(5,w*.07),0,0,Math.PI*2);c.fill()};
     // Musuh
     for(const e of g.enemies){if(!visible(e.x))continue;
-      shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:40);c.save();
+      shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:e.type==='tank'?96:e.type==='firetruck'?100:e.type==='drone'?24:40);c.save();
       if(e.hit>0&&!reduced)c.translate(-e.dir*Math.sin(clamp(e.hit/.2,0,1)*Math.PI)*4,0);
       if(e.hero){
         // Aura ulti
@@ -330,17 +380,22 @@ export class Renderer {
           c.beginPath();c.ellipse(e.x,e.y-70,70+k*40,95+k*40,0,0,Math.PI*2);c.fill();
           c.globalAlpha=.9;c.strokeStyle=light;c.lineWidth=5;c.beginPath();c.ellipse(e.x,e.y-70,90+k*60,115+k*60,0,0,Math.PI*2);c.stroke();c.restore();
         }
-        heroRig(c,a,e);
+        if(e.type==='robot')robotRig(c,a,e,t,reduced);else heroRig(c,a,e);
         // Darah pahlawan
-        const top=e.y-140,ratio=clamp(e.hp/e.max,0,1);
+        const top=e.type==='robot'?-400:e.y-140,ratio=clamp(e.hp/e.max,0,1);
         c.fillStyle='#102321';c.fillRect(e.x-48,top-4,96,18);
         c.fillStyle='#e8536d';c.fillRect(e.x-44,top,88*ratio,10);
       }
       else if(e.type==='turret'){
         c.save();c.translate(e.x,0);c.fillStyle='#172d2a';c.beginPath();c.moveTo(-27,0);c.lineTo(0,-38);c.lineTo(27,0);c.fill();
         a.sprite(c,'characters/heroes/jaring/parts/net-launcher',0,-27,61,e.dir);c.restore();
-      }else if(e.type==='jeep'||e.type==='helicopter'){
-        a.sprite(c,'characters/soldiers/'+e.type,e.x,e.y-e.lift,vehicles[e.type],e.dir,e.lift*.003);
+      }else if(e.type in vehicles){
+        // Tank terbalik
+        if(e.flipped>0){c.save();c.translate(e.x,-65);c.rotate(Math.PI);a.sprite(c,'characters/soldiers/'+e.type,0,65,vehicles[e.type],-e.dir);c.restore()}
+        else{
+          const hover=e.type==='drone'&&!reduced?Math.sin(t*30+e.phase)*1.5:0;
+          a.sprite(c,'characters/soldiers/'+e.type,e.x,e.y-e.lift+hover,vehicles[e.type],e.dir,e.lift*.003);
+        }
       }else{
         const base='characters/soldiers/'+e.type+'/frames/',frame=e.frame||(e.type==='infantry'?'aim':'kneeling-fire');
         const bob=Math.sin(e.walk)**2*e.stride*2;
@@ -364,6 +419,8 @@ export class Renderer {
     shadow(g.rex.x-15,2,212*(1-g.rex.lift/700));c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
     rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1);c.restore();
+    // Semprotan truk
+    for(const e of g.enemies)if(e.type==='firetruck'&&e.spraying&&e.hp>0&&visible(e.x))spray(c,e.x+e.dir*70,-128,g.rex.x+g.rex.dir*60,-190,t,reduced);
     // Warga
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;
@@ -448,8 +505,8 @@ export class Renderer {
       c.strokeStyle='#fff0ce55';c.lineWidth=5;
       for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173-(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
         c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
-      const m=this.art.meta['fx/ulti-cutin.png'],scale=Math.max((width+lean)/m.width,height/m.height),bump=reduced?0:(1-smooth(age/.3))*40;
-      c.drawImage(this.art.images.get('fx/ulti-cutin'),(width+lean-m.width*scale)/2-bump,(height-m.height*scale)/2,m.width*scale,m.height*scale);
+      const m=this.art.meta[this.art.cutin+'.png'],scale=Math.max((width+lean)/m.width,height/m.height),bump=reduced?0:(1-smooth(age/.3))*40;
+      c.drawImage(this.art.images.get(this.art.cutin),(width+lean-m.width*scale)/2-bump,(height-m.height*scale)/2,m.width*scale,m.height*scale);
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font=Math.round(height*.22)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';
@@ -477,8 +534,10 @@ export class Renderer {
       for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173+(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
         c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
       // Potret menghadap kiri
-      const path='characters/heroes/'+cast.type+'/portrait',im=this.art.images.get(path);
-      if(im){const size=height*1.12,bump=reduced?0:(1-smooth(age/.3))*40;
+      const path='characters/heroes/'+cast.type+'/portrait',im=this.art.images.get(path),wide=this.art.images.get('characters/heroes/'+cast.type+'/cutin');
+      // Cut-in robot
+      if(wide){const s=Math.max((width+lean)/wide.width,height/wide.height),bump=reduced?0:(1-smooth(age/.3))*40;c.drawImage(wide,(width+lean-wide.width*s)/2+bump,(height-wide.height*s)/2,wide.width*s,wide.height*s)}
+      else if(im){const size=height*1.12,bump=reduced?0:(1-smooth(age/.3))*40;
         c.save();c.translate(width+lean-size*.12+bump,height*.02);c.scale(-1,1);c.drawImage(im,0,0,size,size*im.height/im.width);c.restore()}
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();

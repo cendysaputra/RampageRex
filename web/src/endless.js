@@ -1,5 +1,5 @@
 // Ulangan distrik
-const LOOPS = 2;
+const LOOPS = 1;
 // Gelombang penjaga
 const WAVE_START = 8, WAVE_STEP = 12;
 

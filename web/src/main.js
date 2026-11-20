@@ -3,8 +3,8 @@ import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
 import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
-import {loadProgress,saveProgress,recordDistrict,resetProgress} from './progress.js';
-import {loadSettings,saveSettings,buzz,padSizes} from './settings.js';
+import {loadProgress,saveProgress,recordDistrict,resetProgress,totalStars} from './progress.js';
+import {loadSettings,saveSettings,buzz,padSizes,skins} from './settings.js';
 import {Tutorial} from './tutorial.js';
 import {missions,earned,starText} from './missions.js';
 import {makeEndless} from './endless.js';
@@ -27,6 +27,8 @@ function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on
 // Label rekor
 function recordLabel(){el('record').textContent=record?'Rekor '+record.toLocaleString('id-ID'):'Belum ada rekor'}
 let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0;
+// Skin aktif
+function activeSkin(){const s=skins[settings.skin];return s&&totalStars(progress)>=s.stars?s.folder:''}
 // Terapkan pengaturan
 function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad}
 applySettings();
@@ -36,9 +38,9 @@ soundLabel();recordLabel();districtLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
 // Data level
-function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]).then(([manifest,levels])=>[manifest,[...levels,makeEndless(levels)]]);return boot}
+function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4,5,6,7,8].map(n=>json('./data/levels/level-0'+n+'.json')))]).then(([manifest,levels])=>[manifest,[...levels,makeEndless(levels)]]);return boot}
 // Indeks tanpa akhir
-const ENDLESS=4;
+const ENDLESS=8;
 // Reset input
 function clearInput(){controls.clear();taps.clear();prior=0}
 // Buka dialog
@@ -108,6 +110,11 @@ function openSettings(paused=false){
   };
   group('Tingkat kesulitan',Object.fromEntries(Object.entries(difficulties).map(([k,d])=>[k,d.label])),settings.difficulty,
     key=>{settings.difficulty=key;saveSettings(settings)},paused?'Berlaku mulai distrik berikutnya.':'Santai: musuh lebih sedikit dan tidak terlalu sakit.');
+  // Skin Rex
+  const stars=totalStars(progress);
+  group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,stars>=s.stars?s.label:s.label+' · '+s.stars+'★'])),settings.skin,
+    key=>{settings.skin=key;saveSettings(settings)},'Bintang terkumpul: '+stars+' dari '+missions.length*3+'.'+(paused?' Berlaku mulai distrik berikutnya.':''));
+  for(const [i,s] of Object.values(skins).entries())form.lastChild.querySelector('.choices').children[i].disabled=stars<s.stars;
   // Volume efek
   const sound=document.createElement('label'),range=document.createElement('input'),value=document.createElement('output');
   sound.className='slider';sound.textContent='Efek suara';range.type='range';range.min=0;range.max=100;range.step=5;range.value=settings.sfx;value.textContent=settings.sfx+'%';
@@ -154,8 +161,8 @@ async function start(index=0,carried=0,result=''){
   el('start').disabled=el('help').disabled=el('districts').disabled=el('settings').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
-    const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,3),{difficulty:settings.difficulty});
+    const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());await art.preload(levels[index]);
+    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty});
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -191,7 +198,7 @@ function finish(){
   // Simpan progres
   const stars=earned(world,levelIndex);recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress);districtLabel();
   if(score>record){record=score;save('rex.best',record);recordLabel()}
-  const more=win&&levelIndex<3;
+  const more=win&&levelIndex<ENDLESS-1;
   // Lanjut distrik
   if(more){el('hud').hidden=true;start(levelIndex+1,score,world.level.name+' rata '+starText(stars)+' · Skor '+score.toLocaleString('id-ID'));return}
   modal(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang',
@@ -221,7 +228,7 @@ function updateHud(){
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+heroNames[e.type]}
   text('objective',world.phase!=='fight'?'Jalan ke ujung distrik →':names?'Kalahkan '+names:world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan');
   if(next!==bossKey){bossKey=next;el('bosses').replaceChildren(...world.enemies.filter(e=>e.hero).map(e=>{
-    const card=document.createElement('div');card.innerHTML='<img src="./assets/characters/heroes/'+e.type+'/portrait.webp" alt="" width="40" height="40"><strong>'+heroNames[e.type]+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
+    const card=document.createElement('div');card.innerHTML='<img src="./assets/characters/heroes/'+e.type+'/'+(e.type==='robot'?'master':'portrait')+'.webp" alt="" width="40" height="40"><strong>'+heroNames[e.type]+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
   }))}
   text('notice',world.time<world.messageUntil?world.message:'');
   // Indikator cooldown
