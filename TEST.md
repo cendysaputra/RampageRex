@@ -3,12 +3,13 @@
 - **Audited branch:** `main` (newer than `staging`)
 - **Commit:** `770f162cebb5298a946c63852297196134613b65`
 - **Date:** 2026-11-20
+- **Re-checked:** `main` at `6342f7d`, 2026-11-20
 
 `staging` (`0a3078406871eb45f6cecf966de5433ff5b4d7ab`, 2026-11-17) is still the initial README. `main` is the playable browser game. The planned Tauri wrapper is not in the repo: there is no Rust crate, `tauri.conf`, capability file, IPC command, updater, or filesystem/shell permission. The game is static HTML, CSS, and ES modules on a canvas.
 
 ## Status
 
-All five findings are resolved on `ccr-1f571043-sgacw4` (PR #32):
+All five findings are resolved and merged into `main` through PR #32 (`ce12366`):
 
 | Finding | Status |
 | --- | --- |
@@ -19,6 +20,8 @@ All five findings are resolved on `ccr-1f571043-sgacw4` (PR #32):
 | RR-5 | Resolved in `ced8583`: `tools/preview-browser.mjs` and `docs/animation-checks.md` were removed as unused. |
 
 `rex.bigNet` is now initialised to 0. `npm run check` reproduces RR-1 to RR-3 and passes.
+
+The re-check on `6342f7d` confirmed each fix is in `main`: `immune()` and the boolean `hurt()` (RR-1, RR-2), takeoff cancelling a hero ulti (RR-2), the queue kept during stun (RR-3), and `pause()` on a hidden tab in `start()` (RR-4). `node --check` passes on every file in `src/` and `tools/`, and `npm run check` passes.
 
 ## Summary
 
@@ -86,7 +89,7 @@ All five findings are resolved on `ccr-1f571043-sgacw4` (PR #32):
 | --- | --- |
 | Stack | Browser game. No Tauri config, IPC, updater, or fs/shell allowlist to review. |
 | Syntax | `node --check` on `src/*.js` and `tools/*.mjs`: pass. |
-| Tests | `npm run check` (`tools/check-motion.mjs`): pass. One impact per attack at 30/60/120/144 Hz, pose curves continuous, walk distance 722.22–722.27 px across those rates, Rajawali roar landing, hero flank, civilian two-hit, district clear/exit, jump immunity against `hurt()`, and defeat timing. |
+| Tests | `npm run check` (`tools/check-motion.mjs`): pass. One impact per attack at 30/60/120/144 Hz, pose curves continuous, walk distance 722.22–722.27 px across those rates, Rajawali roar landing, hero flank, civilian two-hit, district clear/exit, jump immunity against `hurt()`, defeat timing, and since PR #32 regression checks for RR-1 to RR-3. |
 | Typecheck | No TypeScript and no `tsconfig`. Not run. |
 | Lint | No ESLint config. Not run. |
 | Build | No build script. The game is the static files. Not run. |
