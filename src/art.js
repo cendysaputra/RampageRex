@@ -80,7 +80,7 @@ export class Art {
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
       backdrops.includes(k)||k.startsWith('buildings/')||k.startsWith('props/')
       ||k.startsWith('characters/rex/animations/')
-      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net','fx/ulti-cutin'].includes(k));
+      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net','fx/ulti-cutin'].includes(k));
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
     await(this.rexFramesReady??=this.prepareRexFrames());
@@ -116,6 +116,16 @@ export class Art {
   sprite(c,path,x,y,width,dir=1,angle=0){
     const im=this.images.get(path);if(!im)return;
     c.save();c.translate(x,y);c.scale(dir,1);this.part(c,path,0,0,width,angle);c.restore();
+  }
+  // Lebar pose berdiri warga agar tingginya sejalan dengan frame lari
+  standingWidth(type){
+    this.standing??=new Map();
+    if(!this.standing.has(type)){
+      const run=this.meta['characters/civilians/'+type+'/frames/run-a.png'],stand=this.meta['characters/civilians/'+type+'/master.png'];
+      const height=1.08*run.bounds.height*people.civilian/run.width;
+      this.standing.set(type,height/stand.bounds.height*stand.width);
+    }
+    return this.standing.get(type);
   }
   // Baur pose
   blend(c,from,to,mix,x,y,width,dir=1,angle=0){
@@ -176,6 +186,19 @@ function rexRig(c,a,p,t,reduced,down=-1){
     }
   }
   c.restore();
+}
+// Balon obrolan kecil
+function speech(c,x,y,t,reduced){
+  c.save();c.fillStyle='#fff0ce';c.strokeStyle='#102321';c.lineWidth=3;c.lineJoin='round';
+  c.beginPath();c.ellipse(x,y,26,17,0,0,Math.PI*2);c.moveTo(x-12,y+13);c.lineTo(x-20,y+27);c.lineTo(x-2,y+15);c.fill();c.stroke();
+  c.fillStyle='#102321';
+  for(let i=0;i<3;i++){const lift=reduced?0:Math.max(0,Math.sin(t*6-i*.9))*3;c.beginPath();c.arc(x-11+i*11,y-lift,3,0,Math.PI*2);c.fill()}
+  c.restore();
+}
+// Tanda seru saat mulai panik
+function exclaim(c,x,y,k){
+  c.save();c.globalAlpha=clamp(k*2,0,1);c.font='42px Bangers,Impact,sans-serif';c.textAlign='center';c.textBaseline='bottom';
+  c.lineJoin='round';c.lineWidth=7;c.strokeStyle='#102321';c.strokeText('!',x,y-(1-k)*12);c.fillStyle='#ffd45c';c.fillText('!',x,y-(1-k)*12);c.restore();
 }
 // Gambar pahlawan
 function heroRig(c,a,e){
@@ -343,7 +366,15 @@ export class Renderer {
         // Berputar di sekitar badan, bukan di kaki
         c.save();c.globalAlpha=clamp(civ.life/.35,0,1);c.translate(civ.x,civ.lane+civ.y-42);if(!reduced)c.rotate(civ.angle);
         a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,0,42,people.civilian,civ.dir);c.restore();continue}
+      if(civ.calm){
+        // Beraktivitas: pose berdiri, napas pelan, balon obrolan bila berdua
+        const breathe=reduced?0:Math.sin(t*2.2+civ.phase)*1.2;
+        a.sprite(c,'characters/civilians/'+civ.type+'/master',civ.x,civ.lane+breathe*.3,a.standingWidth(civ.type),civ.dir);
+        if(civ.chat&&civ.dir>0&&(t+civ.phase)%4<2.4)speech(c,civ.x+30,civ.lane-118,t,reduced);
+        continue;
+      }
       const recoil=civ.hit>0&&!reduced?-civ.dir*Math.sin(clamp(civ.hit/.2,0,1)*Math.PI)*4:0;
+      if(civ.alarm>0)exclaim(c,civ.x,civ.lane-112,civ.alarm/.7);
       a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x+recoil,civ.lane-(civ.stun>0?0:Math.sin(civ.walk)**2*3),people.civilian,civ.dir);
     }
     // Proyektil

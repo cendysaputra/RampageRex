@@ -8,8 +8,11 @@ from PIL import Image
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
 # Dilewati
 SKIPPED = re.compile(r"(^ui/|(master|sheet)\.png$)")
-# Sampul menu
-EXTRA = ["characters/rex/master.png"]
+# Sampul menu, plus pose berdiri warga untuk aktivitas di jalan
+EXTRA = ["characters/rex/master.png"] + [
+    f"characters/civilians/{name}/master.png"
+    for name in ("office-worker", "shopper", "schoolkid", "elder", "bakso-vendor", "kopdes-worker")
+]
 
 
 def main():

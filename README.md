@@ -94,6 +94,8 @@ Tentara datang beregu dari depan dan belakang sampai 14 orang di layar (bertamba
   <img src="assets/characters/civilians/bakso-vendor/master.png" alt="Pedagang bakso" height="96">
 </p>
 
+Sebelum Rex datang, warga beraktivitas di jalan: mengobrol berdua, menunggu di depan toko, atau berjualan di dekat gerobak dan warung tenda. Begitu Rex mendekat, bangunan di dekat mereka diserang, atau Rex meraung, melompat, atau memakai ulti, mereka panik dan lari. Di Pusat Kota ada bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang, dengan Tugu Kujang di kejauhan.
+
 Warga sipil berlarian panik dan tidak menyerang, tapi bisa dikalahkan seperti tentara: serangan pertama membuat mereka terhuyung, serangan kedua melempar mereka keluar layar. Ulti Rex langsung menjatuhkan semua warga di layar. Tiap warga menambah skor dan sedikit Rage.
 
 ## 🏙️ Empat distrik
