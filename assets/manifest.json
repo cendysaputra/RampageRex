@@ -1371,22 +1371,6 @@
       "alpha": true,
       "logicalHeight": 938
     },
-    "characters/heroes/perisai/master.png": {
-      "width": 693,
-      "height": 760,
-      "bounds": {
-        "x": 12,
-        "y": 12,
-        "width": 669,
-        "height": 736
-      },
-      "pivot": [
-        346,
-        748
-      ],
-      "alpha": true,
-      "logicalHeight": 223
-    },
     "characters/heroes/perisai/parts/head.png": {
       "width": 307,
       "height": 307,
@@ -1582,22 +1566,6 @@
       ],
       "alpha": true
     },
-    "characters/heroes/rajawali/master.png": {
-      "width": 532,
-      "height": 760,
-      "bounds": {
-        "x": 13,
-        "y": 12,
-        "width": 507,
-        "height": 736
-      },
-      "pivot": [
-        266,
-        748
-      ],
-      "alpha": true,
-      "logicalHeight": 223
-    },
     "characters/heroes/rajawali/parts/head.png": {
       "width": 334,
       "height": 311,
@@ -1777,22 +1745,6 @@
         388
       ],
       "alpha": true
-    },
-    "characters/heroes/jaring/master.png": {
-      "width": 723,
-      "height": 760,
-      "bounds": {
-        "x": 12,
-        "y": 12,
-        "width": 699,
-        "height": 736
-      },
-      "pivot": [
-        362,
-        748
-      ],
-      "alpha": true,
-      "logicalHeight": 223
     },
     "characters/heroes/jaring/parts/head.png": {
       "width": 326,
@@ -1989,22 +1941,6 @@
       ],
       "alpha": true
     },
-    "characters/soldiers/infantry/master.png": {
-      "width": 434,
-      "height": 560,
-      "bounds": {
-        "x": 12,
-        "y": 12,
-        "width": 410,
-        "height": 536
-      },
-      "pivot": [
-        217,
-        548
-      ],
-      "alpha": true,
-      "logicalHeight": 199
-    },
     "characters/soldiers/infantry/frames/aim.png": {
       "width": 356,
       "height": 425,
@@ -2065,22 +2001,6 @@
       "pivot": [
         178,
         413
-      ],
-      "alpha": true,
-      "logicalHeight": 199
-    },
-    "characters/soldiers/bazooka/master.png": {
-      "width": 508,
-      "height": 560,
-      "bounds": {
-        "x": 12,
-        "y": 12,
-        "width": 484,
-        "height": 536
-      },
-      "pivot": [
-        254,
-        548
       ],
       "alpha": true,
       "logicalHeight": 199
@@ -3387,7 +3307,6 @@
       "alpha": true
     }
   },
-  "missing": [],
   "review": [],
   "scale": {
     "rexHeight": 938,
