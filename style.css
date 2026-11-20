@@ -217,3 +217,18 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
 @keyframes pan-meteor{from{transform:scale(1.1) translate(-1.6%,-1.6%)}to{transform:scale(1.1) translate(1.6%,1.6%)}}
 @keyframes pan-forest{from{transform:scale(1.1) translateX(2%)}to{transform:scale(1.1) translateX(-2%)}}
 @keyframes zoom-city{to{transform:scale(1.14)}}
+
+/* Kredit sebelum opening */
+#credit{position:absolute;inset:0;z-index:13;display:grid;place-content:center;gap:6px;text-align:center;background:#000;color:var(--cream);cursor:pointer}
+#credit p{margin:0;opacity:0}
+.credit-by{font:600 clamp(13px,1.4vw,17px)/1 var(--text);letter-spacing:.32em;text-transform:uppercase;color:#b9c8bf}
+.credit-name{font:400 clamp(48px,8vw,104px)/1 var(--shout);letter-spacing:.04em}
+#credit.showing p{animation:credit-in .9s cubic-bezier(.2,.7,.2,1) forwards}
+#credit.showing .credit-name{animation-delay:.25s}
+#credit.leaving p{opacity:1;animation:credit-out .7s ease-in forwards}
+@keyframes credit-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes credit-out{to{opacity:0}}
+@media(prefers-reduced-motion:reduce){
+  #credit.showing p{animation:credit-fade .4s forwards}
+  @keyframes credit-fade{to{opacity:1}}
+}

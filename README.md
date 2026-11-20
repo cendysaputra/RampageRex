@@ -6,25 +6,36 @@
 
 **Game 2D di browser: kamu jadi Rex, dan kota Ruko Senja ada di depanmu.**
 
-Hancurkan bangunan lantai demi lantai, hadapi tentara, dan kalahkan para pahlawan penjaga di empat distrik.
+Ratakan bangunan lantai demi lantai, hadapi gerombolan tentara, dan kalahkan tiga pahlawan penjaga kota di empat distrik.
 
-HTML5 Canvas · JavaScript murni · tanpa build · keyboard, mouse, dan layar sentuh
+### [▶ Main sekarang](https://rampagerex.vercel.app)
+
+Bisa dimainkan dengan keyboard, mouse, atau layar sentuh.
 
 </div>
 
+<p align="center">
+  <img src="docs/screenshots/menu.webp" alt="Menu utama: jalan ruko terbakar saat senja" width="49%">
+  <img src="docs/screenshots/gameplay.webp" alt="Rex menghancurkan bangunan di Jalan Ruko" width="49%">
+</p>
+
 ---
 
-## 🎮 Cara main
+## 📖 Kisahnya
 
-Dari root repo, jalankan server statis apa saja, misalnya:
+Suatu malam, sebuah meteor jatuh di hutan pinggir kota. Di dasar kawahnya ada sebutir telur, dan dari telur itu menetas Rex. Ia tumbuh besar di hutan sampai hutan tidak lagi cukup, lalu di kejauhan ia melihat kota.
 
-```
-python -m http.server 8000
-```
+Kisah ini diceritakan lewat opening komik bergerak setelah kamu menekan **Mulai main**.
 
-Lalu buka `http://localhost:8000`. Game membaca modul JavaScript, data level, dan aset lewat HTTP, jadi tidak bisa dibuka langsung sebagai file. Tidak ada paket yang perlu dipasang.
+## 🎯 Tujuan
 
-Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya**. Setelah itu tentara kabur dan panah muncul di ujung jalan: bawa Rex ke sana, lalu ia berjalan keluar layar sendiri menuju distrik berikutnya. Kalau HP Rex habis, Rex terhuyung lalu tumbang dengan bintang di atas kepala, baru kemudian distrik diulang.
+Di setiap distrik:
+
+1. **Ratakan 100% bangunan.** Runtuhkan lantai dasar untuk menjatuhkan semua lantai di atasnya.
+2. **Kalahkan ketiga pahlawan penjaga.** Mereka datang bersamaan begitu kota cukup hancur.
+3. **Jalan ke ujung distrik.** Tentara kabur dan panah muncul di ujung jalan. Bawa Rex ke sana, lalu ia berjalan keluar layar menuju distrik berikutnya.
+
+Kalau darah Rex habis, Rex terhuyung lalu tumbang, dan distrik diulang dari awal.
 
 ## 🕹️ Kontrol
 
@@ -35,18 +46,25 @@ Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya*
 | 🌀 | **Ekor** ke belakang, melempar tentara dan jeep | `Q` | Klik kanan | 2,2 dtk |
 | 🦶 | **Injak** di sekitar kaki, merusak lantai dasar | `S` | | 3,5 dtk |
 | 📣 | **Raung**, membuat tentara di layar terpaku | `E` | | 9 dtk |
-| 🦖 | **Lompat gertakan**: kebal di udara, saat mendarat semua di layar terpaku 4,5 dtk (pahlawan 1,6 dtk) | `Spasi` | | 20 dtk |
+| 🦖 | **Lompat gertakan**, kebal di udara dan membuat semua di layar terpaku saat mendarat | `Spasi` | | 20 dtk |
 | 💥 | **Ulti: Amukan Rex**, mengguncang seluruh layar | `R` | | 40 dtk |
 | ⏸️ | Jeda | `Esc` atau `P` | | |
 
-- Chip skill di bawah layar meredup dan menampilkan sisa detik selama cooldown berjalan. Lompat baru bisa dipakai 6 detik dan Ulti 15 detik setelah distrik dimulai.
+Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
+
+<p align="center">
+  <img src="docs/screenshots/rex-ulti.webp" alt="Cut-in ulti Amukan Rex" width="49%">
+  <img src="docs/screenshots/jump.webp" alt="Gelombang kejut saat Rex mendarat dari lompatan" width="49%">
+</p>
+
+### Tips
+
+- Chip skill di bawah layar menampilkan sisa detik cooldown. Lompat baru bisa dipakai 6 detik dan Ulti 15 detik setelah distrik dimulai.
 - Serangan yang ditekan sedikit terlalu cepat tetap keluar begitu Rex bebas.
-- Meruntuhkan lantai dasar menjatuhkan semua lantai di atasnya.
-- Rex punya 400 darah. Mengalahkan tentara memulihkan sedikit, mengalahkan pahlawan memulihkan lebih banyak.
-- Peluru, roket, dan serangan pahlawan cukup sakit, dan damage-nya naik 12% di tiap distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
-- Tiap pahlawan punya bar darah di atas kepalanya dan di pojok kanan atas layar.
-- Saat **Rage** penuh, damage Rex dua kali lipat selama 8 detik.
-- Di layar sentuh, pakai tombol arah dan tombol aksi di bagian bawah. Rekor skor tersimpan di browser.
+- Rex punya 400 darah. Mengalahkan tentara memulihkan sedikit darah, mengalahkan pahlawan memulihkan lebih banyak.
+- Saat **Rage** penuh, damage Rex dua kali lipat selama 8 detik. Rage terisi dari menghancurkan bangunan dan mengalahkan musuh.
+- Pakai **lompat** untuk menghindari tembakan: Rex kebal selama di udara, dan saat mendarat tentara terpaku 4,5 detik, pahlawan 1,6 detik.
+- Musuh makin keras di distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
 
 ## 🦸 Para penjaga kota
 
@@ -57,23 +75,27 @@ Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya*
     <td align="center" width="33%"><img src="assets/characters/heroes/jaring/portrait.png" alt="Jaring" width="130"><br><b>🕸️ Jaring</b></td>
   </tr>
   <tr>
-    <td valign="top">Menubruk dengan perisai dan memblokir gigitan dari depan.<br><br><b>Kelemahan:</b> hindari tubrukannya, lalu sabet dengan ekor saat ia lengah.</td>
-    <td valign="top">Terbang dengan jetpack, menembak laser, lalu menukik.<br><br><b>Kelemahan:</b> raung untuk menjatuhkannya, lalu gigit saat ia di tanah.</td>
-    <td valign="top">Memasang turret dan menembakkan jaring baja yang memperlambat Rex.<br><br><b>Kelemahan:</b> hancurkan turretnya dulu, lalu injak.</td>
+    <td valign="top">Menghadang di depan, menubruk dengan perisai, dan memblokir gigitan dari depan.<br><br><b>Kelemahan:</b> hindari tubrukannya, lalu sabet dengan ekor saat ia lengah.</td>
+    <td valign="top">Menyerang dari udara dengan jetpack, menembak laser, lalu menukik.<br><br><b>Kelemahan:</b> raung atau lompat untuk menjatuhkannya, lalu gigit saat ia di tanah.</td>
+    <td valign="top">Memotong jalan mundur, memasang turret, dan menembakkan jaring baja yang memperlambat Rex.<br><br><b>Kelemahan:</b> hancurkan turretnya dulu, lalu injak.</td>
   </tr>
 </table>
 
-Tiap penjaga juga punya **ulti** dengan cut-in panel yang sama seperti Amukan Rex, masuk dari kanan layar:
+Ketiganya selalu datang bersamaan dan mengepung Rex. Tiap penjaga juga punya **ulti**:
 
 | Penjaga | Ulti | Efek |
 | --- | --- | --- |
 | 🛡️ Perisai | **Benteng Baja** | Gelombang kejut sepanjang jalan, damage besar dan membuat Rex terpaku |
-| 🦅 Rajawali | **Hujan Laser** | Laser berjatuhan dari langit di sekitar Rex selama 1,5 detik |
+| 🦅 Rajawali | **Hujan Laser** | Laser berjatuhan di sekitar Rex selama 1,5 detik |
 | 🕸️ Jaring | **Jaring Raksasa** | Jaring baja menutupi Rex, damage dan memperlambat 5 detik |
 
-Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. **Raung** atau **lompat** saat panelnya muncul, atau pakai Ulti Rex, untuk menggagalkannya.
+Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul, **raung**, **lompat**, atau pakai **Ulti Rex** untuk menggagalkannya.
 
-## 🪖 Tentara dan warga
+<p align="center">
+  <img src="docs/screenshots/hero-ulti.webp" alt="Cut-in ulti Hujan Laser milik Rajawali" width="70%">
+</p>
+
+## 🪖 Tentara
 
 <table>
   <tr>
@@ -84,7 +106,9 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. **Raung** atau **lom
   </tr>
 </table>
 
-Tentara datang beregu dari depan dan belakang sampai 14 orang di layar (bertambah 2 tiap distrik), jadi Rex selalu dikeroyok. Makin hancur kotanya, makin besar regunya dan makin berat senjatanya. Helikopter hanya bisa digigit saat terbang rendah.
+Tentara datang beregu dari depan dan belakang sampai belasan orang di layar, jadi Rex selalu dikeroyok. Makin hancur kotanya, makin besar regunya dan makin berat senjatanya. Helikopter hanya bisa digigit saat terbang rendah.
+
+## 🧑‍🤝‍🧑 Warga
 
 <p align="center">
   <img src="assets/characters/civilians/office-worker/master.png" alt="Pekerja kantoran" height="96">
@@ -92,66 +116,31 @@ Tentara datang beregu dari depan dan belakang sampai 14 orang di layar (bertamba
   <img src="assets/characters/civilians/schoolkid/master.png" alt="Anak sekolah" height="96">
   <img src="assets/characters/civilians/elder/master.png" alt="Kakek" height="96">
   <img src="assets/characters/civilians/bakso-vendor/master.png" alt="Pedagang bakso" height="96">
+  <img src="assets/characters/civilians/kopdes-worker/master.png" alt="Pekerja Kopdes" height="96">
 </p>
 
-Sebelum Rex datang, warga beraktivitas di jalan: mengobrol berdua, menunggu di depan toko, atau berjualan di dekat gerobak dan warung tenda. Begitu Rex mendekat, bangunan di dekat mereka diserang, atau Rex meraung, melompat, atau memakai ulti, mereka panik dan lari. Di Pusat Kota ada bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang, dengan Tugu Kujang di kejauhan.
+Sebelum Rex datang, warga beraktivitas di jalan: mengobrol, menunggu di depan toko, atau berjualan di dekat gerobak. Begitu Rex mendekat atau bangunan di dekat mereka diserang, mereka panik dan berlarian. Warga tidak menyerang, tapi bisa dikalahkan: serangan pertama membuat mereka terhuyung, serangan kedua melempar mereka keluar layar.
 
-Warga sipil berlarian panik dan tidak menyerang, tapi bisa dikalahkan seperti tentara: serangan pertama membuat mereka terhuyung, serangan kedua melempar mereka keluar layar. Ulti Rex langsung menjatuhkan semua warga di layar. Tiap warga menambah skor dan sedikit Rage.
+<p align="center">
+  <img src="docs/screenshots/street-life.webp" alt="Warga beraktivitas di depan Kopdes Merah Putih di Pusat Kota" width="70%">
+</p>
 
 ## 🏙️ Empat distrik
 
-| | Distrik | Target destruksi | Para penjaga datang di |
-| :-: | --- | :-: | :-: |
-| 1 | Jalan Ruko | 100% | 25% |
-| 2 | Pusat Kota | 100% | 35% |
-| 3 | Pelabuhan | 100% | 45% |
-| 4 | Alun-Alun | 100% | 50% |
+| | Distrik | Suasana |
+| :-: | --- | --- |
+| 1 | **Jalan Ruko** | Deretan ruko, warung, dan angkot saat senja |
+| 2 | **Pusat Kota** | Gedung perkantoran, Kopdes Merah Putih, dan Tugu Kujang di kejauhan |
+| 3 | **Pelabuhan** | Gudang, kontainer, dan derek pelabuhan |
+| 4 | **Alun-Alun** | Pusat kota di malam hari, tempat pertarungan terakhir |
 
-Di setiap distrik, Perisai, Rajawali, dan Jaring selalu datang bertiga dan mengepung Rex: Perisai menghadang di depan, Rajawali menyerang dari udara, Jaring memotong jalan mundur. Darah mereka makin tebal di distrik berikutnya.
+Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal.
 
 <p align="center">
-  <img src="assets/props/angkot.webp" alt="Angkot" height="84">
-  <img src="assets/props/food-cart.webp" alt="Gerobak makanan" height="84">
-  <img src="assets/props/tent-stall.webp" alt="Warung tenda" height="84">
-  <img src="assets/props/tree.webp" alt="Pohon" height="84">
-  <img src="assets/props/billboard.webp" alt="Papan reklame" height="84">
+  <img src="docs/screenshots/knockout.webp" alt="Rex tumbang dengan bintang di atas kepala" width="49%">
+  <img src="docs/screenshots/mobile-play.webp" alt="Tampilan di HP dengan tombol sentuh" width="20%">
 </p>
 
-Susunan bangunan, properti jalan, titik muncul tentara, dan jadwal pahlawan tiap distrik diatur di `data/levels/`.
-
-## 📁 Struktur proyek
-
-| Lokasi | Isi |
-| --- | --- |
-| `index.html`, `style.css` | Halaman, menu, dan HUD |
-| `src/main.js` | Alur layar, input, dan HUD |
-| `src/world.js` | Aturan permainan: Rex, musuh, bangunan, cooldown, ulti |
-| `src/art.js` | Pemuatan gambar dan renderer canvas |
-| `src/rex-animation.js`, `src/motion.js` | Pemilihan pose Rex dan kurva gerak |
-| `src/audio.js` | Efek suara Web Audio |
-| `data/levels/` | Data empat distrik |
-| `assets/backgrounds/` | Latar bersama, plus satu folder per distrik bila punya latar sendiri |
-| `assets/` | Gambar dan `manifest.json` |
-| `tools/` | Konversi WebP dan skrip pemeriksaan |
-| `image-prompts.md` | Arah visual dan prompt pembuatan gambar |
-
-## 🖼️ Aset
-
-Game memuat salinan WebP dari gambar di `assets/` (lihat `imageFormat` di `assets/manifest.json`). Repo hanya menyimpan WebP untuk gambar yang dipakai game; PNG sumbernya ada di riwayat git. Untuk menambah atau mengganti gambar, taruh PNG barunya di folder yang sama, daftarkan di manifest, lalu jalankan `python tools/to-webp.py` dari root repo (butuh Pillow). PNG boleh dihapus setelah hasil WebP-nya diperiksa. Potret, ilustrasi master, dan ikon halaman tetap berformat PNG karena tidak digambar di canvas.
-
-Renderer memangkas ruang transparan saat decode berdasarkan `bounds` di manifest, lalu menggambar dengan pivot asli. Perbarui bounds dan pivot jika bentuk aset berubah. Latar disiapkan ulang saat ukuran layar berubah; langit dan jalan mempertahankan proporsinya pada layar portrait.
-
-Huruf UI memakai Bangers (judul dan seruan) dan Baloo 2 (teks), keduanya berlisensi SIL Open Font License 1.1. File huruf dan lisensinya ada di `assets/fonts/`.
-
-Rex digambar dari pose di `assets/characters/rex/animations/`; catatan pembuatannya ada di [README folder itu](assets/characters/rex/animations/README.md).
-
-## ✅ Pemeriksaan
-
-Jalankan `npm run check` (atau `node tools/check-motion.mjs`) dengan Node.js 16 atau lebih baru. Tidak ada paket yang perlu dipasang; `package.json` hanya menandai file `.js` sebagai modul ES. Pemeriksaan ini menguji waktu benturan, perpindahan pose, pendaratan Rajawali, serta konsistensi gerak pada simulasi 30, 60, 120, dan 144 Hz.
-
-Untuk pemeriksaan browser, jalankan server lokal lalu `node tools/preview-browser.mjs` dari environment yang menyediakan Playwright dan Chromium. Jika Playwright terpasang di luar repo, arahkan variabel `PLAYWRIGHT_PATH` ke file `index.mjs` paket tersebut. `REX_URL` dapat mengganti alamat server, dan `REX_PREVIEW_DIR` dapat mengganti lokasi hasil. Secara default, screenshot dan `results.json` disimpan dalam folder `rampage-rex-preview` di direktori temporer sistem.
-
-Hasil pemeriksaan perubahan gambar dan animasi dicatat di [docs/animation-checks.md](docs/animation-checks.md).
-
 ## 📄 Lisensi
-Kode dan aset game ini berlisensi [MIT](LICENSE) © 2026 Cendy Saputra, kecuali huruf di `assets/fonts/` yang tetap memakai SIL Open Font License 1.1.
+
+Kode dan aset game ini berlisensi [MIT](LICENSE) © 2026 Cendy Saputra, kecuali huruf Bangers dan Baloo 2 di `assets/fonts/` yang memakai SIL Open Font License 1.1.
