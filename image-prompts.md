@@ -736,6 +736,82 @@ ONE small Indonesian [BUILDING], strict front-side view, chunky cartoon proporti
 
 ---
 
+## 18. Event jalan dan ikon toko
+
+### 18.1 Pawai 17 Agustus
+
+Event acak: barisan pawai lewat di jalan, dan panjat pinang berdiri di trotoar.
+
+**Peserta pawai** (warga baru, empat pose seperti warga lain): simpan di `web/assets/characters/civilians/pawai/frames/` sebagai `run-a.webp`, `run-b.webp`, `look-back.webp`, `stumble.webp`, plus pose berdiri `web/assets/characters/civilians/pawai/master.webp`. Kanvas pose 392×425, kaki di baris 413, sama seperti `kopdes-worker`. Gunakan prompt 5.1 dan 5.2 dengan `[DESCRIPTION]`:
+
+```
+a cheerful Indonesian Independence Day parade participant in a red and white outfit with a small red-and-white flag in one hand and a red-and-white headband
+```
+
+**Panjat pinang** (properti): simpan `web/assets/props/panjat-pinang.webp`, `panjat-pinang-damaged.webp`, `panjat-pinang-wreck.webp` dengan kanvas yang sama, latar transparan.
+
+```
+ONE tall Indonesian panjat pinang greased areca pole, side view, a slippery brown pole on a small base, a round frame at the top hung with prizes (a bicycle, buckets, a radio, snack bags), red and white bunting, same outline and sunset lighting as the attached ruko reference, no people, no text.
+```
+
+Versi rusak dan hancur pakai prompt 1.6 (`damaged`: pole cracked and leaning, some prizes fallen; `wreck`: pole snapped on the ground with scattered prizes).
+
+### 18.2 Konvoi motor
+
+Event acak: rombongan motor lewat dengan cepat, bisa ditabrak Rex.
+
+Simpan `web/assets/characters/soldiers/motor.webp` (kanvas sekitar 420×300, roda di dasar kanvas, menghadap kanan) dan `web/assets/characters/soldiers/motor-wreck.webp` dengan kanvas yang sama.
+
+```
+ONE small cartoon Indonesian scooter with a rider wearing a helmet and a jacket, strict side view facing right, chunky toy-like proportions, the rider leaning forward riding fast, same outline style and palette as the attached soldier references. No text, no plate number.
+```
+
+Versi hancur: `the same scooter knocked over on its side, the rider tumbling off, comedic not violent`.
+
+### 18.3 Ikon aplikasi Play Store
+
+Ikon sementara di `web/assets/ui/app/` dipotong dari ilustrasi Rex. Untuk rilis, buat ikon resmi:
+
+| File | Ukuran | Catatan |
+| --- | --- | --- |
+| `web/assets/ui/app/icon-512.png` | 512×512 | Ikon Play Store, tanpa transparansi |
+| `web/assets/ui/app/icon-maskable-512.png` | 512×512 | Kepala Rex di 60% tengah, sisanya latar |
+| `web/assets/ui/app/feature-graphic.png` | 1024×500 | Banner Play Store |
+
+```
+App icon for the game Rampage Rex: the head of the attached red cartoon dinosaur Rex roaring, three-quarter view, filling most of a square, bold dark outline, warm orange sunset circle behind him, dark teal background, flat and readable at small sizes. No text, no letters, no border.
+```
+
+```
+Feature graphic 1024x500 for the game Rampage Rex: the attached red dinosaur Rex stomping through a dense Indonesian ruko street at sunset, buildings crumbling, tiny soldiers and heroes in front, warm orange and magenta sky. Leave the left third calmer for the game title added later. No text, no letters, no logos.
+```
+
+---
+
+## 19. Skin langka ThunderRex
+
+Skin langka yang didapat dengan peluang 1% saat Rex tersambar petir ketika hujan. Efek kilat di setiap skill, aura listrik, dan cut-in "AMUKAN PETIR!" sudah dibuat lewat kode. Gambar di bawah memberi Rex tampilan yang megah.
+
+**Sumber (edit source):** setiap atlas di `web/assets/characters/rex/animations/` dan `web/assets/fx/ulti-cutin.webp`, sama seperti skin di bagian 13.
+
+**Simpan ke:** `web/assets/characters/rex/skins/thunder/` dengan nama yang sama:
+
+```
+walk.webp  bite-roar.webp  tail-stomp.webp  ulti.webp  jump.webp  knockdown.webp  ulti-cutin.webp
+```
+
+Gunakan prompt edit bagian 13.2 dengan `[SKIN]`:
+
+```
+a majestic legendary storm dinosaur: deep midnight-blue and storm-grey scales with glowing electric-cyan lightning veins running along the neck, flanks, legs and tail, dorsal plates turned into translucent crystal spikes crackling with white-blue electricity, a pale silver belly, eyes glowing bright white-yellow, small sparks dancing on the claws and teeth. Keep it readable and cartoon-styled with the same bold outline, epic but not scary
+```
+
+Untuk `ulti-cutin.webp`, tambahkan: `dark storm clouds and a lightning bolt glow behind the head, electric-cyan rim light`.
+
+**Setelah gambar jadi:** kirim foldernya. Kode langsung mendeteksi atlas di folder itu dan memakainya. Tanpa gambar, ThunderRex tetap jalan dengan tubuh Rex merah ditambah efek petir.
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).

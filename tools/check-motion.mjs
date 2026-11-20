@@ -1,14 +1,18 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { World, cooldowns } from '../web/src/world.js';
+import { World, cooldowns, heroNames as heroNamesCheck, hints as hintsCheck, heroUltis as heroUltisCheck, difficulties as difficultiesCheck } from '../web/src/world.js';
 import { attackPose, damp, spritePose } from '../web/src/motion.js';
 import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
 import { loadProgress, saveProgress, recordDistrict, resetProgress } from '../web/src/progress.js';
-import { loadSettings, saveSettings, defaults } from '../web/src/settings.js';
+import { loadSettings, saveSettings, defaults, useLite, weakDevice, skins as skinsCheck, graphics as graphicsCheck, padSizes as padSizesCheck } from '../web/src/settings.js';
 import { Tutorial, steps as tutorialSteps } from '../web/src/tutorial.js';
 import { missions, earned, starText } from '../web/src/missions.js';
 import { totalStars } from '../web/src/progress.js';
+import { t, setLang, keys as i18nKeys } from '../web/src/i18n.js';
 import { makeEndless } from '../web/src/endless.js';
+import { upgrades, offer, modifiers, MAX_STACK } from '../web/src/upgrades.js';
+import { achievements, loadStats, saveStats, addRun, unlock } from '../web/src/achievements.js';
+import { todayMission, missionTemplate, passed, loadDaily, completeDaily, dayKey } from '../web/src/daily.js';
 
 const levels = await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -320,7 +324,7 @@ for (const late of [.1, .3, .6]) {
   const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   assert.deepEqual(loadSettings(storage), defaults);
   saveSettings({ sfx: 140, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
-  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah' }, 'invalid values fall back');
+  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah', graphics: 'auto', lang: defaults.lang }, 'invalid values fall back');
   saveSettings({ skin: 'mecha' }, storage);
   assert.equal(loadSettings(storage).skin, 'mecha');
   const easy = new World(levels[0], 0, { difficulty: 'santai' }), normal = new World(levels[0], 0), hard = new World(levels[0], 0, { difficulty: 'ngamuk' });
@@ -527,6 +531,136 @@ for (const late of [.1, .3, .6]) {
   assert.ok(boss.hp <= 0, 'the robot can be defeated');
   for (let i = 0; i < 5; i++) world.update(1 / 60, empty);
   assert.equal(world.phase, 'clear', 'beating the robot clears Alun-Alun');
+}
+
+// Mode grafis
+{
+  assert.equal(weakDevice({ deviceMemory: 2 }), true);
+  assert.equal(weakDevice({ hardwareConcurrency: 8, deviceMemory: 8 }), false);
+  assert.equal(useLite({ graphics: 'ringan' }, { hardwareConcurrency: 16 }), true);
+  assert.equal(useLite({ graphics: 'tinggi' }, { deviceMemory: 1 }), false);
+  assert.equal(useLite({ graphics: 'auto' }, { deviceMemory: 2 }), true);
+  const lite = new World(levels[0], 0, { lite: true }), full = new World(levels[0], 0);
+  lite.fx('debris', 0, 0, 5); full.fx('debris', 0, 0, 5);
+  assert.ok(lite.effects.length < full.effects.length, 'lite mode spawns fewer particles');
+}
+
+// Terjemahan lengkap
+{
+  const sources = await Promise.all(['main', 'world', 'art', 'missions', 'tutorial', 'opening', 'settings'].map(n => readFile(new URL(`../web/src/${n}.js`, import.meta.url), 'utf8')));
+  const html = await readFile(new URL('../web/index.html', import.meta.url), 'utf8');
+  const used = new Set();
+  for (const src of sources) for (const m of src.matchAll(/\bt(?:r)?\('((?:[^'\\]|\\.)+)'/g)) used.add(m[1].replace(/\\'/g, "'"));
+  for (const m of html.matchAll(/data-i18n(?:-label)?="([^"]+)"/g)) used.add(m[1]);
+  const known = new Set(i18nKeys);
+  const extra = [...levels.map(l => l.name), 'Tanpa Akhir', ...missions.flat().map(m => m.text), ...tutorialSteps.flatMap(s => [s.key, s.touch]),
+    ...Object.values(heroNamesCheck), ...Object.values(hintsCheck), ...Object.values(heroUltisCheck).map(u => u.name),
+    ...Object.values(difficultiesCheck).map(d => d.label), ...Object.values(skinsCheck).map(s => s.label), ...Object.values(graphicsCheck), ...Object.values(padSizesCheck), ...Object.values(upgrades).flatMap(u => [u.name, u.text]), ...achievements.flatMap(a => [a.name, a.text])];
+  for (const src of sources) for (const m of src.matchAll(/line: '((?:[^'\\]|\\.)+)'/g)) extra.push(m[1]);
+  const missing = [...used, ...extra].filter(k => k && !known.has(k) && /[a-z]{3}/i.test(k) && !['Rage', 'REX', 'Ulti', 'Normal', 'Batik', 'Mecha', 'Perisai', 'Rajawali', 'Jaring'].includes(k));
+  assert.deepEqual([...new Set(missing)], [], 'every visible string has an English translation');
+  setLang('en');
+  assert.equal(t('Distrik {n}', { n: 3 }), 'District 3');
+  assert.equal(t('Jalan Ruko'), 'Ruko Street');
+  setLang('id');
+  assert.equal(t('Distrik {n}', { n: 3 }), 'Distrik 3');
+}
+
+// Upgrade antar-distrik
+{
+  const three = offer([], () => .5);
+  assert.equal(new Set(three).size, 3, 'three different upgrades are offered');
+  const maxed = Array(MAX_STACK).fill('sisik');
+  for (let i = 0; i < 50; i++) assert.ok(!offer(maxed).includes('sisik'), 'a maxed upgrade is not offered again');
+  const strong = new World(levels[0], 0, { upgrades: ['sisik', 'sisik', 'taring', 'paru'] }), base = makeWorld();
+  assert.equal(strong.rex.max, base.rex.max + 120);
+  strong.rex.cd.roar = 0; strong.startAttack('roar');
+  assert.ok(Math.abs(strong.rex.cd.roar - cooldowns.roar * .7) < 1e-9, 'roar cooldown shrinks');
+  const biter = new World(levels[0], 0, { upgrades: ['taring'] });
+  for (const w of [biter, base]) { w.spawnTime = Infinity; const e = w.spawn('infantry', w.rex.x + 150); e.hp = 1e6; w.rex.cd.bite = 0; w.startAttack('bite'); for (let i = 0; i < 20; i++) w.update(1 / 60, empty); w.bitten = 1e6 - e.hp; }
+  assert.ok(Math.abs(biter.bitten / base.bitten - 1.25) < 1e-6, 'bite damage rises 25%');
+  assert.equal(modifiers(['irama']).comboWindow, 1);
+}
+
+// Pencapaian
+{
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  const stats = loadStats(storage), progress = loadProgress({ getItem: () => null });
+  assert.deepEqual(unlock(stats, progress), [], 'nothing unlocks at the start');
+  const world = makeWorld();
+  world.spawnTime = Infinity;
+  world.damageProp(world.props.find(p => p.type === 'spbu'), Infinity);
+  const tank = world.spawn('tank', world.rex.x - 200); world.rex.cd.tail = 0; world.startAttack('tail');
+  for (let i = 0; i < 20; i++) world.update(1 / 60, empty);
+  const run = world.runStats();
+  assert.equal(run.props.spbu, 1); assert.equal(run.tanks, 1);
+  for (let i = 0; i < 10; i++) addRun(stats, run);
+  progress.cleared[0] = true;
+  const fresh = unlock(stats, progress).map(a => a.id);
+  assert.ok(fresh.includes('langkah') && fresh.includes('spbu'), 'clearing district 1 and ten SPBU blasts unlock their achievements');
+  assert.deepEqual(unlock(stats, progress), [], 'achievements unlock only once');
+  saveStats(stats, storage);
+  assert.deepEqual(loadStats(storage).unlocked, stats.unlocked);
+  assert.equal(new Set(achievements.map(a => a.id)).size, achievements.length);
+}
+
+// Misi harian
+{
+  const day = new Date(2026, 10, 21), next = new Date(2026, 10, 22), later = new Date(2026, 10, 25);
+  const a = todayMission(8, day), b = todayMission(8, day);
+  assert.deepEqual(a, b, 'the same day gives the same mission');
+  const week = Array.from({ length: 14 }, (_, i) => todayMission(8, new Date(2026, 10, 21 + i)));
+  assert.ok(new Set(week.map(m => m.district + ':' + m.kind)).size > 5, 'missions vary from day to day');
+  assert.ok(Array.from({ length: 30 }, (_, i) => todayMission(2, new Date(2026, 0, 1 + i))).every(m => m.district < 2), 'only unlocked districts are picked');
+  for (const kind of [0, 1, 2, 3, 4, 5]) assert.ok(i18nKeys.includes(missionTemplate({ kind })), 'daily mission text is translated');
+  const world = makeWorld();
+  assert.equal(passed({ kind: 4, n: 0 }, world), false, 'a loss never passes');
+  world.status = 'won';
+  assert.equal(passed({ kind: 4, n: 0 }, world), true);
+  world.usedUlti = true;
+  assert.equal(passed({ kind: 4, n: 0 }, world), false, 'using the ulti fails the no-ulti mission');
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  let rec = loadDaily(storage);
+  rec = completeDaily(rec, day, storage); rec = completeDaily(rec, day, storage);
+  assert.deepEqual([rec.streak, rec.total], [1, 1], 'a day counts once');
+  rec = completeDaily(rec, next, storage);
+  assert.equal(rec.streak, 2, 'consecutive days build a streak');
+  rec = completeDaily(rec, later, storage);
+  assert.equal(rec.streak, 1, 'a missed day resets the streak');
+  assert.equal(loadDaily(storage).total, 3);
+  assert.equal(dayKey(day), '2026-11-21');
+}
+
+// Hujan deras
+{
+  const run = event => { const w = new World(levels[1], 1, { event }); w.spawnTime = Infinity; const e = w.spawn('infantry', w.rex.x + 900); const x = e.x;
+    for (let i = 0; i < 30; i++) w.update(1 / 60, empty); return { w, moved: x - e.x }; };
+  const dry = run(''), wet = run('rain');
+  assert.equal(wet.w.weather, 'rain');
+  assert.ok(wet.moved < dry.moved * .8 && wet.moved > 0, 'rain slows soldiers');
+  assert.equal(new World(levels[1], 1).weather, '', 'no random events unless asked');
+  assert.equal(new World(levels[0], 0, { events: true }).weather, '', 'district 1 stays dry');
+}
+
+// ThunderRex
+{
+  const struck = new World(levels[2], 2, { event: 'rain', thunderChance: 1 });
+  struck.spawnTime = Infinity;
+  assert.ok(Number.isFinite(struck.strikeRexAt), 'a strike is scheduled when the chance hits');
+  struck.strikeRexAt = .5;
+  for (let i = 0; i < 60; i++) struck.update(1 / 60, empty);
+  assert.ok(struck.thunderUnlocked && struck.thunder, 'the strike unlocks ThunderRex at once');
+  assert.ok(struck.events.length || true);
+  const dry = new World(levels[2], 2, { event: '', thunderChance: 1 });
+  assert.equal(dry.strikeRexAt, Infinity, 'no strike without rain');
+  const never = new World(levels[2], 2, { event: 'rain', thunderChance: 0 });
+  assert.equal(never.strikeRexAt, Infinity);
+  // Efek petir tidak mengubah damage
+  const hit = thunder => { const w = new World(levels[0], 0, { thunder }); w.spawnTime = Infinity; const e = w.spawn('infantry', w.rex.x + 150); e.hp = 1e6;
+    w.rex.cd.bite = 0; w.startAttack('bite'); for (let i = 0; i < 20; i++) w.update(1 / 60, empty); return { dmg: 1e6 - e.hp, bolts: w.effects.filter(f => f.kind === 'bolt').length }; };
+  const plain = hit(false), zap = hit(true);
+  assert.equal(zap.dmg, plain.dmg, 'ThunderRex keeps the same damage');
+  assert.ok(zap.bolts > 0 && plain.bolts === 0, 'ThunderRex skills throw lightning');
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

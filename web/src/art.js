@@ -1,5 +1,6 @@
 import { clamp, moduleState, exitTime } from './world.js';
 import { attackPose, smooth } from './motion.js';
+import { t as tr } from './i18n.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
@@ -73,7 +74,7 @@ export class Art {
   // Punya latar
   hasBackdrop(setting){return !!this.meta['backgrounds/'+setting+'/sky.png']}
   // Pramuat level
-  async preload(level){
+  async preload(level,onProgress=()=>{}){
     const heroes=level.bosses.flatMap(b=>['characters/heroes/'+b.type+'/parts/','characters/heroes/'+b.type+'/portrait']);
     // Aset bos
     if(level.boss)heroes.push('characters/heroes/'+level.boss+'/atlas','characters/heroes/'+level.boss+'/cutin');
@@ -91,8 +92,8 @@ export class Art {
       ||props.some(t=>k==='props/'+t||k==='props/'+t+'-damaged'||k==='props/'+t+'-wreck')
       ||rexPaths.includes(k)
       ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','characters/soldiers/tank','characters/soldiers/firetruck','characters/soldiers/drone','fx/steel-net'].includes(k));
-    let cursor=0;
-    await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
+    let cursor=0,done=0;onProgress(0);
+    await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length){await this.load(paths[cursor++]);onProgress(++done/paths.length)}}));
     await(this.rexFramesReady??=this.prepareRexFrames());
     if(level.boss)await(this.robotReady??=this.prepareRobot());
   }
@@ -109,6 +110,10 @@ export class Art {
     }
     this.images.delete(def.path);source.close?.();
   }
+  // Mode grafis
+  setLite(lite){this.lite=!!lite}
+  // Skin tersedia
+  hasSkin(folder){return !folder||Boolean(this.meta['characters/rex/skins/'+folder+'/walk.png'])}
   // Ganti skin
   useSkin(skin=''){
     if(skin===this.skin)return;
@@ -163,6 +168,8 @@ export class Art {
   }
   // Baur pose
   blend(c,from,to,mix,x,y,width,dir=1,angle=0){
+    // Ringan tanpa baur
+    if(this.lite){this.sprite(c,mix<.5?from:to,x,y,width,dir,angle);return}
     if(from===to||mix<=0){this.sprite(c,from,x,y,width,dir,angle);return}
     if(mix>=1){this.sprite(c,to,x,y,width,dir,angle);return}
     const rect=path=>{
@@ -186,7 +193,7 @@ export class Art {
 }
 
 // Gambar Rex
-function rexRig(c,a,p,t,reduced,down=-1){
+function rexRig(c,a,p,t,reduced,down=-1,thunder=false){
   const pose=rexPose(p,a.rexAnimations,down),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
   c.save();c.translate(p.x,reduced||p.attack||down>=0?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
   // Gaya lompat
@@ -210,6 +217,17 @@ function rexRig(c,a,p,t,reduced,down=-1){
     for(let i=0;i<3;i++){c.beginPath();c.arc(270,-280,75+i*44+p.attack.age/p.attack.duration*65,-.75,.75);c.stroke()}
   }
   c.restore();
+  // Aura petir
+  if(thunder&&down<0){
+    c.save();c.globalCompositeOperation='lighter';
+    // Cahaya biru
+    const pulse=reduced?.5:.5+.5*Math.sin(t*9),glow=c.createRadialGradient(60,-170,40,60,-170,330);
+    glow.addColorStop(0,'rgba(95,216,255,'+(.22+.12*pulse).toFixed(3)+')');glow.addColorStop(1,'rgba(95,216,255,0)');
+    c.fillStyle=glow;c.beginPath();c.ellipse(60,-170,340,230,0,0,Math.PI*2);c.fill();
+    const flick=reduced?0:Math.floor(t*16);
+    for(let i=0;i<5;i++){const sd=(flick*5+i)%97/97,x=-260+sd*620,y=-60-((sd*7)%1)*260;bolt(c,x,y,x+80-sd*160,y-90-sd*70,sd,.55,reduced?.4:.9)}
+    c.restore();
+  }
   // Bintang pusing
   if(down>.9){
     const show=smooth((down-.9)/.3);c.globalAlpha=show;c.fillStyle='#ffd45c';c.strokeStyle='#102321';c.lineWidth=4;c.lineJoin='round';
@@ -218,6 +236,18 @@ function rexRig(c,a,p,t,reduced,down=-1){
       c.beginPath();for(let k=0;k<10;k++){const radius=k%2?8:19,q=-Math.PI/2+k*Math.PI/5;c.lineTo(x+Math.cos(q)*radius,y+Math.sin(q)*radius)}
       c.closePath();c.stroke();c.fill();
     }
+  }
+  c.restore();
+}
+// Kilat bercabang
+function bolt(c,x1,y1,x2,y2,seed,width=1,alpha=1){
+  let s=seed*9301+49297;const rand=()=>((s=(s*9301+49297)%233280)/233280);
+  const steps=10,pts=[[x1,y1]];
+  for(let i=1;i<steps;i++){const k=i/steps;pts.push([x1+(x2-x1)*k+(rand()-.5)*70*width,y1+(y2-y1)*k])}
+  pts.push([x2,y2]);
+  c.save();c.globalAlpha=alpha;c.lineJoin='round';c.lineCap='round';
+  for(const [lw,col] of [[18*width,'#5fd8ff55'],[8*width,'#9ff0ff'],[3*width,'#ffffff']]){
+    c.strokeStyle=col;c.lineWidth=lw;c.beginPath();pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();
   }
   c.restore();
 }
@@ -300,7 +330,8 @@ export class Renderer {
   measure(){
     const canvas=this.canvas,w=canvas.clientWidth,h=canvas.clientHeight;this.w=w;this.h=h;if(!w||!h)return;
     // Batas resolusi
-    let dpr=Math.min(2,devicePixelRatio||1);const over=w*h*dpr*dpr/3.7e6;if(over>1)dpr/=Math.sqrt(over);
+    // Batas piksel
+    let dpr=Math.min(this.art.lite?1:2,devicePixelRatio||1);const over=w*h*dpr*dpr/(this.art.lite?1.4e6:3.7e6);if(over>1)dpr/=Math.sqrt(over);
     const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
     if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh}
     // Kualitas sampling
@@ -346,6 +377,8 @@ export class Renderer {
     // Langit menggelap
     const dusk=clamp(g.percent/100,0,1)*(g.level.setting==='square'?.18:.34);
     if(dusk>.005){c.fillStyle='rgba(26,14,48,'+dusk.toFixed(3)+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
+    // Langit mendung
+    if(g.weather==='rain'){c.fillStyle='rgba(58,70,82,.55)';c.fillRect(-20,-floor-20,view+40,floor+30)}
     c.fillStyle=this.ground;c.fillRect(-30,-64,view+60,logicalH-floor+130);
     tile('street',1,-66,235,1750);
     // Sambungan aspal
@@ -353,6 +386,9 @@ export class Renderer {
     roadFade.addColorStop(0,this.ground+'00');roadFade.addColorStop(1,this.ground);
     c.fillStyle=roadFade;c.fillRect(-30,125,view+60,Math.max(45,logicalH-floor-125));
     c.translate(-cam,0);const visible=(x,pad=450)=>x>=cam-pad&&x<=cam+view+pad;
+    // Petir langit
+    const sky=(t-g.boltAt)/.35;
+    if(sky>=0&&sky<1&&g.struckAt!==g.boltAt)bolt(c,g.boltX+40,-floor-20,g.boltX,-380,(g.boltAt*7)%1,1.1,1-sky);
     // Bangunan
     for(const b of g.buildings){
       if(!visible(b.x,b.width))continue;
@@ -418,7 +454,10 @@ export class Renderer {
     }
     shadow(g.rex.x-15,2,212*(1-g.rex.lift/700));c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
-    rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1);c.restore();
+    rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1,g.thunder);c.restore();
+    // Sambaran ke Rex
+    const hit=(t-g.struckAt)/.8;
+    if(hit>=0&&hit<1)for(let i=0;i<3;i++)bolt(c,g.rex.x+(i-1)*90,-floor-20,g.rex.x+(i-1)*30,-200,(i+3)/7,1.8-i*.4,1-hit);
     // Semprotan truk
     for(const e of g.enemies)if(e.type==='firetruck'&&e.spraying&&e.hp>0&&visible(e.x))spray(c,e.x+e.dir*70,-128,g.rex.x+g.rex.dir*60,-190,t,reduced);
     // Warga
@@ -451,6 +490,9 @@ export class Renderer {
         const position=age*3,index=Math.min(2,Math.floor(position)),base='fx/'+f.kind+'/frames/';
         c.globalAlpha=smooth(age/.08)*(1-smooth((age-.55)/.45));
         a.blend(c,base+frames[index],base+frames[index+1],smooth(position-index),f.x,f.y,f.size*(.9+age*.25));
+      }else if(f.kind==='bolt'){
+        // Kilat skill
+        bolt(c,f.x+(f.seed-.5)*80,f.y-520*f.size,f.x,f.y,f.seed,f.size,1-age);
       }else{
         const key=f.kind==='decor'?'shutter':f.seed>.5?'brick':'plaster';
         c.globalAlpha=1-smooth((age-.6)/.4);a.sprite(c,'fx/debris/frames/'+key,f.x,f.y,f.size,1,f.spin*(f.max-f.life));
@@ -486,6 +528,7 @@ export class Renderer {
     c.restore();
     this.ultimateOverlay(c,g,view,logicalH,reduced);
     this.heroOverlay(c,g,view,logicalH,reduced);
+    if(g.weather==='rain')this.rain(c,g,view,logicalH,reduced);
     this.exitOverlay(c,g,view,logicalH,reduced,floor);
   }
   // Efek ulti
@@ -499,7 +542,7 @@ export class Renderer {
       c.save();c.translate(slide,top);c.globalAlpha=reduced?show:1;
       const outline=()=>{c.beginPath();c.moveTo(0,0);c.lineTo(width+lean,0);c.lineTo(width,height);c.lineTo(0,height);c.closePath()};
       outline();c.save();c.clip();
-      const paint=c.createLinearGradient(0,0,width,height);paint.addColorStop(0,'#ff9b40');paint.addColorStop(1,'#c2314f');
+      const paint=c.createLinearGradient(0,0,width,height);paint.addColorStop(0,g.thunder?'#5fd8ff':'#ff9b40');paint.addColorStop(1,g.thunder?'#1a2a6b':'#c2314f');
       c.fillStyle=paint;c.fillRect(0,0,width+lean,height);
       // Garis kecepatan
       c.strokeStyle='#fff0ce55';c.lineWidth=5;
@@ -510,8 +553,8 @@ export class Renderer {
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font=Math.round(height*.22)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';
-      c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';c.strokeText('AMUKAN REX!',28,height-18);
-      c.fillStyle='#fff0ce';c.fillText('AMUKAN REX!',28,height-18);
+      c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';const title=tr(g.thunder?'AMUKAN PETIR!':'AMUKAN REX!');if(g.thunder&&!reduced)for(let i=0;i<4;i++)bolt(c,width*(.15+i*.22),-10,width*(.1+i*.22),height+10,(i+age)%1,.6,.8);c.strokeText(title,28,height-18);
+      c.fillStyle='#fff0ce';c.fillText(title,28,height-18);
       c.restore();
     }
     if(flash>0&&!reduced){c.fillStyle='rgba(255,243,196,'+flash*.75+')';c.fillRect(0,0,view,logicalH)}
@@ -542,16 +585,31 @@ export class Renderer {
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font=Math.round(height*.2)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';c.lineJoin='round';
-      c.lineWidth=10;c.strokeStyle='#102321';c.strokeText(cast.name,28,height-18);
-      c.fillStyle='#fff0ce';c.fillText(cast.name,28,height-18);
+      c.lineWidth=10;c.strokeStyle='#102321';c.strokeText(tr(cast.name),28,height-18);
+      c.fillStyle='#fff0ce';c.fillText(tr(cast.name),28,height-18);
       c.font='700 '+Math.round(height*.075)+'px "Baloo 2",sans-serif';c.lineWidth=6;
-      const tip='Raung untuk menggagalkan!';c.strokeText(tip,lean+24,height*.12+Math.round(height*.075));c.fillStyle=glow;c.fillText(tip,lean+24,height*.12+Math.round(height*.075));
+      const tip=tr('Raung untuk menggagalkan!');c.strokeText(tip,lean+24,height*.12+Math.round(height*.075));c.fillStyle=glow;c.fillText(tip,lean+24,height*.12+Math.round(height*.075));
       c.restore();
     }
     if(flash>0&&!reduced&&g.cast){c.fillStyle=castColors[g.cast.type][2]+Math.round(flash*150).toString(16).padStart(2,'0');c.fillRect(0,0,view,logicalH)}
   }
   // Arah keluar
   exitOverlay(c,g,view,logicalH,reduced,floor){
+    // Kilat layar
+    const flash=1-(g.time-g.boltAt)/.25;
+    if(flash>0&&!reduced){c.fillStyle='rgba(220,240,255,'+(flash*(g.struckAt===g.boltAt?.85:.35)).toFixed(3)+')';c.fillRect(0,0,view,logicalH)}
+    // Banner ThunderRex
+    const show=(g.time-g.struckAt)/3.2;
+    if(show>=0&&show<1){
+      const k=smooth(show/.12)*(1-smooth((show-.8)/.2));
+      c.save();c.globalAlpha=k;c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';
+      c.font=Math.round(Math.min(view*.1,128))+'px Bangers,Impact,sans-serif';c.lineWidth=14;c.strokeStyle='#0b1a33';
+      const y=logicalH*.3;c.strokeText('THUNDERREX!',view/2,y);
+      const grad=c.createLinearGradient(0,y-60,0,y+60);grad.addColorStop(0,'#ffffff');grad.addColorStop(1,'#5fd8ff');c.fillStyle=grad;c.fillText('THUNDERREX!',view/2,y);
+      c.font='800 '+Math.round(Math.min(view*.022,26))+'px "Baloo 2",sans-serif';c.lineWidth=6;
+      const sub=tr('Skin langka terbuka'),sy=y+Math.min(view*.07,90);c.strokeText(sub,view/2,sy);c.fillStyle='#e8f8ff';c.fillText(sub,view/2,sy);
+      c.restore();
+    }
     if(g.phase==='clear'&&g.exitX>g.camera+view-60){
       const bob=reduced?0:Math.sin(g.time*5)*8,x=view-46+bob,y=floor-260;
       c.save();c.lineJoin='round';
@@ -567,12 +625,23 @@ export class Renderer {
         c.fillStyle='rgba(11,23,25,'+k*.6+')';c.fillRect(0,0,view,logicalH);
         c.save();c.globalAlpha=k;c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';
         c.font=Math.round(Math.min(view*.12,150))+'px Bangers,Impact,sans-serif';c.lineWidth=14;c.strokeStyle='#102321';
-        const y=logicalH*.32-(reduced?0:(1-k)*30);c.strokeText('REX TUMBANG',view/2,y);c.fillStyle='#e8536d';c.fillText('REX TUMBANG',view/2,y);c.restore();
+        const y=logicalH*.32-(reduced?0:(1-k)*30);const down=tr('REX TUMBANG');c.strokeText(down,view/2,y);c.fillStyle='#e8536d';c.fillText(down,view/2,y);c.restore();
       }
     }
     if(g.phase==='exit'){
       const k=smooth((g.time-g.exitAt-(exitTime-.9))/.9);
       if(k>0){c.fillStyle='rgba(11,23,25,'+k+')';c.fillRect(0,0,view,logicalH)}
     }
+  }
+  // Hujan deras
+  rain(c,g,view,logicalH,reduced){
+    c.save();c.fillStyle='rgba(20,36,48,.14)';c.fillRect(0,0,view,logicalH);
+    const drops=this.art.lite?70:150,t=reduced?0:g.time;
+    c.strokeStyle='rgba(200,225,240,.55)';c.lineWidth=2;c.beginPath();
+    for(let i=0;i<drops;i++){
+      const seed=(i*7919)%1000/1000,speed=1400+seed*500,x=((i*137.5+g.camera*.15)%(view+200))-100,y=((seed*logicalH+t*speed)%(logicalH+80))-40;
+      c.moveTo(x,y);c.lineTo(x-14,y+38);
+    }
+    c.stroke();c.restore();
   }
 }

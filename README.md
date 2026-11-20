@@ -54,7 +54,7 @@ Progres tersimpan otomatis. Setiap distrik yang selesai membuka distrik berikutn
 
 Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar. Daftar kontrol lengkap bisa dibuka kapan saja dari tombol **Kontrol** di layar jeda.
 
-Menu **Pengaturan** (dari menu utama atau saat jeda) berisi tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
+Menu **Pengaturan** (dari menu utama atau saat jeda) berisi pilihan bahasa **Bahasa Indonesia** atau **English**, mode grafis **Otomatis**, **Tinggi**, atau **Ringan** (untuk HP lama), tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
 
 <p align="center">
   <img src="docs/screenshots/rex-ulti.webp" alt="Cut-in ulti Amukan Rex" width="49%">
@@ -88,6 +88,22 @@ Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk mem
 - Saat **Rage** penuh, damage Rex dua kali lipat selama 8 detik. Rage terisi dari menghancurkan bangunan dan mengalahkan musuh.
 - Pakai **lompat** untuk menghindari tembakan: Rex kebal selama di udara, dan saat mendarat tentara terpaku 4,5 detik, pahlawan 1,6 detik.
 - Musuh makin keras di distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
+
+### Upgrade Rex
+
+Setiap kali distrik selesai, pilih **1 dari 3 upgrade** yang berlaku sampai kampanye berakhir, misalnya **Taring Baja** (gigitan +25%), **Sisik Tebal** (darah +60), atau **Amarah Purba** (cooldown ulti −25%). Ada 10 jenis upgrade, dan masing-masing bisa ditumpuk sampai 3 kali. Upgrade aktif terlihat di layar jeda. Memilih distrik langsung dari **Pilih distrik** memulai tanpa upgrade.
+
+### Misi harian
+
+Setiap hari ada satu misi baru di bagian atas **Pilih distrik**, misalnya "Ratakan Pasar Tradisional dalam 5 menit" atau "Ratakan Pusat Kota tanpa ulti". Misinya sama untuk semua pemain di hari yang sama, dan berhasil berhari-hari berturut-turut membangun **streak**.
+
+### Event jalan
+
+Mulai distrik 2, kadang turun **hujan deras**: langit mendung, dan tentara serta warga bergerak lebih lambat di jalan yang licin. Saat hujan, petir menyambar di kejauhan, dan sesekali (peluang 1%) petir menyambar Rex sendiri. Saat itu Rage langsung penuh dan skin langka **ThunderRex** terbuka. Dengan skin ini, setiap skill Rex mengeluarkan kilat dan tubuhnya diselimuti aura listrik, tanpa mengubah damage.
+
+### Pencapaian
+
+Ada 15 pencapaian yang dihitung dari semua permainan, misalnya **Pemburu Angkot** (hancurkan 40 angkot), **Tank Terbalik** (balikkan 25 tank dengan ekor), dan **Besi Tua** (kalahkan Robot Penjaga). Daftar dan kemajuannya bisa dibuka dari tombol **Pencapaian** di bagian bawah menu. Pencapaian baru diumumkan di akhir distrik.
 
 ### Mode Tanpa Akhir
 
