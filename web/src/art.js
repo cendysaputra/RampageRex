@@ -4,9 +4,9 @@ import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
-const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64,samples=1.6;
+const people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
-  ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/',people.bazooka],
+  ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/tank',vehicles.tank],['characters/soldiers/firetruck',vehicles.firetruck],['characters/soldiers/drone',vehicles.drone],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 // Warna ulti pahlawan
@@ -86,7 +86,7 @@ export class Art {
       backdrops.includes(k)||k.startsWith('buildings/ruko-01/damage/')||colors.some(c=>k.startsWith('buildings/ruko-01/colors/')&&k.endsWith('-'+c))
       ||props.some(t=>k==='props/'+t||k==='props/'+t+'-damaged'||k==='props/'+t+'-wreck')
       ||rexPaths.includes(k)
-      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','fx/steel-net'].includes(k));
+      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','characters/soldiers/tank','characters/soldiers/firetruck','characters/soldiers/drone','fx/steel-net'].includes(k));
     let cursor=0;
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
     await(this.rexFramesReady??=this.prepareRexFrames());
@@ -200,6 +200,16 @@ function rexRig(c,a,p,t,reduced,down=-1){
       c.beginPath();for(let k=0;k<10;k++){const radius=k%2?8:19,q=-Math.PI/2+k*Math.PI/5;c.lineTo(x+Math.cos(q)*radius,y+Math.sin(q)*radius)}
       c.closePath();c.stroke();c.fill();
     }
+  }
+  c.restore();
+}
+// Pancaran air
+function spray(c,x1,y1,x2,y2,t,reduced){
+  c.save();c.lineCap='round';
+  const mx=(x1+x2)/2,my=Math.min(y1,y2)-90;
+  for(const [w,col] of [[16,'#dff6ff99'],[7,'#9fdcff']]){
+    c.strokeStyle=col;c.lineWidth=w;c.setLineDash(reduced?[]:[26,12]);c.lineDashOffset=reduced?0:-t*260;
+    c.beginPath();c.moveTo(x1,y1);c.quadraticCurveTo(mx,my,x2,y2);c.stroke();
   }
   c.restore();
 }
@@ -333,7 +343,7 @@ export class Renderer {
     const shadow=(x,y,w)=>{c.fillStyle='#0c211e51';c.beginPath();c.ellipse(x,y,w,Math.max(5,w*.07),0,0,Math.PI*2);c.fill()};
     // Musuh
     for(const e of g.enemies){if(!visible(e.x))continue;
-      shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:40);c.save();
+      shadow(e.x,0,e.hero?44:e.type==='jeep'?78:e.type==='helicopter'?90:e.type==='tank'?96:e.type==='firetruck'?100:e.type==='drone'?24:40);c.save();
       if(e.hit>0&&!reduced)c.translate(-e.dir*Math.sin(clamp(e.hit/.2,0,1)*Math.PI)*4,0);
       if(e.hero){
         // Aura ulti
@@ -352,8 +362,13 @@ export class Renderer {
       else if(e.type==='turret'){
         c.save();c.translate(e.x,0);c.fillStyle='#172d2a';c.beginPath();c.moveTo(-27,0);c.lineTo(0,-38);c.lineTo(27,0);c.fill();
         a.sprite(c,'characters/heroes/jaring/parts/net-launcher',0,-27,61,e.dir);c.restore();
-      }else if(e.type==='jeep'||e.type==='helicopter'){
-        a.sprite(c,'characters/soldiers/'+e.type,e.x,e.y-e.lift,vehicles[e.type],e.dir,e.lift*.003);
+      }else if(e.type in vehicles){
+        // Tank terbalik
+        if(e.flipped>0){c.save();c.translate(e.x,-65);c.rotate(Math.PI);a.sprite(c,'characters/soldiers/'+e.type,0,65,vehicles[e.type],-e.dir);c.restore()}
+        else{
+          const hover=e.type==='drone'&&!reduced?Math.sin(t*30+e.phase)*1.5:0;
+          a.sprite(c,'characters/soldiers/'+e.type,e.x,e.y-e.lift+hover,vehicles[e.type],e.dir,e.lift*.003);
+        }
       }else{
         const base='characters/soldiers/'+e.type+'/frames/',frame=e.frame||(e.type==='infantry'?'aim':'kneeling-fire');
         const bob=Math.sin(e.walk)**2*e.stride*2;
@@ -377,6 +392,8 @@ export class Renderer {
     shadow(g.rex.x-15,2,212*(1-g.rex.lift/700));c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
     rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1);c.restore();
+    // Semprotan truk
+    for(const e of g.enemies)if(e.type==='firetruck'&&e.spraying&&e.hp>0&&visible(e.x))spray(c,e.x+e.dir*70,-128,g.rex.x+g.rex.dir*60,-190,t,reduced);
     // Warga
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;

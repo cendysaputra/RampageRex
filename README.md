@@ -135,6 +135,15 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul
 
 Tentara datang beregu dari depan dan belakang sampai belasan orang di layar, jadi Rex selalu dikeroyok. Makin hancur kotanya, makin besar regunya dan makin berat senjatanya. Helikopter hanya bisa digigit saat terbang rendah.
 
+Distrik selanjutnya menurunkan pasukan baru:
+
+| Musuh | Muncul mulai | Cara menghadapinya |
+| --- | --- | --- |
+| **Petugas pemadam** | Pasar Tradisional | Semprotannya mengikis Rage, kalahkan dari dekat |
+| **Drone** | Pusat Kota | Datang bertiga dari udara; satu **raungan** menjatuhkan semuanya |
+| **Truk pemadam** | Stasiun Kereta | Melaju sambil menyemprot dan memadamkan mode Rage; lempar dengan **ekor** |
+| **Tank** | Pelabuhan | Kebal gigitan dan injakan; **ekor** membalikkannya, lalu serang saat terbalik |
+
 ## Warga
 
 <p align="center">

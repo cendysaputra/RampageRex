@@ -4288,6 +4288,115 @@
       "alpha": true,
       "repeatX": true,
       "ground": "#364d4d"
+    },
+    "characters/soldiers/tank.png": {
+      "width": 900,
+      "height": 520,
+      "bounds": {
+        "x": 96,
+        "y": 3,
+        "width": 707,
+        "height": 513
+      },
+      "pivot": [
+        450,
+        516
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/firetruck.png": {
+      "width": 900,
+      "height": 520,
+      "bounds": {
+        "x": 4,
+        "y": 34,
+        "width": 892,
+        "height": 482
+      },
+      "pivot": [
+        450,
+        516
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/drone.png": {
+      "width": 320,
+      "height": 200,
+      "bounds": {
+        "x": 4,
+        "y": 89,
+        "width": 312,
+        "height": 107
+      },
+      "pivot": [
+        160,
+        142
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/firefighter/frames/aim.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 4,
+        "y": 67,
+        "width": 348,
+        "height": 347
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/firefighter/frames/run-a.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 4,
+        "y": 77,
+        "width": 348,
+        "height": 337
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/firefighter/frames/run-b.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 39,
+        "y": 77,
+        "width": 277,
+        "height": 337
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/firefighter/frames/knockback.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 44,
+        "y": 66,
+        "width": 267,
+        "height": 348
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
     }
   },
   "review": [],

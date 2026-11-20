@@ -467,4 +467,41 @@ for (const late of [.1, .3, .6]) {
   assert.ok(last.power > first.power && Math.abs(last.power - 1.36) < 1e-9, 'difficulty peaks in the last district');
 }
 
+// Musuh baru
+{
+  // Tank: lapis baja, terbalik oleh ekor
+  const world = makeWorld();
+  world.rex.dir = -1;
+  const tank = world.spawn('tank', world.rex.x - 200), full = tank.hp;
+  world.rex.cd.bite = 0; world.rex.dir = 1; tank.x = world.rex.x + 150;
+  world.startAttack('bite'); for (let i = 0; i < 20; i++) world.update(1 / 60, empty);
+  assert.ok(full - tank.hp <= 100 * .4 + 1, 'bites barely scratch a tank');
+  world.rex.attack = null; world.rex.cd.tail = 0; tank.x = world.rex.x - 200; tank.vx = 0;
+  world.startAttack('tail'); for (let i = 0; i < 20; i++) world.update(1 / 60, empty);
+  assert.ok(tank.flipped > 0 && tank.stun > 0, 'a tail swipe flips the tank');
+  // Drone: jatuh oleh raungan
+  const sky = makeWorld();
+  const drones = [0, 1, 2].map(i => sky.spawn('drone', sky.rex.x + 300 + i * 50));
+  assert.ok(drones.every(d => d.y < -250), 'drones fly');
+  sky.rex.cd.roar = 0; sky.startAttack('roar'); sky.strike(sky.rex.attack);
+  assert.ok(drones.every(d => d.hp <= 0), 'a roar downs every drone on screen');
+  // Pemadam: mengikis Rage
+  const wet = makeWorld();
+  wet.rex.rage = 80;
+  wet.spawn('firefighter', wet.rex.x + 250);
+  for (let i = 0; i < 120; i++) wet.update(1 / 60, empty);
+  assert.ok(wet.rex.rage < 80, 'firefighters drain Rage');
+  const truck = makeWorld();
+  truck.rex.fury = 8;
+  const t = truck.spawn('firetruck', truck.rex.x + 300); t.dir = -1;
+  for (let i = 0; i < 30; i++) truck.update(1 / 60, empty);
+  assert.ok(truck.rex.fury < 8 - .5, 'a fire truck puts out Rage mode');
+  // Jadwal per distrik
+  const pools = levels.map((level, i) => { const w = new World(level, i); w.lost = w.total * .6; w.spawnTime = 0; w.rex.x = level.length / 2;
+    for (let k = 0; k < 600; k++) { w.update(1 / 60, empty); w.rex.hp = w.rex.max; }
+    return new Set(w.enemies.map(e => e.type)); });
+  assert.ok(!pools[0].has('tank') && !pools[0].has('firefighter'), 'district 1 keeps the original troops');
+  assert.ok(['firefighter', 'drone', 'firetruck', 'tank'].every(type => pools.slice(4).some(set => set.has(type))), 'later districts field the new troops');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

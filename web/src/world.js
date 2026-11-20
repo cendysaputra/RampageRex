@@ -31,7 +31,7 @@ export const dieTime=2.8;
 // Darah Rex
 const rexHp=400;
 // Damage ke Rex
-const DAMAGE={bullet:4,rocket:26,laser:16,net:9,ram:20,charge:42,dive:38};
+const DAMAGE={water:2,bullet:4,rocket:26,laser:16,net:9,ram:20,charge:42,dive:38};
 // Pulih darah
 const HEAL={soldier:10,vehicle:16,hero:60};
 // Jeda serangan
@@ -79,6 +79,14 @@ const comboWindow=2.5,comboStep=10,comboCap=3;
 const blastRadius=480,blastDamage=260,warungHeal=60;
 // Distrik terakhir
 export const lastDistrict=7;
+// Ukuran badan
+const bodies={jeep:[170,96],turret:[60,60],tank:[200,130],firetruck:[210,130],drone:[70,50]};
+// Musuh berat
+const heavy=new Set(['jeep','helicopter','tank','firetruck']);
+// Jadwal musuh baru
+const newTroops=[['firefighter',1/7,15],['drone',2/7,35],['firetruck',3/7,45],['tank',4/7,55]];
+// Semprotan pemadam
+const sprayRange=480,rageDrain=14,furyDrain=1.5;
 // Batas tentara
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
@@ -206,8 +214,8 @@ export class World {
   spawn(type,x){
     const hero=type in heroNames;
     // Darah pahlawan
-    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.tier*.3:1)*(hero&&this.level.endless?1+this.percent/80:1);
-    const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
+    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150,tank:520,firetruck:320,firefighter:170,drone:60}[type]*(hero?.7+this.tier*.3:1)*(hero&&this.level.endless?1+this.percent/80:1);
+    const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:type==='drone'?-330:0,dir:-1,hp:max,max,hero,
       ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(190,380),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
   }
@@ -227,6 +235,8 @@ export class World {
     if(a.key==='roar'){
       for(const e of this.enemies.filter(e=>e.x>=this.camera-40&&e.x<=this.camera+this.view+40)){
         if(!e.hero)e.stun=2.6;
+        // Drone jatuh
+        if(e.type==='drone'&&e.hp>0){e.hp=0;this.defeat(e)}
         if(e.type==='rajawali'){e.mode='ground';e.timer=3.4}
       }
       for(const c of this.civilians){c.speed=Math.min(500,c.speed+80);if(c.calm&&c.x>=this.camera-40&&c.x<=this.camera+this.view+40)this.panic(c)}
@@ -249,14 +259,18 @@ export class World {
       if(i!==undefined)this.damageModule(b,i,damage);
     }
     for(const e of this.enemies){
-      if(e.hp<=0||!overlap(hitbox,box(e.x,e.y-e.lift,e.hero?80:e.type==='jeep'?170:e.type==='turret'?60:84,e.hero?112:e.type==='turret'?60:96)))continue;
+      const [bw,bh]=e.hero?[80,112]:bodies[e.type]||[84,96];
+      if(e.hp<=0||!overlap(hitbox,box(e.x,e.y-e.lift,bw,bh)))continue;
       if(e.type==='helicopter'&&(a.key!=='bite'||e.y< -395))continue;
       if(e.type==='rajawali'&&e.mode!=='ground'&&e.mode!=='dive')continue;
       if(e.type==='perisai'&&a.key==='bite'&&e.mode!=='recover'&&Math.sign(p.x-e.x)===e.dir){this.say('Perisai memblokir gigitan.',1);continue}
       if(e.type==='jaring'&&this.enemies.some(t=>t.owner===e&&t.hp>0)){this.say('Hancurkan turret Jaring dulu.',1.1);continue}
       const counter=(e.type==='perisai'&&a.key==='tail'&&e.mode==='recover')||(e.type==='jaring'&&a.key==='stomp')||(e.type==='rajawali'&&e.mode==='ground'&&a.key==='bite');
-      e.hp-=damage*(counter?2:1);e.hit=.2;
-      if(a.key==='tail'&&!e.hero){e.vx=-p.dir*(e.type==='jeep'?920:420);e.stun=.65;if(e.type==='jeep'){e.lift=1;e.vy=370}}
+      // Lapis baja tank
+      const armour=e.type==='tank'&&!(e.flipped>0)&&a.key!=='tail'?.4:e.flipped>0?1.5:1;
+      e.hp-=damage*(counter?2:1)*armour;e.hit=.2;
+      if(a.key==='tail'&&e.type==='tank'){e.flipped=4;e.stun=4;e.vx=-p.dir*260;this.say('Tank terbalik!',1.2)}
+      else if(a.key==='tail'&&!e.hero){const fling=e.type==='jeep'||e.type==='firetruck';e.vx=-p.dir*(fling?920:420);e.stun=.65;if(fling){e.lift=1;e.vy=370}}
       if(e.hp<=0)this.defeat(e);
       else if(!e.hero&&a.key!=='tail')this.stagger(e,p.x);
     }
@@ -312,12 +326,19 @@ export class World {
   }
   // Tentara terhuyung
   stagger(e,from){
-    const away=Math.sign(e.x-from)||1,heavy=e.type==='jeep'||e.type==='helicopter';
-    e.vx=away*(heavy?180:300);e.stun=Math.max(e.stun,heavy?.3:.5);this.fx('dust',e.x,e.y,1);
+    const away=Math.sign(e.x-from)||1,big=heavy.has(e.type);
+    if(e.type==='tank')return;
+    e.vx=away*(big?180:300);e.stun=Math.max(e.stun,big?.3:.5);this.fx('dust',e.x,e.y,1);
+  }
+  // Semprotan air
+  douse(dt,strength){
+    const p=this.rex;if(this.immune())return;
+    p.rage=Math.max(0,p.rage-rageDrain*strength*dt);if(p.fury>0)p.fury=Math.max(0,p.fury-furyDrain*strength*dt);
+    this.wet=(this.wet||0)+dt;if(this.wet>.6){this.wet=0;this.hurt(DAMAGE.water)}
   }
   // Musuh tumbang
   defeat(e){
-    const p=this.rex,big=e.type==='jeep'||e.type==='helicopter';this.kills[e.type]=(this.kills[e.type]||0)+1;
+    const p=this.rex,big=heavy.has(e.type);this.kills[e.type]=(this.kills[e.type]||0)+1;
     this.addScore(e.hero?1200:100);p.rage=Math.min(100,p.rage+(e.hero?20:6));
     if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
@@ -455,12 +476,16 @@ export class World {
     const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+Math.round(this.tier*6)+this.squadBonus;
     if(this.phase==='fight'&&this.spawnTime<=0&&troops<cap){
       const pool=['infantry'];if(this.percent>=30)pool.push('bazooka');if(this.percent>=50)pool.push('jeep');if(this.percent>=70)pool.push('helicopter');
+      // Musuh baru
+      for(const [type,tier,at] of newTroops)if(this.tier>=tier&&this.percent>=at)pool.push(type);
       // Regu bergantian
       const side=this.squads++%2?-1:1,target=p.x+side*(this.view*.49);
       const spawn=this.level.spawns.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a);
       const size=Math.min(cap-troops,2+Math.floor(this.percent/34)+(Math.random()<.4));
       for(let i=0;i<size;i++){
-        const e=this.spawn(pool[this.enemyCount++%pool.length],spawn+side*i*70);e.dir=e.x>p.x?-1:1;e.shot+=i*.35;
+        const type=pool[this.enemyCount++%pool.length];
+        // Kawanan drone
+        for(let d=0;d<(type==='drone'?3:1);d++){const e=this.spawn(type,spawn+side*(i*70+d*60));e.dir=e.x>p.x?-1:1;e.shot+=i*.35+d*.3;e.phase+=d*2}
       }
       this.spawnTime=Math.max(1.6,3.2-this.percent*.016);
     }
@@ -483,7 +508,7 @@ export class World {
     }
     // Musuh
     for(const e of this.enemies){
-      if(e.hp<=0)continue;const previousX=e.x;e.shot-=dt;e.hit=Math.max(0,e.hit-dt);
+      if(e.hp<=0)continue;const previousX=e.x;e.shot-=dt;e.hit=Math.max(0,e.hit-dt);e.flipped=Math.max(0,(e.flipped||0)-dt);
       if(this.phase==='dying'){e.vx*=Math.pow(.05,dt);this.animateEnemy(e,dt,previousX);continue}
       e.x+=e.vx*dt;e.vx*=Math.pow(.05,dt);
       if(e.lift>0){e.lift=Math.max(0,e.lift+e.vy*dt);e.vy-=850*dt}
@@ -502,10 +527,25 @@ export class World {
       else if(e.type==='turret'){if(!e.owner||e.owner.hp<=0){e.hp=0;continue}if(dist<900&&e.shot<=0){this.shoot(e,'bullet');e.shot=1.7}}
       else{
         if(e.type==='jeep'){e.x+=e.dir*445*dt;if(dist<85&&e.shot<=0)this.hurt(DAMAGE.ram,.2)}
+        else if(e.type==='firetruck'){
+          // Truk pemadam
+          e.x+=e.dir*300*dt;e.spraying=dist<sprayRange;
+          if(e.spraying)this.douse(dt,1)
+        }
+        else if(e.type==='tank'){e.dir=dir;e.x+=dir*clamp(dist-560,-60,70)*dt}
+        else if(e.type==='drone'){e.dir=dir;e.x+=dir*clamp(dist-260,-150,220)*dt;e.y=-330+Math.sin(this.time*2.4+e.phase)*45}
+        else if(e.type==='firefighter'){
+          // Petugas pemadam
+          e.dir=dir;e.x+=dir*clamp(dist-300,-130,185)*dt;e.spraying=dist<sprayRange*.75&&e.shot<=1.2;
+          if(e.spraying)this.douse(dt,.6);
+          if(e.shot<=0)e.shot=2.4;
+          this.animateEnemy(e,dt,previousX);continue;
+        }
         else{e.dir=dir;e.x+=dir*clamp(dist-e.hold,-130,185)*dt}
+        if(e.type==='firetruck'){this.animateEnemy(e,dt,previousX);continue}
         if(e.type==='helicopter')e.y=-420+Math.sin(this.time*1.5+e.phase)*135;
-        if(dist<940&&e.shot<=0){const rocket=e.type==='bazooka'||e.type==='helicopter';
-          this.shoot(e,rocket?'rocket':'bullet');e.shot=rocket?4.2:e.type==='infantry'&&++e.burst%3?.19:3}
+        if(dist<940&&e.shot<=0){const rocket=e.type==='bazooka'||e.type==='helicopter'||e.type==='tank';
+          this.shoot(e,rocket?'rocket':'bullet');e.shot=e.type==='tank'?3.6:rocket?4.2:e.type==='infantry'&&++e.burst%3?.19:e.type==='drone'?2.2:3}
       }
       if(e.hero)e.x=clamp(e.x,60,this.level.length-60);
       this.animateEnemy(e,dt,previousX);
