@@ -1,5 +1,6 @@
 import { damp as ease, spritePose } from './motion.js';
 import { t } from './i18n.js';
+import { modifiers } from './upgrades.js';
 // Batasi nilai
 export const clamp = (n, low, high) => Math.max(low, Math.min(n, high));
 export const people = ['office-worker','shopper','schoolkid','elder','bakso-vendor'];
@@ -97,9 +98,9 @@ const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
 // Dunia permainan
 export class World {
   constructor(level,index,options={}){
-    this.lite=!!options.lite;
+    this.lite=!!options.lite;this.upgrades=options.upgrades||[];this.mods=modifiers(this.upgrades);
     this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.lost=0;this.total=0;
-    this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
+    this.rex={x:level.start,dir:1,hp:rexHp+this.mods.hp,max:rexHp+this.mods.hp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
     this.buildings=level.buildings.map(b=>{
       let y=-65;
@@ -154,7 +155,7 @@ export class World {
   get multiplier(){return Math.min(comboCap,1+Math.floor(this.combo/comboStep)*.5)}
   // Tambah skor
   addScore(points){
-    this.combo++;this.comboTime=comboWindow;this.maxCombo=Math.max(this.maxCombo,this.combo);
+    this.combo++;this.comboTime=comboWindow+this.mods.comboWindow;this.maxCombo=Math.max(this.maxCombo,this.combo);
     this.score+=Math.round(points*this.multiplier);
   }
   // Persen hancur
@@ -176,7 +177,7 @@ export class World {
   damageModule(b,i,damage){
     const m=b.modules[i];if(m.hp<=0)return;
     const before=moduleState(m),delta=Math.min(m.hp,damage);m.hp-=delta;this.lost+=delta;this.addScore(delta);
-    this.rex.rage=clamp(this.rex.rage+delta*.065,0,100);
+    this.rex.rage=clamp(this.rex.rage+delta*.065*this.mods.rage,0,100);
     if(!b.evacuated){
       b.evacuated=true;this.sound('panic');this.alarmNear(b.x,b.width/2+520);
       for(let n=0;n<2+Math.floor(this.percent/22);n++){
@@ -198,7 +199,7 @@ export class World {
     this.fx('dust',prop.x,-46,prop.hp?1:2);
     this.sound(prop.hp?'crack':'collapse');
     // Hadiah rusak
-    if(!prop.hp){this.fx('debris',prop.x,-90,4);this.addScore(40);this.rex.rage=clamp(this.rex.rage+2,0,100);this.propEffect(prop)}
+    if(!prop.hp){this.fx('debris',prop.x,-90,4);this.addScore(40);this.rex.rage=clamp(this.rex.rage+2*this.mods.rage,0,100);this.propEffect(prop)}
   }
   // Efek properti
   propEffect(prop){
@@ -229,14 +230,14 @@ export class World {
   startAttack(key){
     const p=this.rex;if(!abilities[key]||p.attack||p.stun>0||this.status!=='playing')return;
     if(p.cd[key]>0){if(key==='ulti'||key==='roar'||key==='jump')this.say(t('{skill} siap dalam {n} dtk.',{skill:t(({ulti:'Ulti',roar:'Raung',jump:'Lompat'})[key]),n:Math.ceil(p.cd[key])}),.9);return}
-    p.cd[key]=cooldowns[key];
+    p.cd[key]=cooldowns[key]*this.mods.cooldown[key];
     p.attack={key,age:0,...abilities[key],done:false};
     if(key==='ulti'){this.messageUntil=0;this.sound('ulti');if(this.cast&&!this.cast.done)this.cancelCast()}
   }
   // Hantam target
   strike(a){
     const p=this.rex;this.sound(a.key);this.shake=Math.max(this.shake,a.key==='bite'?4:9);
-    if(a.key==='ulti'){this.quake(a.damage*(p.fury>0?2:1));return}
+    if(a.key==='ulti'){this.quake(a.damage*(p.fury>0?2:1)*this.mods.damage.ulti);return}
     if(a.key==='jump'){this.slam();return}
     if(a.key==='roar'){
       for(const e of this.enemies.filter(e=>e.x>=this.camera-40&&e.x<=this.camera+this.view+40)){
@@ -252,7 +253,7 @@ export class World {
     }
     const [u,v]=a.range.map(n=>p.x+n*p.dir);
     const hitbox={l:Math.min(u,v),r:Math.max(u,v),t:a.height[0],b:a.height[1]};
-    const damage=a.damage*(p.fury>0?2:1);
+    const damage=a.damage*(p.fury>0?2:1)*(this.mods.damage[a.key]||1);
     for(const prop of this.props){
       const [width,height]=propHitboxes[prop.type];
       if(overlap(hitbox,box(prop.x,-46,width,height)))this.damageProp(prop,damage);
@@ -296,7 +297,7 @@ export class World {
   knock(c,from){
     c.down=true;c.dir=Math.sign(c.x-from)||1;c.vx=c.dir*range(380,640);c.vy=-range(560,820);c.y=0;
     c.spin=c.dir*range(6,10);c.angle=0;c.life=1.15;c.hp=0;this.civiliansDown++;
-    this.addScore(40);this.rex.rage=clamp(this.rex.rage+1.5,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
+    this.addScore(40);this.rex.rage=clamp(this.rex.rage+1.5*this.mods.rage,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
   }
   // Pendaratan lompat
   slam(){
@@ -345,8 +346,8 @@ export class World {
   // Musuh tumbang
   defeat(e){
     const p=this.rex,big=heavy.has(e.type);this.kills[e.type]=(this.kills[e.type]||0)+1;
-    this.addScore(e.type==='robot'?5000:e.hero?1200:100);if(e.type==='robot'){for(let i=0;i<5;i++)this.fx('explosion',e.x+range(-120,120),-range(60,320));this.shake=26}p.rage=Math.min(100,p.rage+(e.hero?20:6));
-    if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
+    this.addScore(e.type==='robot'?5000:e.hero?1200:100);if(e.type==='robot'){for(let i=0;i<5;i++)this.fx('explosion',e.x+range(-120,120),-range(60,320));this.shake=26}p.rage=Math.min(100,p.rage+(e.hero?20:6)*this.mods.rage);
+    if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier)*this.mods.heal);
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(t('{name} tumbang!',{name:t(heroNames[e.type])}),2.5);
   }
   // Lukai Rex

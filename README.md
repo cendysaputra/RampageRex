@@ -89,6 +89,10 @@ Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk mem
 - Pakai **lompat** untuk menghindari tembakan: Rex kebal selama di udara, dan saat mendarat tentara terpaku 4,5 detik, pahlawan 1,6 detik.
 - Musuh makin keras di distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
 
+### Upgrade Rex
+
+Setiap kali distrik selesai, pilih **1 dari 3 upgrade** yang berlaku sampai kampanye berakhir, misalnya **Taring Baja** (gigitan +25%), **Sisik Tebal** (darah +60), atau **Amarah Purba** (cooldown ulti −25%). Ada 10 jenis upgrade, dan masing-masing bisa ditumpuk sampai 3 kali. Upgrade aktif terlihat di layar jeda. Memilih distrik langsung dari **Pilih distrik** memulai tanpa upgrade.
+
 ### Mode Tanpa Akhir
 
 Setelah Jalan Ruko selesai, **Pilih distrik** membuka **∞ · Tanpa Akhir**: jalan sangat panjang yang menyambung kedelapan distrik. Penjaga datang bergelombang di setiap 12% kehancuran dengan darah yang makin tebal, dan serangan musuh makin sakit seiring kota hancur. Permainan berakhir saat Rex tumbang, dan skor terbaiknya tercatat sebagai rekor.

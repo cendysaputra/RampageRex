@@ -10,6 +10,7 @@ import { missions, earned, starText } from '../web/src/missions.js';
 import { totalStars } from '../web/src/progress.js';
 import { t, setLang, keys as i18nKeys } from '../web/src/i18n.js';
 import { makeEndless } from '../web/src/endless.js';
+import { upgrades, offer, modifiers, MAX_STACK } from '../web/src/upgrades.js';
 
 const levels = await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -552,7 +553,7 @@ for (const late of [.1, .3, .6]) {
   const known = new Set(i18nKeys);
   const extra = [...levels.map(l => l.name), 'Tanpa Akhir', ...missions.flat().map(m => m.text), ...tutorialSteps.flatMap(s => [s.key, s.touch]),
     ...Object.values(heroNamesCheck), ...Object.values(hintsCheck), ...Object.values(heroUltisCheck).map(u => u.name),
-    ...Object.values(difficultiesCheck).map(d => d.label), ...Object.values(skinsCheck).map(s => s.label), ...Object.values(graphicsCheck), ...Object.values(padSizesCheck)];
+    ...Object.values(difficultiesCheck).map(d => d.label), ...Object.values(skinsCheck).map(s => s.label), ...Object.values(graphicsCheck), ...Object.values(padSizesCheck), ...Object.values(upgrades).flatMap(u => [u.name, u.text])];
   for (const src of sources) for (const m of src.matchAll(/line: '((?:[^'\\]|\\.)+)'/g)) extra.push(m[1]);
   const missing = [...used, ...extra].filter(k => k && !known.has(k) && /[a-z]{3}/i.test(k) && !['Rage', 'REX', 'Ulti', 'Normal', 'Batik', 'Mecha', 'Perisai', 'Rajawali', 'Jaring'].includes(k));
   assert.deepEqual([...new Set(missing)], [], 'every visible string has an English translation');
@@ -561,6 +562,22 @@ for (const late of [.1, .3, .6]) {
   assert.equal(t('Jalan Ruko'), 'Ruko Street');
   setLang('id');
   assert.equal(t('Distrik {n}', { n: 3 }), 'Distrik 3');
+}
+
+// Upgrade antar-distrik
+{
+  const three = offer([], () => .5);
+  assert.equal(new Set(three).size, 3, 'three different upgrades are offered');
+  const maxed = Array(MAX_STACK).fill('sisik');
+  for (let i = 0; i < 50; i++) assert.ok(!offer(maxed).includes('sisik'), 'a maxed upgrade is not offered again');
+  const strong = new World(levels[0], 0, { upgrades: ['sisik', 'sisik', 'taring', 'paru'] }), base = makeWorld();
+  assert.equal(strong.rex.max, base.rex.max + 120);
+  strong.rex.cd.roar = 0; strong.startAttack('roar');
+  assert.ok(Math.abs(strong.rex.cd.roar - cooldowns.roar * .7) < 1e-9, 'roar cooldown shrinks');
+  const biter = new World(levels[0], 0, { upgrades: ['taring'] });
+  for (const w of [biter, base]) { w.spawnTime = Infinity; const e = w.spawn('infantry', w.rex.x + 150); e.hp = 1e6; w.rex.cd.bite = 0; w.startAttack('bite'); for (let i = 0; i < 20; i++) w.update(1 / 60, empty); w.bitten = 1e6 - e.hp; }
+  assert.ok(Math.abs(biter.bitten / base.bitten - 1.25) < 1e-6, 'bite damage rises 25%');
+  assert.equal(modifiers(['irama']).comboWindow, 1);
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

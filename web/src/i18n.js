@@ -75,6 +75,13 @@ const en = {
   'Terkepung? Tekan Lompat: kebal di udara, musuh terpaku saat mendarat.': 'Surrounded? Press Jump: invulnerable in the air, enemies freeze when you land.',
   'Ulti siap! Tekan R untuk Amukan Rex.': "Ulti ready! Press R for Rex's Rampage.", 'Ulti siap! Tekan Ulti untuk Amukan Rex.': "Ulti ready! Press Ulti for Rex's Rampage.",
   'Tutorial selesai! Ratakan 100% kota.': 'Tutorial done! Wreck 100% of the city.', 'Selesai': 'Done',
+  // Upgrade
+  'Pilih upgrade': 'Choose an upgrade', 'Upgrade berlaku sampai kampanye selesai.': 'Upgrades last until the campaign ends.', 'Upgrade aktif': 'Active upgrades',
+  'Taring Baja': 'Steel Fangs', 'Gigitan +25% damage': 'Bite +25% damage', 'Ekor Godam': 'Hammer Tail', 'Sabetan ekor +30% damage': 'Tail swipe +30% damage',
+  'Telapak Gempa': 'Quake Feet', 'Injakan +30% damage': 'Stomp +30% damage', 'Sisik Tebal': 'Thick Scales', 'Darah maksimal +60': 'Max health +60',
+  'Paru-paru Besar': 'Big Lungs', 'Cooldown raung −30%': 'Roar cooldown −30%', 'Kaki Pegas': 'Spring Legs', 'Cooldown lompat −30%': 'Jump cooldown −30%',
+  'Amarah Purba': 'Primal Fury', 'Cooldown ulti −25%': 'Ulti cooldown −25%', 'Perut Rakus': 'Greedy Gut', 'Pulih darah dari musuh +50%': 'Health from defeated enemies +50%',
+  'Murka': 'Wrath', 'Rage terisi 30% lebih cepat': 'Rage fills 30% faster', 'Irama Amuk': 'Rampage Rhythm', 'Kombo bertahan 1 detik lebih lama': 'Combos last 1 second longer',
   // Pesan permainan
   '{name} · Hancurkan {n}% kota': '{name} · Wreck {n}% of the city', 'SPBU meledak!': 'Petrol station exploded!',
   'Rex makan! +{n} darah': 'Rex eats! +{n} health', 'Rex sudah kenyang.': 'Rex is full.', '{skill} siap dalam {n} dtk.': '{skill} ready in {n}s.',

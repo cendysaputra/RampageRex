@@ -9,6 +9,7 @@ import {Tutorial} from './tutorial.js';
 import {missions,earned,starText,missionText} from './missions.js';
 import {t,num,setLang,deviceLang,translatePage,languages} from './i18n.js';
 import {makeEndless} from './endless.js';
+import {upgrades,offer} from './upgrades.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -27,7 +28,7 @@ function soundLabel(){const btn=document.querySelector('.audio');btn.querySelect
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
 function recordLabel(){el('record').textContent=record?t('Rekor {n}',{n:num(record)}):t('Belum ada rekor')}
-let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0;
+let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,picked=[];
 // Skin aktif
 function activeSkin(){const s=skins[settings.skin];return s&&totalStars(progress)>=s.stars?s.folder:''}
 // Terapkan bahasa
@@ -49,11 +50,11 @@ function clearInput(){controls.clear();taps.clear();prior=0}
 // Buka dialog
 function modal(title,html,buttons){
   clearInput();el('panel-title').textContent=title;el('panel-copy').innerHTML=html;
-  const row=el('panel-actions');row.replaceChildren();
+  const row=el('panel-actions');row.replaceChildren();row.hidden=!buttons.length;
   for(const [i,[text,fn]] of buttons.entries()){
     const b=document.createElement('button');b.className=i?'secondary':'primary';b.textContent=text;b.onclick=fn;row.append(b);
   }
-  if(!panel.open)panel.showModal();row.firstElementChild.focus();
+  if(!panel.open)panel.showModal();row.firstElementChild?.focus();
 }
 // Tutup dialog
 function close(){if(panel.open)panel.close()}
@@ -169,15 +170,16 @@ function stageCard(index,manifest,level){
 // Tutup kartu
 function stageOut(){const card=el('stage');card.classList.add('leaving');setTimeout(()=>{if(card.classList.contains('leaving'))card.hidden=true},320)}
 // Mulai level
-async function start(index=0,carried=0,result=''){
+async function start(index=0,carried=0,result='',kept=[]){
   if(screen==='loading')return;
   close();clearInput();screen='loading';el('menu').hidden=true;el('hud').hidden=true;
   el('start').disabled=el('districts').disabled=el('settings').disabled=true;el('load-status').textContent='';text('stage-status',t('Memuat distrik…'));snd.unlock();
+  picked=index===ENDLESS?[]:kept;
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());art.setLite(useLite(settings));if(renderer)renderer.stale=true;
     await art.preload(levels[index],ratio=>{el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status',t('Memuat distrik… {n}%',{n:Math.round(ratio*100)}))});
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings)});
+    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked});
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status',t('Siap mengamuk!'));
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -193,13 +195,33 @@ function resume(){close();clearInput();screen='playing';el('pause').focus({preve
 // Jeda
 function pause(){if(screen!=='playing')return;screen='paused';modal(t('Jeda'),
   (levelIndex===ENDLESS?'<p>'+t('Mode Tanpa Akhir · skor {score} · rekor {best} · kombo terbaik {combo}',{score:num(world.score),best:num(progress.endless),combo:world.maxCombo})+'</p>'
-    :'<p>'+t('Distrik {n}, {name} · {pct}% hancur · kombo terbaik {combo}',{n:levelIndex+1,name:t(world.level.name),pct:Math.floor(world.percent),combo:world.maxCombo})+'</p>'+missionList(progress.stars[levelIndex])),
+    :'<p>'+t('Distrik {n}, {name} · {pct}% hancur · kombo terbaik {combo}',{n:levelIndex+1,name:t(world.level.name),pct:Math.floor(world.percent),combo:world.maxCombo})+'</p>'+missionList(progress.stars[levelIndex])+upgradeList()),
   [[t('Lanjut main'),resume],[t('Kontrol'),showControls],[t('Pengaturan'),()=>openSettings(true)],[t('Menu utama'),menu]])}
 // Daftar misi
 function missionList(stars){
   return '<ul class="missions">'+missions[levelIndex].map((m,i)=>'<li'+(stars[i]?' class="done"':'')+'>'+(stars[i]?'★':'☆')+' '+missionText(m)+'</li>').join('')+'</ul>';
 }
 // Hasil level
+// Pilih upgrade
+function chooseUpgrade(next,score,result){
+  screen='upgrade';const choices=offer(picked);
+  const go=key=>start(next,score,result+(key?' · +'+t(upgrades[key].name):''),key?[...picked,key]:picked);
+  if(!choices.length){go('');return}
+  modal(t('Pilih upgrade'),'<p>'+t('Upgrade berlaku sampai kampanye selesai.')+'</p><div class="upgrades"></div>'+upgradeList(),[]);
+  const list=el('panel-copy').querySelector('.upgrades');
+  for(const key of choices){
+    const b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small'),have=picked.filter(p=>p===key).length;
+    b.type='button';b.className='upgrade';name.textContent=t(upgrades[key].name)+(have?' '+'★'.repeat(have+1):'');note.textContent=t(upgrades[key].text);
+    b.append(name,note);b.onclick=()=>go(key);list.append(b);
+  }
+  el('panel-actions').hidden=true;list.firstChild.focus();
+}
+// Daftar upgrade aktif
+function upgradeList(){
+  if(!picked.length)return '';
+  const count={};for(const k of picked)count[k]=(count[k]||0)+1;
+  return '<p class="owned">'+t('Upgrade aktif')+': '+Object.entries(count).map(([k,n])=>t(upgrades[k].name)+(n>1?' ×'+n:'')).join(', ')+'</p>';
+}
 function finish(){
   screen='result';
   // Akhir tanpa akhir
@@ -215,10 +237,10 @@ function finish(){
   if(score>record){record=score;save('rex.best',record);recordLabel()}
   const more=win&&levelIndex<ENDLESS-1;
   // Lanjut distrik
-  if(more){el('hud').hidden=true;start(levelIndex+1,score,t('{name} rata {stars} · Skor {score}',{name:t(world.level.name),stars:starText(stars),score:num(score)}));return}
+  if(more){el('hud').hidden=true;chooseUpgrade(levelIndex+1,score,t('{name} rata {stars} · Skor {score}',{name:t(world.level.name),stars:starText(stars),score:num(score)}));return}
   modal(t(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang'),
     '<p>'+t('{name} · destruksi {pct}% · Skor {score}',{name:t(world.level.name),pct:Math.floor(world.percent),score:num(score)})+'</p>'+missionList(stars),
-    [[more?t('Lanjut ke distrik {n}',{n:levelIndex+2}):t(win?'Main dari awal':'Coba lagi'),()=>more?start(levelIndex+1,score):win?start():start(levelIndex,previousScore)],[t('Menu utama'),menu]]);
+    [[more?t('Lanjut ke distrik {n}',{n:levelIndex+2}):t(win?'Main dari awal':'Coba lagi'),()=>more?start(levelIndex+1,score,'',picked):win?start():start(levelIndex,previousScore,'',picked)],[t('Menu utama'),menu]]);
 }
 let bossKey='';
 const skillNodes=document.querySelectorAll('[data-skill]');
@@ -306,6 +328,8 @@ el('start').onclick=async()=>{
 };
 el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);
+// Debug lokal
+if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get world(){return world}};
 // Mode offline
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'))
   addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
