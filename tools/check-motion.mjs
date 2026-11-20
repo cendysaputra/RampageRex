@@ -249,4 +249,45 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   assert.ok(world.civilians.length && world.civilians.every(c => c.type === 'kopdes-worker'), 'Kopdes evacuates its workers');
 }
 
+// Audit RR-1
+{
+  const world = makeWorld();
+  world.rex.cd.jump = 0;
+  world.startAttack('jump');
+  for (let i = 0; i < 30; i++) world.update(1 / 60, empty);
+  world.shots.push({ x: world.rex.x, y: -150 - world.rex.lift, type: 'net', vx: 0, vy: 0, life: 1 });
+  world.update(1 / 60, empty);
+  assert.equal(world.rex.slow, 0, 'a net must not stick while Rex is airborne');
+  const hero = world.spawn('jaring', world.rex.x + 300);
+  world.cast = { hero, type: 'jaring', age: 0, windup: 1, done: true, reach: 1150, damage: 45, stun: .8, slow: 5 };
+  world.castStrike(world.cast);
+  assert.equal(world.rex.bigNet, 0, 'the giant net must miss an airborne Rex');
+}
+
+// Audit RR-2
+for (const late of [.1, .3, .6]) {
+  const world = makeWorld();
+  const hero = world.spawn('perisai', world.rex.x + 400);
+  hero.ultCd = 0;
+  world.update(1 / 60, empty);
+  assert.ok(world.cast, 'ulti must start');
+  for (let t = 0; t < late; t += 1 / 60) world.update(1 / 60, empty);
+  world.rex.cd.jump = 0;
+  world.update(1 / 60, new Set(['jump']));
+  const hp = world.rex.hp;
+  for (let i = 0; i < 60; i++) world.update(1 / 60, empty);
+  assert.equal(world.cast, null, `jump ${late}s late must still cancel the ulti`);
+  assert.equal(world.rex.hp, hp, `jump ${late}s late must avoid the ulti damage`);
+}
+
+// Audit RR-3
+{
+  const world = makeWorld();
+  world.rex.stun = .45;
+  world.update(1 / 60, new Set(['bite']));
+  let started = false;
+  for (let i = 0; i < 40; i++) { world.update(1 / 60, empty); started ||= world.rex.attack?.key === 'bite'; }
+  assert.ok(started, 'a tap during hitstun must fire once Rex recovers');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

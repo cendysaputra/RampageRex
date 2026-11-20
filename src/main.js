@@ -71,6 +71,8 @@ async function start(index=0,carried=0,result=''){
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
     stageOut();el('hud').hidden=false;screen='playing';el('pause').focus({preventScroll:true});clearInput();
+    // Tab tersembunyi
+    if(document.hidden)pause();
   }catch(err){
     boot=null;art=null;renderer=null;el('stage').hidden=true;el('menu').hidden=false;screen='menu';el('load-status').textContent='Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.';console.error(err);
   }finally{el('start').disabled=el('help').disabled=false}

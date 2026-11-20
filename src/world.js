@@ -78,7 +78,7 @@ const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
 export class World {
   constructor(level,index){
     this.level=level;this.index=index;this.time=0;this.score=0;this.lost=0;this.total=0;
-    this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,
+    this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
     this.buildings=level.buildings.map(b=>{
       let y=-65;
@@ -289,7 +289,9 @@ export class World {
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
   // Lukai Rex
-  hurt(amount,stun=0){const p=this.rex;if(p.attack?.key==='ulti'||p.lift>40||this.phase==='dying')return;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun)}
+  hurt(amount,stun=0){const p=this.rex;if(this.immune())return false;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun);return true}
+  // Rex kebal
+  immune(){const p=this.rex;return p.attack?.key==='ulti'||p.lift>0||this.phase==='dying'}
   // Mulai ulti pahlawan
   startCast(e){
     this.cast={hero:e,type:e.type,age:0,windup:ultWindup,done:false,...heroUltis[e.type]};
@@ -311,7 +313,7 @@ export class World {
       this.rain={until:this.time+1.5,next:0,damage:cast.damage};this.sound('launch');
     }else{
       this.sound('launch');
-      if(near){this.hurt(cast.damage,cast.stun);p.slow=Math.max(p.slow,cast.slow);p.bigNet=cast.slow}
+      if(near&&this.hurt(cast.damage,cast.stun)){p.slow=Math.max(p.slow,cast.slow);p.bigNet=cast.slow}
     }
   }
   // Tembak
@@ -385,11 +387,14 @@ export class World {
     // Antre serangan
     if(!exiting&&!dying)for(const key of ['ulti','jump','bite','tail','stomp','roar'])if(input.has(key)){p.queued=key;p.queuedUntil=this.time+.25;break}
     if(p.queued){
+      if(p.stun>0)p.queuedUntil=Math.max(p.queuedUntil,this.time+.1);
       if(this.time>p.queuedUntil)p.queued=null;
       else if(!p.attack&&p.stun<=0){this.startAttack(p.queued);p.queued=null}
     }
     if(p.attack){const a=p.attack;a.age+=dt;if(!a.done&&a.age>=a.impact){a.done=true;this.strike(a)}if(a.age>=a.duration)p.attack=null}
-    p.lift=p.attack?.key==='jump'?jumpLift(p.attack.age):0;
+    const grounded=!p.lift;p.lift=p.attack?.key==='jump'?jumpLift(p.attack.age):0;
+    // Lepas landas
+    if(grounded&&p.lift>0&&this.cast&&!this.cast.done&&this.cast.hero.x>=this.camera-40&&this.cast.hero.x<=this.camera+this.view+40)this.cancelCast();
     // Kamera
     this.look+=(p.dir-this.look)*ease(1.6,dt);
     this.camera+=(clamp(p.x-this.view*(.5-.06*this.look),0,Math.max(0,this.level.length-this.view))-this.camera)*ease(6,dt);
@@ -470,7 +475,7 @@ export class World {
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
     // Proyektil
     for(const s of this.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
-      if(overlap(box(s.x,s.y,10,10),box(p.x,-12-p.lift,141,290))){s.life=0;this.hurt(s.damage??DAMAGE[s.type]);
+      if(!this.immune()&&overlap(box(s.x,s.y,10,10),box(p.x,-12-p.lift,141,290))){s.life=0;this.hurt(s.damage??DAMAGE[s.type]);
         if(s.type==='net')p.slow=2.3;if(s.type==='rocket')this.fx('explosion',s.x,s.y)}}
     keep(this.shots,s=>s.life>0&&s.y<40);
     // Warga
