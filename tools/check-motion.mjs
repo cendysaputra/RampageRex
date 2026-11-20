@@ -4,7 +4,7 @@ import { World, cooldowns } from '../web/src/world.js';
 import { attackPose, damp, spritePose } from '../web/src/motion.js';
 import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
 import { loadProgress, saveProgress, recordDistrict, resetProgress } from '../web/src/progress.js';
-import { loadSettings, saveSettings, defaults } from '../web/src/settings.js';
+import { loadSettings, saveSettings, defaults, useLite, weakDevice } from '../web/src/settings.js';
 import { Tutorial, steps as tutorialSteps } from '../web/src/tutorial.js';
 import { missions, earned, starText } from '../web/src/missions.js';
 import { totalStars } from '../web/src/progress.js';
@@ -320,7 +320,7 @@ for (const late of [.1, .3, .6]) {
   const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   assert.deepEqual(loadSettings(storage), defaults);
   saveSettings({ sfx: 140, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
-  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah' }, 'invalid values fall back');
+  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah', graphics: 'auto' }, 'invalid values fall back');
   saveSettings({ skin: 'mecha' }, storage);
   assert.equal(loadSettings(storage).skin, 'mecha');
   const easy = new World(levels[0], 0, { difficulty: 'santai' }), normal = new World(levels[0], 0), hard = new World(levels[0], 0, { difficulty: 'ngamuk' });
@@ -527,6 +527,18 @@ for (const late of [.1, .3, .6]) {
   assert.ok(boss.hp <= 0, 'the robot can be defeated');
   for (let i = 0; i < 5; i++) world.update(1 / 60, empty);
   assert.equal(world.phase, 'clear', 'beating the robot clears Alun-Alun');
+}
+
+// Mode grafis
+{
+  assert.equal(weakDevice({ deviceMemory: 2 }), true);
+  assert.equal(weakDevice({ hardwareConcurrency: 8, deviceMemory: 8 }), false);
+  assert.equal(useLite({ graphics: 'ringan' }, { hardwareConcurrency: 16 }), true);
+  assert.equal(useLite({ graphics: 'tinggi' }, { deviceMemory: 1 }), false);
+  assert.equal(useLite({ graphics: 'auto' }, { deviceMemory: 2 }), true);
+  const lite = new World(levels[0], 0, { lite: true }), full = new World(levels[0], 0);
+  lite.fx('debris', 0, 0, 5); full.fx('debris', 0, 0, 5);
+  assert.ok(lite.effects.length < full.effects.length, 'lite mode spawns fewer particles');
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

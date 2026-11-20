@@ -96,6 +96,7 @@ const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
 // Dunia permainan
 export class World {
   constructor(level,index,options={}){
+    this.lite=!!options.lite;
     this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
@@ -163,6 +164,7 @@ export class World {
   sound(name){this.events.push(name)}
   // Buat efek
   fx(kind,x,y,count=1){
+    if(this.lite)count=Math.ceil(count/2);
     for(let i=0;i<count;i++){
       const debris=kind==='debris'||kind==='decor';
       this.effects.push({kind,x,y,vx:debris?range(-200,200):range(-30,30),vy:debris?range(-430,-160):-40,

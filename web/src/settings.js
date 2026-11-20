@@ -10,7 +10,17 @@ export const skins = {
   hutan: { label: 'Hutan', stars: 8, folder: 'hutan' },
   mecha: { label: 'Mecha', stars: 12, folder: 'mecha' }
 };
-export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah' };
+// Mode grafis
+export const graphics = { auto: 'Otomatis', tinggi: 'Tinggi', ringan: 'Ringan' };
+// Perangkat lemah
+export function weakDevice(nav = globalThis.navigator) {
+  return Boolean(nav && ((nav.deviceMemory && nav.deviceMemory <= 4) || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4)));
+}
+// Pakai ringan
+export function useLite(settings, nav) {
+  return settings.graphics === 'ringan' || (settings.graphics === 'auto' && weakDevice(nav));
+}
+export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah', graphics: 'auto' };
 
 // Baca pengaturan
 export function loadSettings(storage = globalThis.localStorage) {
@@ -22,7 +32,8 @@ export function loadSettings(storage = globalThis.localStorage) {
     vibrate: typeof data.vibrate === 'boolean' ? data.vibrate : defaults.vibrate,
     pad: data.pad in padSizes ? data.pad : defaults.pad,
     difficulty: data.difficulty in difficulties ? data.difficulty : defaults.difficulty,
-    skin: data.skin in skins ? data.skin : defaults.skin
+    skin: data.skin in skins ? data.skin : defaults.skin,
+    graphics: data.graphics in graphics ? data.graphics : defaults.graphics
   };
 }
 

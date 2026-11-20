@@ -4,7 +4,7 @@ import {Sound} from './audio.js';
 import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
 import {loadProgress,saveProgress,recordDistrict,resetProgress,totalStars} from './progress.js';
-import {loadSettings,saveSettings,buzz,padSizes,skins} from './settings.js';
+import {loadSettings,saveSettings,buzz,padSizes,skins,graphics,useLite,weakDevice} from './settings.js';
 import {Tutorial} from './tutorial.js';
 import {missions,earned,starText} from './missions.js';
 import {makeEndless} from './endless.js';
@@ -116,6 +116,9 @@ function openSettings(paused=false){
   };
   group('Tingkat kesulitan',Object.fromEntries(Object.entries(difficulties).map(([k,d])=>[k,d.label])),settings.difficulty,
     key=>{settings.difficulty=key;saveSettings(settings)},paused?'Berlaku mulai distrik berikutnya.':'Santai: musuh lebih sedikit dan tidak terlalu sakit.');
+  // Mode grafis
+  group('Grafis',graphics,settings.graphics,key=>{settings.graphics=key;saveSettings(settings);if(art){art.setLite(useLite(settings));if(renderer)renderer.stale=true}},
+    (weakDevice()?'Perangkat ini disarankan memakai Ringan.':'Ringan: resolusi lebih rendah dan efek lebih sedikit untuk HP lama.'));
   // Skin Rex
   const stars=totalStars(progress);
   group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,stars>=s.stars?s.label:s.label+' · '+s.stars+'★'])),settings.skin,
@@ -167,9 +170,9 @@ async function start(index=0,carried=0,result=''){
   el('start').disabled=el('districts').disabled=el('settings').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
-    const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());
+    const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());art.setLite(useLite(settings));if(renderer)renderer.stale=true;
     await art.preload(levels[index],ratio=>{el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status','Memuat distrik… '+Math.round(ratio*100)+'%')});
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty});
+    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings)});
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));

@@ -109,6 +109,8 @@ export class Art {
     }
     this.images.delete(def.path);source.close?.();
   }
+  // Mode grafis
+  setLite(lite){this.lite=!!lite}
   // Ganti skin
   useSkin(skin=''){
     if(skin===this.skin)return;
@@ -163,6 +165,8 @@ export class Art {
   }
   // Baur pose
   blend(c,from,to,mix,x,y,width,dir=1,angle=0){
+    // Ringan tanpa baur
+    if(this.lite){this.sprite(c,mix<.5?from:to,x,y,width,dir,angle);return}
     if(from===to||mix<=0){this.sprite(c,from,x,y,width,dir,angle);return}
     if(mix>=1){this.sprite(c,to,x,y,width,dir,angle);return}
     const rect=path=>{
@@ -300,7 +304,8 @@ export class Renderer {
   measure(){
     const canvas=this.canvas,w=canvas.clientWidth,h=canvas.clientHeight;this.w=w;this.h=h;if(!w||!h)return;
     // Batas resolusi
-    let dpr=Math.min(2,devicePixelRatio||1);const over=w*h*dpr*dpr/3.7e6;if(over>1)dpr/=Math.sqrt(over);
+    // Batas piksel
+    let dpr=Math.min(this.art.lite?1:2,devicePixelRatio||1);const over=w*h*dpr*dpr/(this.art.lite?1.4e6:3.7e6);if(over>1)dpr/=Math.sqrt(over);
     const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
     if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh}
     // Kualitas sampling
