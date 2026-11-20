@@ -35,6 +35,8 @@ Di setiap distrik:
 
 Kalau darah Rex habis, Rex terhuyung lalu tumbang, dan distrik diulang dari awal.
 
+Saat pertama kali bermain, tutorial singkat di Jalan Ruko memandu enam langkah: berjalan, menggigit, meruntuhkan lantai dasar, melempar tentara dengan ekor, melompat, dan memakai ulti. Tentara baru datang setelah tiga langkah pertama selesai. Tutorial bisa dilewati, dan bisa diulang dari Pengaturan.
+
 Progres tersimpan otomatis. Setiap distrik yang selesai membuka distrik berikutnya, dan tombol **Pilih distrik** di menu membawamu langsung ke distrik mana pun yang sudah terbuka, lengkap dengan skor terbaiknya.
 
 ## Kontrol

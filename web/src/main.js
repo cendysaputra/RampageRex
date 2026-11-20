@@ -5,6 +5,7 @@ import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
 import {loadProgress,saveProgress,recordDistrict,resetProgress} from './progress.js';
 import {loadSettings,saveSettings,buzz,padSizes} from './settings.js';
+import {Tutorial} from './tutorial.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -23,7 +24,7 @@ function soundLabel(){const btn=document.querySelector('.audio');btn.querySelect
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
 function recordLabel(){el('record').textContent=record?'Rekor '+record.toLocaleString('id-ID'):'Belum ada rekor'}
-let progress=loadProgress(),settings=loadSettings();
+let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0;
 // Terapkan pengaturan
 function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad}
 applySettings();
@@ -49,7 +50,7 @@ function modal(title,html,buttons){
 function close(){if(panel.open)panel.close()}
 // Menu utama
 function menu(){
-  close();clearInput();screen='menu';world=null;el('hud').hidden=true;el('menu').hidden=false;el('start').focus();
+  close();clearInput();screen='menu';world=null;guide=null;showGuide();el('hud').hidden=true;el('menu').hidden=false;el('start').focus();
 }
 // Cara main
 function help(){screen='help';modal('Cara main',
@@ -71,6 +72,18 @@ async function chooseDistrict(){
   }
   list.querySelector('button:not(:disabled)')?.focus();
 }
+// Tampilkan tutorial
+function showGuide(){
+  const box=el('tutorial');
+  if(!guide){box.hidden=true;return}
+  if(guide.finished){
+    if(!guideUntil){guideUntil=performance.now()+3500;save('rex.tutorial','done')}
+    if(performance.now()>guideUntil){guide=null;box.hidden=true;return}
+  }
+  box.hidden=false;text('tutorial-step',guide.label());text('tutorial-text',guide.text(matchMedia('(pointer:coarse)').matches));
+}
+// Lewati tutorial
+function skipGuide(){save('rex.tutorial','done');guide=null;showGuide();el('pause').focus({preventScroll:true})}
 // Menu pengaturan
 function openSettings(paused=false){
   screen=paused?'settings-paused':'settings';
@@ -99,6 +112,12 @@ function openSettings(paused=false){
   const touch=matchMedia('(pointer:coarse)').matches;
   if(touch&&'vibrate' in navigator)group('Getaran',{on:'Nyala',off:'Mati'},settings.vibrate?'on':'off',key=>{settings.vibrate=key==='on';saveSettings(settings);if(settings.vibrate)buzz(settings,'stomp')});
   if(touch||matchMedia('(max-width:720px)').matches)group('Ukuran tombol sentuh',padSizes,settings.pad,key=>{settings.pad=key;applySettings();saveSettings(settings)});
+  // Ulangi tutorial
+  if(!paused){
+    const replay=document.createElement('button');replay.type='button';replay.className='plain';
+    replay.textContent=getSaved('rex.tutorial','')==='done'?'Ulangi tutorial di distrik 1':'Tutorial aktif di distrik 1';replay.disabled=replay.textContent.startsWith('Tutorial aktif');
+    replay.onclick=()=>{save('rex.tutorial','');replay.textContent='Tutorial aktif di distrik 1';replay.disabled=true};form.append(replay);
+  }
   // Hapus progres
   if(!paused){
     const wipe=document.createElement('button');wipe.type='button';wipe.className='danger';wipe.textContent='Hapus progres';
@@ -130,6 +149,7 @@ async function start(index=0,carried=0,result=''){
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
     renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],index,{difficulty:settings.difficulty});
+    guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
     stageOut();el('hud').hidden=false;screen='playing';el('pause').focus({preventScroll:true});clearInput();
@@ -197,6 +217,7 @@ function frame(now){
       input.clear();for(const action of controls.values())input.add(action);for(const action of taps)input.add(action);
       world.update(elapsed/steps,input);taps.clear();
     }
+    if(guide&&world.status==='playing'){guide.update(world);showGuide()}
     for(const name of world.events.splice(0)){snd.play(name);buzz(settings,name)}
     renderer.render(world);updateHud();if(world.status!=='playing')finish();
   }
@@ -237,5 +258,5 @@ el('start').onclick=async()=>{
   await playOpening(el('opening'),snd);
   await start();
 };
-el('help').onclick=help;el('districts').onclick=chooseDistrict;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
+el('help').onclick=help;el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);
