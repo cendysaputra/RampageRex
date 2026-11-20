@@ -1,7 +1,7 @@
 {
   "name": "rampage-rex",
   "private": true,
-  "license": "MIT",
+  "license": "UNLICENSED",
   "author": "Cendy Saputra",
   "type": "module",
   "scripts": {

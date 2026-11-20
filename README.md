@@ -203,4 +203,4 @@ Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjan
 
 ## Lisensi
 
-Kode dan aset game ini berlisensi [MIT](LICENSE) © 2026 Cendy Saputra, kecuali huruf Bangers dan Baloo 2 di `web/assets/fonts/` yang memakai SIL Open Font License 1.1.
+© 2026 Cendy Saputra. Hak cipta dilindungi. Kode dan aset game ini tidak boleh disalin, diubah, atau disebarkan tanpa izin tertulis. Lihat [LICENSE](LICENSE). Huruf Bangers dan Baloo 2 di `web/assets/fonts/` memakai SIL Open Font License 1.1.
