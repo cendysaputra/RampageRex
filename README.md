@@ -2,13 +2,11 @@
 
 <img src="assets/characters/rex/master.webp" alt="Rex, dinosaurus merah berpelat punggung oranye" width="620">
 
-# <img src="assets/ui/hud/frames/rage.png" alt="" width="36"> Rampage Rex
+# Rampage Rex
 
 **Game 2D di browser: kamu jadi Rex, dan kota Ruko Senja ada di depanmu.**
 
 Ratakan bangunan lantai demi lantai, hadapi gerombolan tentara, dan kalahkan tiga pahlawan penjaga kota di empat distrik.
-
-### [▶ Main sekarang](https://rampagerex.vercel.app)
 
 Bisa dimainkan dengan keyboard, mouse, atau layar sentuh.
 
@@ -21,13 +19,13 @@ Bisa dimainkan dengan keyboard, mouse, atau layar sentuh.
 
 ---
 
-## 📖 Kisahnya
+## Kisahnya
 
 Suatu malam, sebuah meteor jatuh di hutan pinggir kota. Di dasar kawahnya ada sebutir telur, dan dari telur itu menetas Rex. Ia tumbuh besar di hutan sampai hutan tidak lagi cukup, lalu di kejauhan ia melihat kota.
 
 Kisah ini diceritakan lewat opening komik bergerak setelah kamu menekan **Mulai main**.
 
-## 🎯 Tujuan
+## Tujuan
 
 Di setiap distrik:
 
@@ -37,18 +35,18 @@ Di setiap distrik:
 
 Kalau darah Rex habis, Rex terhuyung lalu tumbang, dan distrik diulang dari awal.
 
-## 🕹️ Kontrol
+## Kontrol
 
-| | Aksi | Keyboard | Mouse | Cooldown |
-| :-: | --- | :-: | :-: | :-: |
-| 🚶 | Jalan | `A` `D` atau `←` `→` | | |
-| 🦷 | **Gigit** di depan, mengenai lantai teratas | `W` | Klik kiri | 0,7 dtk |
-| 🌀 | **Ekor** ke belakang, melempar tentara dan jeep | `Q` | Klik kanan | 2,2 dtk |
-| 🦶 | **Injak** di sekitar kaki, merusak lantai dasar | `S` | | 3,5 dtk |
-| 📣 | **Raung**, membuat tentara di layar terpaku | `E` | | 9 dtk |
-| 🦖 | **Lompat gertakan**, kebal di udara dan membuat semua di layar terpaku saat mendarat | `Spasi` | | 20 dtk |
-| 💥 | **Ulti: Amukan Rex**, mengguncang seluruh layar | `R` | | 40 dtk |
-| ⏸️ | Jeda | `Esc` atau `P` | | |
+| Aksi | Keyboard | Mouse | Cooldown |
+| --- | :-: | :-: | :-: |
+| Jalan | `A` `D` atau `←` `→` | | |
+| **Gigit** di depan, mengenai lantai teratas | `W` | Klik kiri | 0,7 dtk |
+| **Ekor** ke belakang, melempar tentara dan jeep | `Q` | Klik kanan | 2,2 dtk |
+| **Injak** di sekitar kaki, merusak lantai dasar | `S` | | 3,5 dtk |
+| **Raung**, membuat tentara di layar terpaku | `E` | | 9 dtk |
+| **Lompat gertakan**, kebal di udara dan membuat semua di layar terpaku saat mendarat | `Spasi` | | 20 dtk |
+| **Ulti: Amukan Rex**, mengguncang seluruh layar | `R` | | 40 dtk |
+| Jeda | `Esc` atau `P` | | |
 
 Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
 
@@ -66,13 +64,13 @@ Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
 - Pakai **lompat** untuk menghindari tembakan: Rex kebal selama di udara, dan saat mendarat tentara terpaku 4,5 detik, pahlawan 1,6 detik.
 - Musuh makin keras di distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
 
-## 🦸 Para penjaga kota
+## Para penjaga kota
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="assets/characters/heroes/perisai/portrait.png" alt="Perisai" width="130"><br><b>🛡️ Perisai</b></td>
-    <td align="center" width="33%"><img src="assets/characters/heroes/rajawali/portrait.png" alt="Rajawali" width="130"><br><b>🦅 Rajawali</b></td>
-    <td align="center" width="33%"><img src="assets/characters/heroes/jaring/portrait.png" alt="Jaring" width="130"><br><b>🕸️ Jaring</b></td>
+    <td align="center" width="33%"><img src="assets/characters/heroes/perisai/portrait.png" alt="Perisai" width="130"><br><b>Perisai</b></td>
+    <td align="center" width="33%"><img src="assets/characters/heroes/rajawali/portrait.png" alt="Rajawali" width="130"><br><b>Rajawali</b></td>
+    <td align="center" width="33%"><img src="assets/characters/heroes/jaring/portrait.png" alt="Jaring" width="130"><br><b>Jaring</b></td>
   </tr>
   <tr>
     <td valign="top">Menghadang di depan, menubruk dengan perisai, dan memblokir gigitan dari depan.<br><br><b>Kelemahan:</b> hindari tubrukannya, lalu sabet dengan ekor saat ia lengah.</td>
@@ -85,9 +83,9 @@ Ketiganya selalu datang bersamaan dan mengepung Rex. Tiap penjaga juga punya **u
 
 | Penjaga | Ulti | Efek |
 | --- | --- | --- |
-| 🛡️ Perisai | **Benteng Baja** | Gelombang kejut sepanjang jalan, damage besar dan membuat Rex terpaku |
-| 🦅 Rajawali | **Hujan Laser** | Laser berjatuhan di sekitar Rex selama 1,5 detik |
-| 🕸️ Jaring | **Jaring Raksasa** | Jaring baja menutupi Rex, damage dan memperlambat 5 detik |
+| Perisai | **Benteng Baja** | Gelombang kejut sepanjang jalan, damage besar dan membuat Rex terpaku |
+| Rajawali | **Hujan Laser** | Laser berjatuhan di sekitar Rex selama 1,5 detik |
+| Jaring | **Jaring Raksasa** | Jaring baja menutupi Rex, damage dan memperlambat 5 detik |
 
 Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul, **raung**, **lompat**, atau pakai **Ulti Rex** untuk menggagalkannya.
 
@@ -95,7 +93,7 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul
   <img src="docs/screenshots/hero-ulti.webp" alt="Cut-in ulti Hujan Laser milik Rajawali" width="70%">
 </p>
 
-## 🪖 Tentara
+## Tentara
 
 <table>
   <tr>
@@ -108,7 +106,7 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul
 
 Tentara datang beregu dari depan dan belakang sampai belasan orang di layar, jadi Rex selalu dikeroyok. Makin hancur kotanya, makin besar regunya dan makin berat senjatanya. Helikopter hanya bisa digigit saat terbang rendah.
 
-## 🧑‍🤝‍🧑 Warga
+## Warga
 
 <p align="center">
   <img src="assets/characters/civilians/office-worker/master.png" alt="Pekerja kantoran" height="96">
@@ -125,22 +123,22 @@ Sebelum Rex datang, warga beraktivitas di jalan: mengobrol, menunggu di depan to
   <img src="docs/screenshots/street-life.webp" alt="Warga beraktivitas di depan Kopdes Merah Putih di Pusat Kota" width="70%">
 </p>
 
-## 🏙️ Empat distrik
+## Empat distrik
 
 | | Distrik | Suasana |
 | :-: | --- | --- |
 | 1 | **Jalan Ruko** | Deretan ruko, warung, dan angkot saat senja |
-| 2 | **Pusat Kota** | Gedung perkantoran, Kopdes Merah Putih, dan Tugu Kujang di kejauhan |
+| 2 | **Pusat Kota** | Gedung perkantoran dan Tugu Kujang di kejauhan |
 | 3 | **Pelabuhan** | Gudang, kontainer, dan derek pelabuhan |
 | 4 | **Alun-Alun** | Pusat kota di malam hari, tempat pertarungan terakhir |
 
-Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal.
+Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang. Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal.
 
 <p align="center">
   <img src="docs/screenshots/knockout.webp" alt="Rex tumbang dengan bintang di atas kepala" width="49%">
   <img src="docs/screenshots/mobile-play.webp" alt="Tampilan di HP dengan tombol sentuh" width="20%">
 </p>
 
-## 📄 Lisensi
+## Lisensi
 
 Kode dan aset game ini berlisensi [MIT](LICENSE) © 2026 Cendy Saputra, kecuali huruf Bangers dan Baloo 2 di `assets/fonts/` yang memakai SIL Open Font License 1.1.
