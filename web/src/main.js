@@ -161,7 +161,7 @@ function openSettings(paused=false){
   group('Tingkat kesulitan',Object.fromEntries(Object.entries(difficulties).map(([k,d])=>[k,d.label])),settings.difficulty,
     key=>{settings.difficulty=key;saveSettings(settings)},paused?'Berlaku mulai distrik berikutnya.':'Santai: musuh lebih sedikit dan tidak terlalu sakit.');
   // Mode grafis
-  group('Grafis',graphics,settings.graphics,key=>{settings.graphics=key;saveSettings(settings);if(art){art.setLite(useLite(settings));if(renderer)renderer.stale=true}},
+  group('Grafis',graphics,settings.graphics,key=>{settings.graphics=key;saveSettings(settings);if(art){art.setLite(useLite(settings));if(renderer){renderer.adaptive=key==='auto';renderer.cap=2;renderer.stale=true}}},
     (weakDevice()?'Perangkat ini disarankan memakai Ringan.':'Ringan: resolusi lebih rendah dan efek lebih sedikit untuk HP lama.'));
   // Skin Rex
   const stars=totalStars(progress);
@@ -217,7 +217,7 @@ async function start(index=0,carried=0,result='',kept=[]){
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());art.setLite(useLite(settings));if(renderer)renderer.stale=true;
     await art.preload(levels[index],ratio=>{el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status',t('Memuat distrik… {n}%',{n:Math.round(ratio*100)}))});
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn(),god:dev&&getSaved('rex.devgod','1')==='1'});
+    renderer??=new Renderer(el('world'),art);renderer.adaptive=settings.graphics==='auto';levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn(),god:dev&&getSaved('rex.devgod','1')==='1'});
     world.onGod=on=>save('rex.devgod',on?'1':'');
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status',t('Siap mengamuk!'));
@@ -325,12 +325,14 @@ function updateHud(){
     const seconds=left>0?String(Math.ceil(left)):'';if(node.dataset.left!==seconds)node.dataset.left=seconds;
   }
 }
+// Batas langkah per frame
+const maxSteps=4;
 // Loop utama
 function frame(now){
   if(screen==='playing'){
     // Langkah simulasi
     const elapsed=prior?Math.min(.1,(now-prior)/1000):0;prior=now;
-    const steps=Math.max(1,Math.ceil(elapsed*60-.01));
+    const steps=Math.min(maxSteps,Math.max(1,Math.ceil(elapsed*60-.01)));
     for(let i=0;i<steps&&elapsed>0&&world.status==='playing';i++){
       input.clear();for(const action of controls.values())input.add(action);for(const action of taps)input.add(action);
       world.update(elapsed/steps,input);taps.clear();
@@ -397,7 +399,7 @@ if(dev){
   const badge=document.createElement('span');badge.className='dev-badge';badge.textContent='MODE DEVELOPER · kebal · progres tidak disimpan';el('menu').append(badge);
 }
 // Debug lokal
-if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get world(){return world}};
+if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get world(){return world},get art(){return art},get renderer(){return renderer}};
 // Mode offline
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'))
   addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
