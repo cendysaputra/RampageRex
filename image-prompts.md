@@ -812,6 +812,45 @@ Untuk `ulti-cutin.webp`, tambahkan: `dark storm clouds and a lightning bolt glow
 
 ---
 
+## 20. Aset rilis desktop
+
+Ikon aplikasi Windows/macOS dan gambar toko Steam. Ikon dikerjakan dulu. Gambar Steam baru dibuat kalau jadi rilis di Steam. Ukuran Steam di bawah perlu dicek ulang di Steamworks saat upload.
+
+**Sumber (edit source):** `web/assets/characters/rex/master.webp` sebagai acuan wajah Rex. Untuk gambar Steam, pakai juga satu latar distrik dari `web/assets/backgrounds/`.
+
+**Simpan ke:** `desktop/build/` dan `desktop/store/`.
+
+| File | Ukuran | Catatan |
+| --- | --- | --- |
+| `desktop/build/icon.png` | 1024×1024 | Ikon aplikasi, latar penuh tanpa transparansi, sudut tidak dibulatkan |
+| `desktop/store/header-capsule.png` | 920×430 | Header toko Steam, dengan judul |
+| `desktop/store/small-capsule.png` | 462×174 | Judul harus tetap terbaca di ukuran kecil |
+| `desktop/store/main-capsule.png` | 1232×706 | Banner halaman depan Steam, dengan judul |
+| `desktop/store/vertical-capsule.png` | 748×896 | Versi tegak, dengan judul |
+| `desktop/store/library-capsule.png` | 600×900 | Sampul library, dengan judul |
+| `desktop/store/library-hero.png` | 3840×1240 | Latar library, **tanpa** judul dan tanpa tokoh di tengah |
+| `desktop/store/library-logo.png` | 1280×720 | Logo judul saja, latar transparan |
+
+```
+Desktop app icon 1024x1024 for the game Rampage Rex: the head of the attached red cartoon dinosaur Rex roaring, three-quarter view, filling about 80% of the square, bold dark outline, warm orange sunset circle behind him, dark teal background filling the whole square. Flat, high contrast, readable at 32x32. No text, no letters, no border, no rounded corners.
+```
+
+```
+Steam store capsule for the game Rampage Rex, landscape: the attached red dinosaur Rex roaring on the right half while stomping a crumbling Indonesian ruko street at sunset, tiny soldiers and a tank in front. The left half is calmer with the bold comic title "RAMPAGE REX" in thick cream letters with a dark outline and a red shadow. Warm orange and magenta sky, chunky hand-drawn comic style matching the attached background. No other text, no logos.
+```
+
+```
+Steam library hero 3840x1240 for the game Rampage Rex: wide panorama of an Indonesian city district at sunset with ruko rows, a tall Tugu monument and the attached red dinosaur Rex small on the far right edge, smoke and dust in the sky. Keep the center calm and empty for the logo placed by Steam. Chunky hand-drawn comic style matching the attached background. No text, no letters, no logos.
+```
+
+```
+Title logo for the game Rampage Rex on a fully transparent background: the words "RAMPAGE REX" in thick bold comic letters, cream fill, dark brown outline, red drop shadow, slight crack marks on the letters and a small claw scratch across "REX". Centered with padding. No background, no other text.
+```
+
+Ukuran lain (judul tegak dan kecil) cukup diturunkan dari gambar di atas. Kalau Codex kesulitan menulis judul dengan rapi, buat versi tanpa judul, lalu judul ditempel dari `library-logo.png`.
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).
