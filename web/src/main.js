@@ -58,10 +58,16 @@ function close(){if(panel.open)panel.close()}
 function menu(){
   close();clearInput();screen='menu';world=null;guide=null;showGuide();el('hud').hidden=true;el('menu').hidden=false;el('start').focus();
 }
-// Cara main
-function help(){screen='help';modal('Cara main',
-  '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>Spasi</dt><dd>Lompat gertakan: saat mendarat, semua di layar terpaku lebih lama dari raungan</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Ratakan 100% bangunan dan kalahkan pahlawan distrik. Warga juga bisa dikalahkan. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p><p>Tiga penjaga selalu datang bersama. Saat panel ulti mereka muncul, raung untuk menggagalkannya.</p>',
-  [['Kembali',menu]]);
+// Daftar kontrol
+function showControls(){
+  screen='controls';
+  const touch=matchMedia('(pointer:coarse)').matches;
+  const rows=touch
+    ?[['◀ ▶','Jalan'],['Gigit','Gigit bangunan dan musuh di depan'],['Ekor','Sabet ke belakang, melempar tentara'],['Injak','Rusak lantai dasar di sekitar kaki'],['Raung','Bikin tentara terpaku, jatuhkan drone'],['Lompat','Kebal di udara, musuh terpaku saat mendarat'],['Ulti','Amukan Rex, guncang seluruh layar'],['⏸','Jeda']]
+    :[['A D / ← →','Jalan'],['W / klik kiri','Gigit bangunan dan musuh di depan'],['Q / klik kanan','Sabet ke belakang, melempar tentara'],['S','Rusak lantai dasar di sekitar kaki'],['E','Raung: tentara terpaku, drone jatuh'],['Spasi','Lompat: kebal di udara, musuh terpaku saat mendarat'],['R','Ulti Amukan Rex, guncang seluruh layar'],['Esc / P','Jeda']];
+  const tips=['Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan.','Raung atau lompat saat panel ulti penjaga muncul untuk menggagalkannya.','Ekor membalikkan tank dan melempar jeep serta truk pemadam.'];
+  modal('Kontrol','<dl class="keys">'+rows.map(([k,v])=>'<dt>'+k+'</dt><dd>'+v+'</dd>').join('')+'</dl><ul class="tips">'+tips.map(t=>'<li>'+t+'</li>').join('')+'</ul>',
+    [['Kembali',()=>{screen='playing';pause()}]]);
 }
 // Pilih distrik
 async function chooseDistrict(){
@@ -158,7 +164,7 @@ function stageOut(){const card=el('stage');card.classList.add('leaving');setTime
 async function start(index=0,carried=0,result=''){
   if(screen==='loading')return;
   close();clearInput();screen='loading';el('menu').hidden=true;el('hud').hidden=true;
-  el('start').disabled=el('help').disabled=el('districts').disabled=el('settings').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
+  el('start').disabled=el('districts').disabled=el('settings').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());await art.preload(levels[index]);
@@ -171,7 +177,7 @@ async function start(index=0,carried=0,result=''){
     if(document.hidden)pause();
   }catch(err){
     boot=null;art=null;renderer=null;el('stage').hidden=true;el('menu').hidden=false;screen='menu';el('load-status').textContent='Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.';console.error(err);
-  }finally{el('start').disabled=el('help').disabled=el('districts').disabled=el('settings').disabled=false}
+  }finally{el('start').disabled=el('districts').disabled=el('settings').disabled=false}
 }
 // Lanjut main
 function resume(){close();clearInput();screen='playing';el('pause').focus({preventScroll:true})}
@@ -179,7 +185,7 @@ function resume(){close();clearInput();screen='playing';el('pause').focus({preve
 function pause(){if(screen!=='playing')return;screen='paused';modal('Jeda',
   (levelIndex===ENDLESS?'<p>Mode Tanpa Akhir · skor '+world.score.toLocaleString('id-ID')+' · rekor '+progress.endless.toLocaleString('id-ID')+' · kombo terbaik '+world.maxCombo+'</p>'
     :'<p>Distrik '+(levelIndex+1)+', '+world.level.name+' · '+Math.floor(world.percent)+'% hancur · kombo terbaik '+world.maxCombo+'</p>'+missionList(progress.stars[levelIndex])),
-  [['Lanjut main',resume],[snd.enabled?'Matikan suara':'Aktifkan suara',()=>{toggleSound();screen='playing';pause()}],['Pengaturan',()=>openSettings(true)],['Menu utama',menu]])}
+  [['Lanjut main',resume],['Kontrol',showControls],['Pengaturan',()=>openSettings(true)],['Menu utama',menu]])}
 // Daftar misi
 function missionList(stars){
   return '<ul class="missions">'+missions[levelIndex].map((m,i)=>'<li'+(stars[i]?' class="done"':'')+'>'+(stars[i]?'★':'☆')+' '+m.text+'</li>').join('')+'</ul>';
@@ -278,7 +284,7 @@ document.querySelectorAll('[data-action]').forEach(b=>{
   for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,e=>controls.delete(e.pointerId));
 });
 // Batal dialog
-panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='help'||screen==='select'||screen==='settings')menu();else if(screen==='settings-paused'){screen='playing';pause()}});
+panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='select'||screen==='settings')menu();else if(screen==='settings-paused'||screen==='controls'){screen='playing';pause()}});
 // Jeda otomatis
 window.addEventListener('blur',()=>{clearInput();pause()});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();pause()}});
 // Tombol menu
@@ -289,5 +295,5 @@ el('start').onclick=async()=>{
   await playOpening(el('opening'),snd);
   await start();
 };
-el('help').onclick=help;el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
+el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);
