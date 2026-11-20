@@ -352,6 +352,8 @@ export class Renderer {
     // Langit menggelap
     const dusk=clamp(g.percent/100,0,1)*(g.level.setting==='square'?.18:.34);
     if(dusk>.005){c.fillStyle='rgba(26,14,48,'+dusk.toFixed(3)+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
+    // Langit mendung
+    if(g.weather==='rain'){c.fillStyle='rgba(58,70,82,.55)';c.fillRect(-20,-floor-20,view+40,floor+30)}
     c.fillStyle=this.ground;c.fillRect(-30,-64,view+60,logicalH-floor+130);
     tile('street',1,-66,235,1750);
     // Sambungan aspal
@@ -492,6 +494,7 @@ export class Renderer {
     c.restore();
     this.ultimateOverlay(c,g,view,logicalH,reduced);
     this.heroOverlay(c,g,view,logicalH,reduced);
+    if(g.weather==='rain')this.rain(c,g,view,logicalH,reduced);
     this.exitOverlay(c,g,view,logicalH,reduced,floor);
   }
   // Efek ulti
@@ -580,5 +583,16 @@ export class Renderer {
       const k=smooth((g.time-g.exitAt-(exitTime-.9))/.9);
       if(k>0){c.fillStyle='rgba(11,23,25,'+k+')';c.fillRect(0,0,view,logicalH)}
     }
+  }
+  // Hujan deras
+  rain(c,g,view,logicalH,reduced){
+    c.save();c.fillStyle='rgba(20,36,48,.14)';c.fillRect(0,0,view,logicalH);
+    const drops=this.art.lite?70:150,t=reduced?0:g.time;
+    c.strokeStyle='rgba(200,225,240,.55)';c.lineWidth=2;c.beginPath();
+    for(let i=0;i<drops;i++){
+      const seed=(i*7919)%1000/1000,speed=1400+seed*500,x=((i*137.5+g.camera*.15)%(view+200))-100,y=((seed*logicalH+t*speed)%(logicalH+80))-40;
+      c.moveTo(x,y);c.lineTo(x-14,y+38);
+    }
+    c.stroke();c.restore();
   }
 }

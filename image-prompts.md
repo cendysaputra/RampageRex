@@ -736,6 +736,58 @@ ONE small Indonesian [BUILDING], strict front-side view, chunky cartoon proporti
 
 ---
 
+## 18. Event jalan dan ikon toko
+
+### 18.1 Pawai 17 Agustus
+
+Event acak: barisan pawai lewat di jalan, dan panjat pinang berdiri di trotoar.
+
+**Peserta pawai** (warga baru, empat pose seperti warga lain): simpan di `web/assets/characters/civilians/pawai/frames/` sebagai `run-a.webp`, `run-b.webp`, `look-back.webp`, `stumble.webp`, plus pose berdiri `web/assets/characters/civilians/pawai/master.webp`. Kanvas pose 392×425, kaki di baris 413, sama seperti `kopdes-worker`. Gunakan prompt 5.1 dan 5.2 dengan `[DESCRIPTION]`:
+
+```
+a cheerful Indonesian Independence Day parade participant in a red and white outfit with a small red-and-white flag in one hand and a red-and-white headband
+```
+
+**Panjat pinang** (properti): simpan `web/assets/props/panjat-pinang.webp`, `panjat-pinang-damaged.webp`, `panjat-pinang-wreck.webp` dengan kanvas yang sama, latar transparan.
+
+```
+ONE tall Indonesian panjat pinang greased areca pole, side view, a slippery brown pole on a small base, a round frame at the top hung with prizes (a bicycle, buckets, a radio, snack bags), red and white bunting, same outline and sunset lighting as the attached ruko reference, no people, no text.
+```
+
+Versi rusak dan hancur pakai prompt 1.6 (`damaged`: pole cracked and leaning, some prizes fallen; `wreck`: pole snapped on the ground with scattered prizes).
+
+### 18.2 Konvoi motor
+
+Event acak: rombongan motor lewat dengan cepat, bisa ditabrak Rex.
+
+Simpan `web/assets/characters/soldiers/motor.webp` (kanvas sekitar 420×300, roda di dasar kanvas, menghadap kanan) dan `web/assets/characters/soldiers/motor-wreck.webp` dengan kanvas yang sama.
+
+```
+ONE small cartoon Indonesian scooter with a rider wearing a helmet and a jacket, strict side view facing right, chunky toy-like proportions, the rider leaning forward riding fast, same outline style and palette as the attached soldier references. No text, no plate number.
+```
+
+Versi hancur: `the same scooter knocked over on its side, the rider tumbling off, comedic not violent`.
+
+### 18.3 Ikon aplikasi Play Store
+
+Ikon sementara di `web/assets/ui/app/` dipotong dari ilustrasi Rex. Untuk rilis, buat ikon resmi:
+
+| File | Ukuran | Catatan |
+| --- | --- | --- |
+| `web/assets/ui/app/icon-512.png` | 512×512 | Ikon Play Store, tanpa transparansi |
+| `web/assets/ui/app/icon-maskable-512.png` | 512×512 | Kepala Rex di 60% tengah, sisanya latar |
+| `web/assets/ui/app/feature-graphic.png` | 1024×500 | Banner Play Store |
+
+```
+App icon for the game Rampage Rex: the head of the attached red cartoon dinosaur Rex roaring, three-quarter view, filling most of a square, bold dark outline, warm orange sunset circle behind him, dark teal background, flat and readable at small sizes. No text, no letters, no border.
+```
+
+```
+Feature graphic 1024x500 for the game Rampage Rex: the attached red dinosaur Rex stomping through a dense Indonesian ruko street at sunset, buildings crumbling, tiny soldiers and heroes in front, warm orange and magenta sky. Leave the left third calmer for the game title added later. No text, no letters, no logos.
+```
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).

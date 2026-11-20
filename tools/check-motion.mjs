@@ -631,4 +631,15 @@ for (const late of [.1, .3, .6]) {
   assert.equal(dayKey(day), '2026-11-21');
 }
 
+// Hujan deras
+{
+  const run = event => { const w = new World(levels[1], 1, { event }); w.spawnTime = Infinity; const e = w.spawn('infantry', w.rex.x + 900); const x = e.x;
+    for (let i = 0; i < 30; i++) w.update(1 / 60, empty); return { w, moved: x - e.x }; };
+  const dry = run(''), wet = run('rain');
+  assert.equal(wet.w.weather, 'rain');
+  assert.ok(wet.moved < dry.moved * .8 && wet.moved > 0, 'rain slows soldiers');
+  assert.equal(new World(levels[1], 1).weather, '', 'no random events unless asked');
+  assert.equal(new World(levels[0], 0, { events: true }).weather, '', 'district 1 stays dry');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

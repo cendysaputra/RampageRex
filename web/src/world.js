@@ -92,6 +92,8 @@ const newTroops=[['firefighter',1/7,15],['drone',2/7,35],['firetruck',3/7,45],['
 const sprayRange=480,rageDrain=14,furyDrain=1.5;
 // Aturan robot
 const robot={reach:240,speed:150,windup:.75,punch:50,netEvery:4.5};
+// Hujan deras
+const rainChance=.3,rainSlow=.7;
 // Batas tentara
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
@@ -123,7 +125,9 @@ export class World {
     this.basePower=this.power=(1+this.tier*.36)*mode.power;this.squadBonus=mode.squad;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
-    this.say(t('{name} · Hancurkan {n}% kota',{name:t(level.name),n:level.target}),3.2);
+    // Event jalan
+    this.weather=options.event??(options.events&&index>0&&Math.random()<rainChance?'rain':'');
+    this.say(this.weather==='rain'?t('Hujan deras! Tentara dan warga melambat.'):t('{name} · Hancurkan {n}% kota',{name:t(level.name),n:level.target}),3.2);
   }
   // Warga beraktivitas
   populate(){
@@ -576,6 +580,8 @@ export class World {
         if(dist<940&&e.shot<=0){const rocket=e.type==='bazooka'||e.type==='helicopter'||e.type==='tank';
           this.shoot(e,rocket?'rocket':'bullet');e.shot=e.type==='tank'?3.6:rocket?4.2:e.type==='infantry'&&++e.burst%3?.19:e.type==='drone'?2.2:3}
       }
+      // Jalan licin
+      if(this.weather==='rain'&&!e.hero)e.x=previousX+(e.x-previousX)*rainSlow;
       if(e.hero)e.x=clamp(e.x,60,this.level.length-60);
       this.animateEnemy(e,dt,previousX);
     }
@@ -599,7 +605,7 @@ export class World {
         }
       }
       if(c.stun>0){c.stun-=dt;c.x+=c.vx*dt;c.vx*=Math.pow(.05,dt);spritePose(c,'stumble',dt);continue}
-      c.x+=c.dir*c.speed*dt;c.walk+=c.speed*dt/28;
+      const pace=this.weather==='rain'?.8:1;c.x+=c.dir*c.speed*pace*dt;c.walk+=c.speed*pace*dt/28;
       const glance=(this.time+c.phase)%5>4.6,stumble=(this.time+c.phase)%8>7.8;
       spritePose(c,stumble?'stumble':glance?'look-back':Math.sin(c.walk)>=0?'run-a':'run-b',dt);
     }
