@@ -6,6 +6,7 @@ import {playCredit} from './credit.js';
 import {loadProgress,saveProgress,recordDistrict,resetProgress} from './progress.js';
 import {loadSettings,saveSettings,buzz,padSizes} from './settings.js';
 import {Tutorial} from './tutorial.js';
+import {missions,earned,starText} from './missions.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -67,7 +68,7 @@ async function chooseDistrict(){
     const open=i<progress.unlocked,b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
     b.type='button';b.className='district';b.disabled=!open;
     name.textContent=(i+1)+' · '+level.name;
-    note.textContent=!open?'Terkunci':progress.cleared[i]?'Selesai · skor terbaik '+progress.best[i].toLocaleString('id-ID'):'Belum selesai';
+    note.textContent=!open?'Terkunci':starText(progress.stars[i])+(progress.cleared[i]?' · skor terbaik '+progress.best[i].toLocaleString('id-ID'):' · belum selesai');
     b.append(name,note);b.onclick=()=>start(i);list.append(b);
   }
   list.querySelector('button:not(:disabled)')?.focus();
@@ -133,6 +134,7 @@ function stageCard(index,manifest,level){
   const card=el('stage');card.hidden=false;card.classList.remove('leaving');
   text('stage-number','Distrik '+(index+1));text('stage-name',level?.name??'');
   text('stage-goal',level?'Target destruksi '+level.target+'%':'');
+  text('stage-missions',level?missions[index].map((m,i)=>(progress.stars[index][i]?'★ ':'☆ ')+m.text).join('  ·  '):'');
   if(manifest&&level){
     const layer=name=>{const own='backgrounds/'+level.setting+'/'+name;return './assets/'+(manifest.assets[own+'.png']?own:'backgrounds/'+name)+'.webp'};
     card.style.setProperty('--far','url('+layer('far-city')+')');card.style.setProperty('--sky','url('+layer('sky')+')');
@@ -163,19 +165,23 @@ async function start(index=0,carried=0,result=''){
 function resume(){close();clearInput();screen='playing';el('pause').focus({preventScroll:true})}
 // Jeda
 function pause(){if(screen!=='playing')return;screen='paused';modal('Jeda',
-  '<p>Distrik '+(levelIndex+1)+', '+world.level.name+' · '+Math.floor(world.percent)+'% hancur</p>',
+  '<p>Distrik '+(levelIndex+1)+', '+world.level.name+' · '+Math.floor(world.percent)+'% hancur · kombo terbaik '+world.maxCombo+'</p>'+missionList(progress.stars[levelIndex]),
   [['Lanjut main',resume],[snd.enabled?'Matikan suara':'Aktifkan suara',()=>{toggleSound();screen='playing';pause()}],['Pengaturan',()=>openSettings(true)],['Menu utama',menu]])}
+// Daftar misi
+function missionList(stars){
+  return '<ul class="missions">'+missions[levelIndex].map((m,i)=>'<li'+(stars[i]?' class="done"':'')+'>'+(stars[i]?'★':'☆')+' '+m.text+'</li>').join('')+'</ul>';
+}
 // Hasil level
 function finish(){
   screen='result';const win=world.status==='won',score=previousScore+world.score;
   // Simpan progres
-  recordDistrict(progress,levelIndex,world.score,win);saveProgress(progress);districtLabel();
+  const stars=earned(world,levelIndex);recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress);districtLabel();
   if(score>record){record=score;save('rex.best',record);recordLabel()}
   const more=win&&levelIndex<3;
   // Lanjut distrik
-  if(more){el('hud').hidden=true;start(levelIndex+1,score,world.level.name+' rata · Skor '+score.toLocaleString('id-ID'));return}
+  if(more){el('hud').hidden=true;start(levelIndex+1,score,world.level.name+' rata '+starText(stars)+' · Skor '+score.toLocaleString('id-ID'));return}
   modal(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang',
-    '<p>'+world.level.name+' · destruksi '+Math.floor(world.percent)+'% · Skor '+score.toLocaleString('id-ID')+'</p>',
+    '<p>'+world.level.name+' · destruksi '+Math.floor(world.percent)+'% · Skor '+score.toLocaleString('id-ID')+'</p>'+missionList(stars),
     [[more?'Lanjut ke distrik '+(levelIndex+2):win?'Main dari awal':'Coba lagi',()=>more?start(levelIndex+1,score):win?start():start(levelIndex,previousScore)],['Menu utama',menu]]);
 }
 let bossKey='';
@@ -193,7 +199,7 @@ function updateHud(){
   fill('destroyed',Math.min(1,world.percent/100));
   const goal=world.level.target+'%';if(shown.get('goal')!==goal){shown.set('goal',goal);el('goal').style.left=goal}
   // Kombo
-  const combo=world.combo>=5?world.combo:0;el('combo').hidden=!combo;
+  const combo=world.combo>=10?world.combo:0;el('combo').hidden=!combo;
   if(combo){text('combo-mult','×'+world.multiplier.toString().replace('.',','));text('combo-count',combo+' kombo')}
   const fury=p.fury>0;if(shown.get('fury')!==fury){shown.set('fury',fury);el('hp').closest('.player-card').toggleAttribute('data-fury',fury)}
   let next='',names='';

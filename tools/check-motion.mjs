@@ -6,6 +6,8 @@ import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
 import { loadProgress, saveProgress, recordDistrict, resetProgress } from '../web/src/progress.js';
 import { loadSettings, saveSettings, defaults } from '../web/src/settings.js';
 import { Tutorial, steps as tutorialSteps } from '../web/src/tutorial.js';
+import { missions, earned, starText } from '../web/src/missions.js';
+import { totalStars } from '../web/src/progress.js';
 
 const levels = await Promise.all([1, 2, 3, 4].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -366,6 +368,35 @@ for (const late of [.1, .3, .6]) {
   for (let i = 0; i < 160; i++) world.update(1 / 60, empty);
   assert.equal(world.combo, 0, 'combo drops after 2.5 s without a hit');
   assert.ok(world.maxCombo >= 111);
+}
+
+// Misi dan bintang
+{
+  assert.equal(missions.length, 4);
+  for (const row of missions) assert.equal(row.length, 3);
+  const world = makeWorld();
+  assert.deepEqual(earned(world, 0), [false, false, false]);
+  world.status = 'won'; world.time = 300; world.maxCombo = 30;
+  assert.deepEqual(earned(world, 0), [true, true, true]);
+  world.time = 500;
+  assert.deepEqual(earned(world, 0), [true, false, true], 'the time mission needs a fast clear');
+  const ultis = new World(levels[1], 1);
+  ultis.status = 'won'; ultis.cancelled = 2;
+  assert.equal(earned(ultis, 1)[2], true);
+  const props = new World(levels[2], 2);
+  for (const p of props.props) props.damageProp(p, Infinity);
+  assert.equal(earned(props, 2)[2], true, 'wrecking every prop earns the district 3 star');
+  const hp = new World(levels[3], 3);
+  hp.status = 'won'; hp.rex.hp = hp.rex.max / 2 - 1;
+  assert.equal(earned(hp, 3)[2], false);
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  const progress = loadProgress(storage);
+  recordDistrict(progress, 0, 10, true, [true, false, true]);
+  recordDistrict(progress, 0, 10, true, [true, true, false]);
+  assert.deepEqual(progress.stars[0], [true, true, true], 'stars from different runs add up');
+  saveProgress(progress, storage);
+  assert.equal(totalStars(loadProgress(storage)), 3);
+  assert.equal(starText([true, false, true]), '★☆★');
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));
