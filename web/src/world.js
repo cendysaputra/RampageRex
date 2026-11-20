@@ -100,7 +100,7 @@ export class World {
     this.phase='fight';this.exitX=level.length-420;this.exitAt=0;
     // Kekuatan musuh
     const mode=difficulties[options.difficulty]||difficulties.normal;
-    this.power=(1+index*.12)*mode.power;this.squadBonus=mode.squad;
+    this.basePower=this.power=(1+index*.12)*mode.power;this.squadBonus=mode.squad;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
@@ -184,7 +184,7 @@ export class World {
   spawn(type,x){
     const hero=type in heroNames;
     // Darah pahlawan
-    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.index*.1:1);
+    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.index*.1:1)*(hero&&this.level.endless?1+this.percent/80:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
       ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(190,380),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
@@ -377,6 +377,8 @@ export class World {
   update(dt,input){
     if(this.status!=='playing'||dt<=0)return;
     this.time+=dt;const p=this.rex;
+    // Tanpa akhir
+    if(this.level.endless)this.power=this.basePower*(1+this.percent/50);
     // Kombo putus
     if(this.combo&&(this.comboTime-=dt)<=0)this.combo=0;
     // Pewaktu

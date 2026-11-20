@@ -7,6 +7,7 @@ import {loadProgress,saveProgress,recordDistrict,resetProgress,totalStars} from 
 import {loadSettings,saveSettings,buzz,padSizes,skins,canTint} from './settings.js';
 import {Tutorial} from './tutorial.js';
 import {missions,earned,starText} from './missions.js';
+import {makeEndless} from './endless.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -37,7 +38,9 @@ soundLabel();recordLabel();districtLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
 // Data level
-function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]);return boot}
+function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]).then(([manifest,levels])=>[manifest,[...levels,makeEndless(levels)]]);return boot}
+// Indeks tanpa akhir
+const ENDLESS=4;
 // Reset input
 function clearInput(){controls.clear();taps.clear();prior=0}
 // Buka dialog
@@ -67,10 +70,11 @@ async function chooseDistrict(){
   modal('Pilih distrik','<div class="districts"></div>',[['Kembali',menu]]);
   const list=el('panel-copy').querySelector('.districts');
   for(const [i,level] of levels.entries()){
-    const open=i<progress.unlocked,b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
+    const endless=i===ENDLESS,open=endless?progress.cleared[0]:i<progress.unlocked,b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
     b.type='button';b.className='district';b.disabled=!open;
-    name.textContent=(i+1)+' · '+level.name;
-    note.textContent=!open?'Terkunci':starText(progress.stars[i])+(progress.cleared[i]?' · skor terbaik '+progress.best[i].toLocaleString('id-ID'):' · belum selesai');
+    name.textContent=(endless?'∞':i+1)+' · '+level.name;
+    note.textContent=endless?(open?(progress.endless?'Rekor '+progress.endless.toLocaleString('id-ID'):'Bertahan selama mungkin'):'Terbuka setelah Jalan Ruko selesai')
+      :!open?'Terkunci':starText(progress.stars[i])+(progress.cleared[i]?' · skor terbaik '+progress.best[i].toLocaleString('id-ID'):' · belum selesai');
     b.append(name,note);b.onclick=()=>start(i);list.append(b);
   }
   list.querySelector('button:not(:disabled)')?.focus();
@@ -140,9 +144,10 @@ function openSettings(paused=false){
 // Kartu distrik
 function stageCard(index,manifest,level){
   const card=el('stage');card.hidden=false;card.classList.remove('leaving');
-  text('stage-number','Distrik '+(index+1));text('stage-name',level?.name??'');
-  text('stage-goal',level?'Target destruksi '+level.target+'%':'');
-  text('stage-missions',level?missions[index].map((m,i)=>(progress.stars[index][i]?'★ ':'☆ ')+m.text).join('  ·  '):'');
+  const endless=index===ENDLESS;
+  text('stage-number',endless?'Mode':'Distrik '+(index+1));text('stage-name',level?.name??(endless?'Tanpa Akhir':''));
+  text('stage-goal',!level?'':endless?'Bertahan dan hancurkan sebanyak mungkin':'Target destruksi '+level.target+'%');
+  text('stage-missions',level&&!endless?missions[index].map((m,i)=>(progress.stars[index][i]?'★ ':'☆ ')+m.text).join('  ·  '):'');
   if(manifest&&level){
     const layer=name=>{const own='backgrounds/'+level.setting+'/'+name;return './assets/'+(manifest.assets[own+'.png']?own:'backgrounds/'+name)+'.webp'};
     card.style.setProperty('--far','url('+layer('far-city')+')');card.style.setProperty('--sky','url('+layer('sky')+')');
@@ -158,7 +163,7 @@ async function start(index=0,carried=0,result=''){
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
-    renderer??=new Renderer(el('world'),art);renderer.skin=skinFilter();levelIndex=index;previousScore=carried;world=new World(levels[index],index,{difficulty:settings.difficulty});
+    renderer??=new Renderer(el('world'),art);renderer.skin=skinFilter();levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,3),{difficulty:settings.difficulty});
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -173,7 +178,8 @@ async function start(index=0,carried=0,result=''){
 function resume(){close();clearInput();screen='playing';el('pause').focus({preventScroll:true})}
 // Jeda
 function pause(){if(screen!=='playing')return;screen='paused';modal('Jeda',
-  '<p>Distrik '+(levelIndex+1)+', '+world.level.name+' · '+Math.floor(world.percent)+'% hancur · kombo terbaik '+world.maxCombo+'</p>'+missionList(progress.stars[levelIndex]),
+  (levelIndex===ENDLESS?'<p>Mode Tanpa Akhir · skor '+world.score.toLocaleString('id-ID')+' · rekor '+progress.endless.toLocaleString('id-ID')+' · kombo terbaik '+world.maxCombo+'</p>'
+    :'<p>Distrik '+(levelIndex+1)+', '+world.level.name+' · '+Math.floor(world.percent)+'% hancur · kombo terbaik '+world.maxCombo+'</p>'+missionList(progress.stars[levelIndex])),
   [['Lanjut main',resume],[snd.enabled?'Matikan suara':'Aktifkan suara',()=>{toggleSound();screen='playing';pause()}],['Pengaturan',()=>openSettings(true)],['Menu utama',menu]])}
 // Daftar misi
 function missionList(stars){
@@ -181,7 +187,15 @@ function missionList(stars){
 }
 // Hasil level
 function finish(){
-  screen='result';const win=world.status==='won',score=previousScore+world.score;
+  screen='result';
+  // Akhir tanpa akhir
+  if(levelIndex===ENDLESS){
+    const best=world.score>progress.endless;if(best){progress.endless=world.score;saveProgress(progress)}
+    modal(best?'Rekor baru!':'Rex tumbang','<p>Mode Tanpa Akhir · Skor '+world.score.toLocaleString('id-ID')+' · Rekor '+progress.endless.toLocaleString('id-ID')+' · kombo terbaik '+world.maxCombo+'</p>',
+      [['Coba lagi',()=>start(ENDLESS)],['Menu utama',menu]]);
+    return;
+  }
+  const win=world.status==='won',score=previousScore+world.score;
   // Simpan progres
   const stars=earned(world,levelIndex);recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress);districtLabel();
   if(score>record){record=score;save('rex.best',record);recordLabel()}
@@ -202,9 +216,10 @@ function fill(id,ratio){const value='scaleX('+ratio.toFixed(3)+')';if(shown.get(
 function updateHud(){
   const p=world.rex;text('hp-text',Math.ceil(p.hp)+' / '+p.max);fill('hp',p.hp/p.max);
   fill('rage',p.fury>0?p.fury/8:p.rage/100);text('rage-text',p.fury>0?Math.ceil(p.fury)+' dtk':Math.floor(p.rage));
-  text('district','Distrik '+(levelIndex+1)+' · '+world.level.name);
-  text('destruction',Math.floor(world.percent+.0001)+'% / '+world.level.target+'%');
-  fill('destroyed',Math.min(1,world.percent/100));
+  const endless=levelIndex===ENDLESS;
+  text('district',endless?'Mode Tanpa Akhir':'Distrik '+(levelIndex+1)+' · '+world.level.name);
+  text('destruction',endless?world.score.toLocaleString('id-ID'):Math.floor(world.percent+.0001)+'% / '+world.level.target+'%');
+  fill('destroyed',Math.min(1,world.percent/100));el('destroyed').parentElement.hidden=endless;
   const goal=world.level.target+'%';if(shown.get('goal')!==goal){shown.set('goal',goal);el('goal').style.left=goal}
   // Kombo
   const combo=world.combo>=10?world.combo:0;el('combo').hidden=!combo;

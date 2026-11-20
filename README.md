@@ -85,6 +85,10 @@ Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk mem
 - Pakai **lompat** untuk menghindari tembakan: Rex kebal selama di udara, dan saat mendarat tentara terpaku 4,5 detik, pahlawan 1,6 detik.
 - Musuh makin keras di distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
 
+### Mode Tanpa Akhir
+
+Setelah Jalan Ruko selesai, **Pilih distrik** membuka **∞ · Tanpa Akhir**: jalan sangat panjang yang menyambung keempat distrik dua kali. Penjaga datang bergelombang di setiap 12% kehancuran dengan darah yang makin tebal, dan serangan musuh makin sakit seiring kota hancur. Permainan berakhir saat Rex tumbang, dan skor terbaiknya tercatat sebagai rekor.
+
 ## Para penjaga kota
 
 <table>

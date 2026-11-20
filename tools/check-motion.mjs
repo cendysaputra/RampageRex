@@ -8,6 +8,7 @@ import { loadSettings, saveSettings, defaults } from '../web/src/settings.js';
 import { Tutorial, steps as tutorialSteps } from '../web/src/tutorial.js';
 import { missions, earned, starText } from '../web/src/missions.js';
 import { totalStars } from '../web/src/progress.js';
+import { makeEndless } from '../web/src/endless.js';
 
 const levels = await Promise.all([1, 2, 3, 4].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -399,6 +400,26 @@ for (const late of [.1, .3, .6]) {
   saveProgress(progress, storage);
   assert.equal(totalStars(loadProgress(storage)), 3);
   assert.equal(starText([true, false, true]), '★☆★');
+}
+
+// Mode tanpa akhir
+{
+  const level = makeEndless(levels);
+  assert.equal(level.length, 2 * levels.reduce((n, l) => n + l.length, 0));
+  assert.equal(level.buildings.length, 2 * levels.reduce((n, l) => n + l.buildings.length, 0));
+  assert.ok(level.buildings.every((b, i, all) => i === 0 || b.x > all[i - 1].x), 'segments follow each other');
+  assert.equal(level.bosses.length % 3, 0);
+  const world = new World(level, 3);
+  world.spawnTime = Infinity;
+  world.rex.x = level.length / 2;
+  world.lost = world.total;
+  for (let i = 0; i < 60; i++) world.update(1 / 60, empty);
+  assert.equal(world.phase, 'fight', 'endless mode never clears');
+  assert.ok(world.power > world.basePower * 2.5, 'enemies hit harder as the city falls');
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  const progress = loadProgress(storage);
+  progress.endless = 4321; saveProgress(progress, storage);
+  assert.equal(loadProgress(storage).endless, 4321);
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

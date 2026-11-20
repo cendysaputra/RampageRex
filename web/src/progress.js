@@ -4,7 +4,7 @@ export const DISTRICTS = 4;
 
 // Progres kosong
 function fresh() {
-  return { unlocked: 1, cleared: Array(DISTRICTS).fill(false), best: Array(DISTRICTS).fill(0), stars: Array.from({ length: DISTRICTS }, () => [false, false, false]) };
+  return { unlocked: 1, cleared: Array(DISTRICTS).fill(false), best: Array(DISTRICTS).fill(0), stars: Array.from({ length: DISTRICTS }, () => [false, false, false]), endless: 0 };
 }
 
 // Baca progres
@@ -17,7 +17,8 @@ export function loadProgress(storage = globalThis.localStorage) {
       unlocked: Math.max(1, Math.min(DISTRICTS, Math.floor(Number(data.unlocked)) || 1)),
       cleared: base.cleared.map((_, i) => data.cleared?.[i] === true),
       best: base.best.map((_, i) => Math.max(0, Math.floor(Number(data.best?.[i])) || 0)),
-      stars: base.stars.map((row, i) => row.map((_, j) => data.stars?.[i]?.[j] === true))
+      stars: base.stars.map((row, i) => row.map((_, j) => data.stars?.[i]?.[j] === true)),
+      endless: Math.max(0, Math.floor(Number(data.endless)) || 0)
     };
   } catch {
     return fresh();
