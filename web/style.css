@@ -139,6 +139,12 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
 .panel-inner dd{margin:0}
 .panel-inner dt{font-weight:800;white-space:nowrap;color:var(--orange)}
 #panel-actions{margin-top:22px}
+/* Daftar distrik */
+.districts{display:grid;gap:8px;margin-top:14px}
+.district{display:grid;gap:2px;width:100%;padding:12px 26px 11px;text-align:left;background:#1d302e}
+.district b{font-family:var(--shout);font-weight:400;font-size:24px;letter-spacing:.04em;line-height:1}
+.district small{font-size:14px;color:var(--muted)}
+.district:disabled{opacity:.45}
 #panel-actions .primary{font-size:24px}
 #panel-actions .secondary{background:#1d302e}
 

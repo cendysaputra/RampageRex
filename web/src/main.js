@@ -3,6 +3,7 @@ import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
 import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
+import {loadProgress,saveProgress,recordDistrict} from './progress.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -21,9 +22,14 @@ function soundLabel(){const btn=document.querySelector('.audio');btn.querySelect
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
 function recordLabel(){el('record').textContent=record?'Rekor '+record.toLocaleString('id-ID'):'Belum ada rekor'}
-soundLabel();recordLabel();
+let progress=loadProgress();
+// Tombol distrik
+function districtLabel(){el('districts').hidden=progress.unlocked<2}
+soundLabel();recordLabel();districtLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
+// Data level
+function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]);return boot}
 // Reset input
 function clearInput(){controls.clear();taps.clear();prior=0}
 // Buka dialog
@@ -46,6 +52,21 @@ function help(){screen='help';modal('Cara main',
   '<dl><dt>A / D atau ← →</dt><dd>Jalan kiri dan kanan</dd><dt>W atau klik kiri</dt><dd>Gigit di depan Rex</dd><dt>Q atau klik kanan</dt><dd>Sabet dengan ekor di belakang</dd><dt>S</dt><dd>Injak tanah di sekitar kaki</dd><dt>E</dt><dd>Raung, membuat tentara di layar terpaku</dd><dt>Spasi</dt><dd>Lompat gertakan: saat mendarat, semua di layar terpaku lebih lama dari raungan</dd><dt>R</dt><dd>Ulti Amukan Rex, mengguncang semua yang ada di layar</dd><dt>Esc / P</dt><dd>Jeda</dd></dl><p>Runtuhkan lantai dasar untuk menjatuhkan seluruh bangunan. Ratakan 100% bangunan dan kalahkan pahlawan distrik. Warga juga bisa dikalahkan. Setiap serangan punya cooldown sebelum bisa dipakai lagi, dan cooldown Ulti paling lama. Mengalahkan musuh memulihkan sedikit darah Rex. Saat Rage penuh, serangan Rex dua kali lebih kuat selama 8 detik.</p><p>Tiga penjaga selalu datang bersama. Saat panel ulti mereka muncul, raung untuk menggagalkannya.</p>',
   [['Kembali',menu]]);
 }
+// Pilih distrik
+async function chooseDistrict(){
+  if(screen!=='menu')return;screen='select';
+  let levels;try{[,levels]=await levelData()}catch{boot=null;menu();el('load-status').textContent='Data distrik gagal dimuat.';return}
+  modal('Pilih distrik','<div class="districts"></div>',[['Kembali',menu]]);
+  const list=el('panel-copy').querySelector('.districts');
+  for(const [i,level] of levels.entries()){
+    const open=i<progress.unlocked,b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
+    b.type='button';b.className='district';b.disabled=!open;
+    name.textContent=(i+1)+' · '+level.name;
+    note.textContent=!open?'Terkunci':progress.cleared[i]?'Selesai · skor terbaik '+progress.best[i].toLocaleString('id-ID'):'Belum selesai';
+    b.append(name,note);b.onclick=()=>start(i);list.append(b);
+  }
+  list.querySelector('button:not(:disabled)')?.focus();
+}
 // Kartu distrik
 function stageCard(index,manifest,level){
   const card=el('stage');card.hidden=false;card.classList.remove('leaving');
@@ -62,11 +83,10 @@ function stageOut(){const card=el('stage');card.classList.add('leaving');setTime
 async function start(index=0,carried=0,result=''){
   if(screen==='loading')return;
   close();clearInput();screen='loading';el('menu').hidden=true;el('hud').hidden=true;
-  el('start').disabled=el('help').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
+  el('start').disabled=el('help').disabled=el('districts').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
-    boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]);
-    const [manifest,levels]=await boot;stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
+    const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
     renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],index);
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -75,7 +95,7 @@ async function start(index=0,carried=0,result=''){
     if(document.hidden)pause();
   }catch(err){
     boot=null;art=null;renderer=null;el('stage').hidden=true;el('menu').hidden=false;screen='menu';el('load-status').textContent='Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.';console.error(err);
-  }finally{el('start').disabled=el('help').disabled=false}
+  }finally{el('start').disabled=el('help').disabled=el('districts').disabled=false}
 }
 // Lanjut main
 function resume(){close();clearInput();screen='playing';el('pause').focus({preventScroll:true})}
@@ -86,6 +106,8 @@ function pause(){if(screen!=='playing')return;screen='paused';modal('Jeda',
 // Hasil level
 function finish(){
   screen='result';const win=world.status==='won',score=previousScore+world.score;
+  // Simpan progres
+  recordDistrict(progress,levelIndex,world.score,win);saveProgress(progress);districtLabel();
   if(score>record){record=score;save('rex.best',record);recordLabel()}
   const more=win&&levelIndex<3;
   // Lanjut distrik
@@ -162,7 +184,7 @@ document.querySelectorAll('[data-action]').forEach(b=>{
   for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,e=>controls.delete(e.pointerId));
 });
 // Batal dialog
-panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='help')menu()});
+panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='help'||screen==='select')menu()});
 // Jeda otomatis
 window.addEventListener('blur',()=>{clearInput();pause()});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();pause()}});
 // Tombol menu
@@ -173,5 +195,5 @@ el('start').onclick=async()=>{
   await playOpening(el('opening'),snd);
   await start();
 };
-el('help').onclick=help;el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
+el('help').onclick=help;el('districts').onclick=chooseDistrict;el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);

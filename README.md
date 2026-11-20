@@ -35,6 +35,8 @@ Di setiap distrik:
 
 Kalau darah Rex habis, Rex terhuyung lalu tumbang, dan distrik diulang dari awal.
 
+Progres tersimpan otomatis. Setiap distrik yang selesai membuka distrik berikutnya, dan tombol **Pilih distrik** di menu membawamu langsung ke distrik mana pun yang sudah terbuka, lengkap dengan skor terbaiknya.
+
 ## Kontrol
 
 | Aksi | Keyboard | Mouse | Cooldown |

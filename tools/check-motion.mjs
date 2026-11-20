@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { World, cooldowns } from '../web/src/world.js';
 import { attackPose, damp, spritePose } from '../web/src/motion.js';
 import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
+import { loadProgress, saveProgress, recordDistrict, resetProgress } from '../web/src/progress.js';
 
 const levels = await Promise.all([1, 2, 3, 4].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -288,6 +289,25 @@ for (const late of [.1, .3, .6]) {
   let started = false;
   for (let i = 0; i < 40; i++) { world.update(1 / 60, empty); started ||= world.rex.attack?.key === 'bite'; }
   assert.ok(started, 'a tap during hitstun must fire once Rex recovers');
+}
+
+// Simpan progres
+{
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  let progress = loadProgress(storage);
+  assert.deepEqual([progress.unlocked, progress.cleared, progress.best], [1, [false, false, false, false], [0, 0, 0, 0]]);
+  recordDistrict(progress, 0, 900, false);
+  assert.equal(progress.unlocked, 1, 'a loss must not unlock the next district');
+  recordDistrict(progress, 0, 1500, true);
+  recordDistrict(progress, 0, 700, true);
+  saveProgress(progress, storage);
+  progress = loadProgress(storage);
+  assert.deepEqual([progress.unlocked, progress.cleared[0], progress.best[0]], [2, true, 1500]);
+  recordDistrict(progress, 3, 10, true);
+  assert.equal(progress.unlocked, 4, 'unlocks never pass the last district');
+  store.set('rex.progress', '{broken');
+  assert.equal(loadProgress(storage).unlocked, 1, 'corrupt saves fall back to a fresh start');
+  assert.equal(resetProgress(storage).unlocked, 1);
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));
