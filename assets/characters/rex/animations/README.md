@@ -66,3 +66,12 @@ Framing: head, neck and upper chest only, seen in a dynamic three-quarter view f
 Place the head in the upper-right two thirds of the frame. The lower-left third shows only the darker neck and chest, calm and low in detail, because a title will be overlaid there. The neck and back run off the left and bottom edges of the canvas; the snout and upper jaw keep a small transparent margin from the right and top edges.
 
 Thick confident antialiased outlines, clean silhouette, rich saturated colour. No background, no scenery, no speed lines, no energy aura, no flames, no smoke, no text, no letters, no logo, no frame, no border, no watermark, no checkerboard.
+
+## Jump and knockdown
+
+Added on 20 November 2026 from the `Rex-12` package (prompts in `image-prompts.md` section 12).
+
+- `jump.webp`: eight poses: crouch, launch, rising, roaring peak, falling, landing (index 5, the `contact` frame where the shockwave fires), rebound and settle.
+- `knockdown.webp`: six poses from the hit reaction to lying knocked out. The runtime clip is named `defeat` and plays with the package's `frameMs` timings (85, 105, 125, 105, 120 and 390 ms), then holds the last pose until the result dialog.
+
+Both atlases use scale 1.08 to match the walking body size. The package drew the jump height into the cells; the manifest moves each jump frame's pivot to the soles of the feet instead, because the game already lifts Rex in code (`jumpLift` in `src/world.js`) and uses that height for the airborne damage immunity.
