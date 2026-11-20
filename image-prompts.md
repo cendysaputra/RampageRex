@@ -579,6 +579,163 @@ Six clearly different, individually clean poses with big readable silhouette cha
 
 ---
 
+## 13. Skin Rex
+
+Skin adalah **gambar ulang atlas Rex yang sudah ada**, bukan filter warna. Pose, posisi, ukuran kanvas, dan susunan sel harus sama persis dengan atlas aslinya, supaya koordinat frame di `web/assets/manifest.json` tetap berlaku. Yang berubah hanya warna, motif, dan aksesori yang menempel di tubuh.
+
+Skin dibuka dengan total bintang misi (maksimal 12).
+
+| Skin | Syarat | Konsep |
+| --- | --- | --- |
+| `batik` | 4 ★ | Kulit merah dengan motif batik parang cokelat-emas di punggung dan ekor |
+| `hutan` | 8 ★ | Rex hijau klasik: hijau, bintik teal tua, perut krem, duri oranye |
+| `mecha` | 12 ★ | Rex robot: pelat logam abu-teal, sambungan baut, mata kuning menyala, duri jadi sirip logam oranye |
+
+### 13.1 File yang harus dibuat per skin
+
+Sumber (edit source): setiap atlas di `web/assets/characters/rex/animations/` dan `web/assets/fx/ulti-cutin.webp`.
+
+Simpan hasil ke `web/assets/characters/rex/skins/<skin>/` dengan nama yang sama:
+
+```
+walk.webp  bite-roar.webp  tail-stomp.webp  ulti.webp  jump.webp  knockdown.webp  ulti-cutin.webp
+```
+
+### 13.2 Prompt edit (ulang untuk setiap atlas)
+
+```
+Edit the attached sprite atlas of this exact red dinosaur Rex. Keep EVERYTHING identical: the canvas size, the number of cells, every pose, every silhouette, the position of each sprite inside its cell, the outline weight, the cel shading and the genuine transparent background. Change ONLY the surface design of the character to: [SKIN]. Apply it consistently to every pose so it reads as the same costume in all frames. No new limbs, no props held in the hands, no background, no text, no checkerboard.
+```
+
+`[SKIN]`:
+- **batik:** `the same red skin, with a classic Indonesian batik parang motif in brown and gold flowing diagonally across the back, flanks and tail, cream belly kept plain, orange dorsal plates edged in gold`
+- **hutan:** `the original green Rex: saturated green skin with dark teal spots and dark teal outlines, cream segmented belly, golden orange dorsal plates, yellow eye, three red cheek scars`
+- **mecha:** `a robot version: brushed gunmetal and teal armour plates with visible bolt seams over the body, a cream ceramic belly plate, glowing yellow eye, dorsal plates turned into orange metal fins, small vent grilles on the neck`
+
+### 13.3 Setelah gambar jadi
+
+Kirim folder `web/assets/characters/rex/skins/<skin>/`. Sisanya disambungkan di kode: pilihan skin di Pengaturan, syarat bintang, dan penggantian atlas.
+
+---
+
+## 14. Distrik baru
+
+Empat distrik tambahan. Masing-masing butuh empat lapis latar dan tiga properti jalan. Bangunannya memakai modul ruko dan Kopdes yang sudah ada.
+
+| Distrik | Kode `setting` | Suasana |
+| --- | --- | --- |
+| Pasar Tradisional | `market` | Pagi, los pasar beratap seng, terpal warna-warni, keramaian |
+| Stasiun Kereta | `station` | Siang, peron, rel, kanopi stasiun tua bergaya kolonial |
+| Jembatan Tol | `toll` | Sore, jalan layang, gerbang tol, papan arah tanpa tulisan |
+| Pantai | `beach` | Senja, laut, perahu nelayan, pohon kelapa |
+
+### 14.1 Latar (per distrik)
+
+Simpan di `web/assets/backgrounds/<setting>/`. Semua bisa diulang mendatar tanpa sambungan terlihat (horizontally seamless).
+
+| File | Ukuran | Isi |
+| --- | --- | --- |
+| `sky.webp` | 1600×900 | Langit penuh, tanpa transparansi |
+| `far-city.webp` | 1600×295 | Siluet jauh, latar transparan |
+| `mid-city.webp` | 1600×239 | Lapis tengah, latar transparan |
+| `street.webp` | 1600×214 | Trotoar dan jalan, latar transparan di atas trotoar |
+
+Gunakan prompt bagian 11 sebagai template, ganti suasananya sesuai tabel di atas.
+
+### 14.2 Properti jalan (per distrik, tiga buah)
+
+Simpan di `web/assets/props/`, masing-masing tiga file dengan kanvas yang sama: `<nama>.webp`, `<nama>-damaged.webp`, `<nama>-wreck.webp`. Tampak samping murni, menghadap kanan, latar transparan.
+
+| Distrik | Properti |
+| --- | --- |
+| Pasar | `lapak-sayur` (lapak sayur beratap terpal), `becak`, `tumpukan-karung` |
+| Stasiun | `gerbong` (gerbong kereta penumpang hijau-krem, lebar), `bangku-peron`, `menara-sinyal` |
+| Tol | `gerbang-tol`, `truk-kontainer`, `pembatas-beton` |
+| Pantai | `perahu-nelayan`, `pohon-kelapa`, `warung-pantai` |
+
+Prompt properti (utuh), lalu pakai bagian 1.6 untuk versi `damaged` dan `wreck`:
+
+```
+ONE [PROP], strict side view facing right, chunky cartoon proportions, same outline and lighting style as the attached ruko reference, warm sunset rim light from the upper left. No people, no text, no logos.
+```
+
+---
+
+## 15. Musuh baru
+
+### 15.1 Tank
+
+Simpan sebagai `web/assets/characters/soldiers/tank.webp`, kanvas sekitar 900×520, roda di dasar kanvas.
+
+```
+ONE vehicle: a small cartoon army tank, strict side view facing right, chunky toy-like proportions, olive camouflage body with khaki details, short thick cannon, rounded tracks drawn as clean separate shapes, a small hatch on top. No driver, no text, no muzzle flash.
+```
+
+### 15.2 Pemadam kebakaran
+
+Truk: `web/assets/characters/soldiers/firetruck.webp`, kanvas sekitar 900×520.
+
+```
+ONE vehicle: a small cartoon Indonesian fire truck, strict side view facing right, bright red body with a white stripe, ladder on the roof, a water cannon on top pointing forward, chunky rounded wheels. No driver, no text.
+```
+
+Petugas: empat pose di `web/assets/characters/soldiers/firefighter/frames/` dengan nama `aim.webp` (menyemprot selang ke depan), `run-a.webp`, `run-b.webp`, `knockback.webp`. Kanvas tiap pose 356×425, kaki di baris 413 seperti infanteri. Gunakan prompt 4.1 dan 4.2 dengan karakter:
+
+```
+a small cartoon Indonesian firefighter in an orange-tan suit with reflective stripes, yellow helmet, holding a fire hose nozzle
+```
+
+### 15.3 Drone
+
+Simpan sebagai `web/assets/characters/soldiers/drone.webp`, kanvas sekitar 320×200.
+
+```
+ONE small cartoon military quadcopter drone, side view facing right, olive and teal body, four propellers drawn as flat blur discs, a small camera pod underneath, a red blinking light. No text.
+```
+
+---
+
+## 16. Bos final — Robot Penjaga
+
+Ketiga pahlawan bergabung menjadi robot raksasa setinggi Rex di akhir Alun-Alun. Warna gabungan: navy dan mustard (Perisai), merah dan putih (Rajawali), ungu dan teal (Jaring).
+
+### 16.1 Master
+
+Simpan sebagai `web/assets/characters/heroes/robot/master.webp`, menghadap **kiri** (ke arah Rex), latar transparan.
+
+```
+ONE giant cartoon combined hero robot, full body, strict side view facing LEFT, as tall and heavy as a giant dinosaur. Built from three heroes: a navy and mustard armoured torso with a big round shield on one arm, red and white jet wings with glowing cyan thrusters on the back, a purple and teal net-launcher cannon on the other arm. Square heroic head with a visor. Chunky, toy-like, heroic. Same outline and cel shading as the attached hero references. No text, no logos.
+```
+
+### 16.2 Atlas animasi (8 pose)
+
+Simpan sebagai `web/assets/characters/heroes/robot/atlas.webp`, dua kolom × empat baris, sel sama besar, kaki di garis 90% tinggi sel, semua menghadap kiri: (1) diam, (2) jalan A, (3) jalan B, (4) ancang-ancang pukulan perisai, (5) pukulan perisai, (6) tembak jaring, (7) terkena serangan, (8) roboh. Gunakan pola prompt atlas bagian 9.1 dengan robot di atas sebagai referensi.
+
+### 16.3 Cut-in ulti
+
+Simpan sebagai `web/assets/characters/heroes/robot/cutin.webp`, 16:9, latar transparan. Wajah robot tiga perempat, visor menyala, area kiri bawah dibiarkan tenang untuk judul.
+
+---
+
+## 17. Bangunan spesial
+
+Properti besar dengan efek khusus saat hancur. Tiga file per properti dengan kanvas yang sama: utuh, `-damaged`, `-wreck`, disimpan di `web/assets/props/`.
+
+| Nama file | Efek di game |
+| --- | --- |
+| `spbu` | Meledak saat hancur dan merusak semua di sekitarnya |
+| `warung-makan` | Memulihkan darah Rex saat hancur |
+
+```
+ONE small Indonesian [BUILDING], strict front-side view, chunky cartoon proportions, same outline, palette and sunset lighting as the attached ruko reference, no people, no readable text or brand logos.
+```
+
+`[BUILDING]`:
+- **spbu:** `fuel station with two fuel pumps under a flat canopy on pillars, red and white colour scheme, abstract shapes instead of brand marks`
+- **warung-makan:** `food stall with a glass display of dishes, a striped awning, plastic stools and a big cooking pot`
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).
