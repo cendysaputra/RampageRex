@@ -307,7 +307,7 @@ export class Renderer {
     tile('mid-city',.48,-334,269,1800);
     if(g.index&&!own){c.fillStyle='rgba(43,23,64,'+g.index*.105+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
     // Langit menggelap
-    const dusk=clamp(g.percent/100,0,1)*(g.index===3?.18:.34);
+    const dusk=clamp(g.percent/100,0,1)*(g.level.setting==='square'?.18:.34);
     if(dusk>.005){c.fillStyle='rgba(26,14,48,'+dusk.toFixed(3)+')';c.fillRect(-20,-floor-20,view+40,floor+30)}
     c.fillStyle=this.ground;c.fillRect(-30,-64,view+60,logicalH-floor+130);
     tile('street',1,-66,235,1750);

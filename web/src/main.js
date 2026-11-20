@@ -38,9 +38,9 @@ soundLabel();recordLabel();districtLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
 // Data level
-function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]).then(([manifest,levels])=>[manifest,[...levels,makeEndless(levels)]]);return boot}
+function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4,5,6,7,8].map(n=>json('./data/levels/level-0'+n+'.json')))]).then(([manifest,levels])=>[manifest,[...levels,makeEndless(levels)]]);return boot}
 // Indeks tanpa akhir
-const ENDLESS=4;
+const ENDLESS=8;
 // Reset input
 function clearInput(){controls.clear();taps.clear();prior=0}
 // Buka dialog
@@ -113,7 +113,7 @@ function openSettings(paused=false){
   // Skin Rex
   const stars=totalStars(progress);
   group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,stars>=s.stars?s.label:s.label+' · '+s.stars+'★'])),settings.skin,
-    key=>{settings.skin=key;saveSettings(settings)},'Bintang terkumpul: '+stars+' dari 12.'+(paused?' Berlaku mulai distrik berikutnya.':''));
+    key=>{settings.skin=key;saveSettings(settings)},'Bintang terkumpul: '+stars+' dari '+missions.length*3+'.'+(paused?' Berlaku mulai distrik berikutnya.':''));
   for(const [i,s] of Object.values(skins).entries())form.lastChild.querySelector('.choices').children[i].disabled=stars<s.stars;
   // Volume efek
   const sound=document.createElement('label'),range=document.createElement('input'),value=document.createElement('output');
@@ -162,7 +162,7 @@ async function start(index=0,carried=0,result=''){
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());await art.preload(levels[index]);
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,3),{difficulty:settings.difficulty});
+    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty});
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -198,7 +198,7 @@ function finish(){
   // Simpan progres
   const stars=earned(world,levelIndex);recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress);districtLabel();
   if(score>record){record=score;save('rex.best',record);recordLabel()}
-  const more=win&&levelIndex<3;
+  const more=win&&levelIndex<ENDLESS-1;
   // Lanjut distrik
   if(more){el('hud').hidden=true;start(levelIndex+1,score,world.level.name+' rata '+starText(stars)+' · Skor '+score.toLocaleString('id-ID'));return}
   modal(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang',

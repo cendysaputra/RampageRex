@@ -4124,6 +4124,170 @@
         304
       ],
       "alpha": true
+    },
+    "backgrounds/market/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/market/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/market/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/market/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#3b4248"
+    },
+    "backgrounds/station/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/station/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/station/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/station/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#364246"
+    },
+    "backgrounds/toll/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/toll/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/toll/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/toll/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#6a6869"
+    },
+    "backgrounds/beach/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/beach/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/beach/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/beach/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#364d4d"
     }
   },
   "review": [],

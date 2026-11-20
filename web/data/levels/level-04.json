@@ -1,140 +1,128 @@
 {
-  "name": "Alun-Alun",
-  "setting": "square",
+  "name": "Stasiun Kereta",
+  "setting": "station",
   "target": 100,
   "bosses": [
     {
-      "at": 50,
+      "at": 40,
       "type": "perisai"
     },
     {
-      "at": 50,
+      "at": 40,
       "type": "rajawali"
     },
     {
-      "at": 50,
+      "at": 40,
       "type": "jaring"
     }
   ],
-  "length": 15625,
+  "length": 14090,
   "start": 380,
   "buildings": [
     {
       "x": 760,
-      "width": 470,
-      "upper": 1,
-      "color": "blue"
-    },
-    {
-      "x": 1490,
-      "width": 500,
-      "upper": 1,
+      "width": 430,
+      "upper": 2,
       "color": "mustard"
     },
     {
-      "x": 1997,
-      "width": 430,
+      "x": 1450,
+      "width": 540,
       "upper": 0,
       "color": "kopdes"
     },
     {
-      "x": 2470,
+      "x": 1955,
       "width": 430,
-      "upper": 2,
-      "color": "mint"
-    },
-    {
-      "x": 2985,
-      "width": 540,
       "upper": 0,
       "color": "pink"
+    },
+    {
+      "x": 2470,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 3025,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
     },
     {
       "x": 3825,
-      "width": 470,
-      "upper": 2,
-      "color": "blue"
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
     },
     {
-      "x": 4555,
-      "width": 500,
-      "upper": 1,
-      "color": "mustard"
+      "x": 4515,
+      "width": 540,
+      "upper": 2,
+      "color": "pink"
     },
     {
       "x": 5535,
-      "width": 430,
-      "upper": 1,
-      "color": "mint"
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
     },
     {
-      "x": 6050,
-      "width": 540,
+      "x": 6090,
+      "width": 500,
       "upper": 1,
-      "color": "pink"
+      "color": "mustard"
     },
     {
       "x": 6890,
-      "width": 470,
+      "width": 430,
       "upper": 2,
-      "color": "blue"
+      "color": "mint"
     },
     {
-      "x": 7620,
-      "width": 500,
-      "upper": 0,
-      "color": "mustard"
+      "x": 7580,
+      "width": 540,
+      "upper": 2,
+      "color": "pink"
     },
     {
       "x": 8600,
-      "width": 430,
-      "upper": 2,
-      "color": "mint"
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
     },
     {
-      "x": 9115,
-      "width": 540,
-      "upper": 1,
-      "color": "pink"
+      "x": 9155,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
     },
     {
       "x": 9955,
-      "width": 470,
-      "upper": 1,
-      "color": "blue"
-    },
-    {
-      "x": 10685,
-      "width": 500,
-      "upper": 1,
-      "color": "mustard"
-    },
-    {
-      "x": 11665,
       "width": 430,
       "upper": 2,
       "color": "mint"
     },
     {
-      "x": 12180,
+      "x": 10645,
       "width": 540,
-      "upper": 0,
+      "upper": 1,
       "color": "pink"
     },
     {
-      "x": 13020,
+      "x": 11665,
       "width": 470,
       "upper": 2,
       "color": "blue"
     },
     {
-      "x": 13750,
+      "x": 12220,
       "width": 500,
-      "upper": 1,
+      "upper": 2,
       "color": "mustard"
     },
     {
-      "x": 14730,
+      "x": 13020,
       "width": 430,
       "upper": 1,
       "color": "mint"
@@ -142,134 +130,108 @@
   ],
   "props": [
     {
-      "x": 858,
-      "type": "street-lamp"
+      "x": 650,
+      "type": "gerbong"
     },
     {
-      "x": 3923,
-      "type": "street-lamp"
+      "x": 1330,
+      "type": "bangku-peron"
     },
     {
-      "x": 6988,
-      "type": "street-lamp"
-    },
-    {
-      "x": 10053,
-      "type": "street-lamp"
-    },
-    {
-      "x": 13118,
-      "type": "street-lamp"
-    },
-    {
-      "x": 501.5,
-      "type": "tent-stall"
-    },
-    {
-      "x": 1215.0,
-      "type": "food-cart"
-    },
-    {
-      "x": 1750,
+      "x": 1920,
       "type": "mobil-sppg"
     },
     {
-      "x": 2233.5,
-      "type": "electric-pole"
+      "x": 2285,
+      "type": "menara-sinyal"
     },
     {
-      "x": 2688.0,
-      "type": "billboard"
+      "x": 2897,
+      "type": "street-lamp"
     },
     {
-      "x": 3566.5,
+      "x": 3659,
+      "type": "bangku-peron"
+    },
+    {
+      "x": 4464,
       "type": "angkot"
     },
     {
-      "x": 4280.0,
-      "type": "electric-pole"
-    },
-    {
-      "x": 4789,
+      "x": 5072,
       "type": "spbu"
     },
     {
-      "x": 5298.5,
-      "type": "tree"
-    },
-    {
-      "x": 5753.0,
-      "type": "tent-stall"
-    },
-    {
-      "x": 6631.5,
-      "type": "food-cart"
-    },
-    {
-      "x": 7345.0,
+      "x": 5463,
       "type": "electric-pole"
     },
     {
-      "x": 7854,
+      "x": 6069,
+      "type": "gerbong"
+    },
+    {
+      "x": 6663,
+      "type": "bangku-peron"
+    },
+    {
+      "x": 7233,
+      "type": "menara-sinyal"
+    },
+    {
+      "x": 8172,
       "type": "warung-makan"
     },
     {
-      "x": 8363.5,
-      "type": "billboard"
+      "x": 8478,
+      "type": "street-lamp"
     },
     {
-      "x": 8818.0,
+      "x": 9186,
+      "type": "bangku-peron"
+    },
+    {
+      "x": 9776,
       "type": "angkot"
     },
     {
-      "x": 9696.5,
+      "x": 10449,
       "type": "electric-pole"
     },
     {
-      "x": 10410.0,
-      "type": "tree"
+      "x": 11193,
+      "type": "gerbong"
     },
     {
-      "x": 11428.5,
-      "type": "tent-stall"
+      "x": 11894,
+      "type": "bangku-peron"
     },
     {
-      "x": 11883.0,
-      "type": "food-cart"
+      "x": 12542,
+      "type": "menara-sinyal"
     },
     {
-      "x": 12761.5,
-      "type": "electric-pole"
-    },
-    {
-      "x": 13475.0,
-      "type": "billboard"
-    },
-    {
-      "x": 14493.5,
-      "type": "angkot"
+      "x": 13156,
+      "type": "street-lamp"
     }
   ],
   "spawns": [
     1040,
-    1250,
+    1210,
     2230,
-    2745,
+    2785,
     3585,
-    4315,
+    4275,
     5295,
-    5810,
+    5850,
     6650,
-    7380,
+    7340,
     8360,
-    8875,
+    8915,
     9715,
-    10445,
+    10405,
     11425,
-    11940,
+    11980,
     12780,
-    13510,
-    14490,
-    15005
+    13470
   ]
 }

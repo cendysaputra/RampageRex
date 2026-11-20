@@ -1,0 +1,248 @@
+{
+  "name": "Jembatan Tol",
+  "setting": "toll",
+  "target": 100,
+  "bosses": [
+    {
+      "at": 45,
+      "type": "perisai"
+    },
+    {
+      "at": 45,
+      "type": "rajawali"
+    },
+    {
+      "at": 45,
+      "type": "jaring"
+    }
+  ],
+  "length": 15150,
+  "start": 380,
+  "buildings": [
+    {
+      "x": 760,
+      "width": 540,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 1560,
+      "width": 470,
+      "upper": 0,
+      "color": "kopdes"
+    },
+    {
+      "x": 2027,
+      "width": 430,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 2510,
+      "width": 500,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 3095,
+      "width": 430,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 3825,
+      "width": 540,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 4625,
+      "width": 470,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 5575,
+      "width": 500,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 6160,
+      "width": 430,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 6890,
+      "width": 540,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 7690,
+      "width": 470,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 8640,
+      "width": 500,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 9225,
+      "width": 430,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 9955,
+      "width": 540,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 10755,
+      "width": 470,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 11705,
+      "width": 500,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 12290,
+      "width": 430,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 13020,
+      "width": 540,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 13820,
+      "width": 470,
+      "upper": 1,
+      "color": "mustard"
+    }
+  ],
+  "props": [
+    {
+      "x": 650,
+      "type": "gerbang-tol"
+    },
+    {
+      "x": 1251,
+      "type": "truk-kontainer"
+    },
+    {
+      "x": 1995,
+      "type": "mobil-sppg"
+    },
+    {
+      "x": 2299,
+      "type": "pembatas-beton"
+    },
+    {
+      "x": 2992,
+      "type": "street-lamp"
+    },
+    {
+      "x": 3570,
+      "type": "pembatas-beton"
+    },
+    {
+      "x": 4130,
+      "type": "truk-kontainer"
+    },
+    {
+      "x": 4764,
+      "type": "electric-pole"
+    },
+    {
+      "x": 5454,
+      "type": "spbu"
+    },
+    {
+      "x": 5924,
+      "type": "gerbang-tol"
+    },
+    {
+      "x": 6675,
+      "type": "truk-kontainer"
+    },
+    {
+      "x": 7398,
+      "type": "pembatas-beton"
+    },
+    {
+      "x": 7969,
+      "type": "street-lamp"
+    },
+    {
+      "x": 8787,
+      "type": "warung-makan"
+    },
+    {
+      "x": 9148,
+      "type": "pembatas-beton"
+    },
+    {
+      "x": 9958,
+      "type": "truk-kontainer"
+    },
+    {
+      "x": 10619,
+      "type": "electric-pole"
+    },
+    {
+      "x": 11390,
+      "type": "gerbang-tol"
+    },
+    {
+      "x": 11998,
+      "type": "truk-kontainer"
+    },
+    {
+      "x": 12656,
+      "type": "pembatas-beton"
+    },
+    {
+      "x": 13351,
+      "type": "street-lamp"
+    },
+    {
+      "x": 13956,
+      "type": "pembatas-beton"
+    }
+  ],
+  "spawns": [
+    1040,
+    1320,
+    2270,
+    2855,
+    3585,
+    4385,
+    5335,
+    5920,
+    6650,
+    7450,
+    8400,
+    8985,
+    9715,
+    10515,
+    11465,
+    12050,
+    12780,
+    13580,
+    14530
+  ]
+}

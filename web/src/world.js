@@ -77,13 +77,15 @@ const calmRadius=560;
 const comboWindow=2.5,comboStep=10,comboCap=3;
 // Efek bangunan spesial
 const blastRadius=480,blastDamage=260,warungHeal=60;
+// Distrik terakhir
+export const lastDistrict=7;
 // Batas tentara
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
 // Dunia permainan
 export class World {
   constructor(level,index,options={}){
-    this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.lost=0;this.total=0;
+    this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
     this.buildings=level.buildings.map(b=>{
@@ -102,7 +104,9 @@ export class World {
     this.phase='fight';this.exitX=level.length-420;this.exitAt=0;
     // Kekuatan musuh
     const mode=difficulties[options.difficulty]||difficulties.normal;
-    this.basePower=this.power=(1+index*.12)*mode.power;this.squadBonus=mode.squad;
+    // Posisi kampanye
+    this.tier=clamp(index/lastDistrict,0,1);
+    this.basePower=this.power=(1+this.tier*.36)*mode.power;this.squadBonus=mode.squad;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
@@ -202,7 +206,7 @@ export class World {
   spawn(type,x){
     const hero=type in heroNames;
     // Darah pahlawan
-    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.index*.1:1)*(hero&&this.level.endless?1+this.percent/80:1);
+    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.tier*.3:1)*(hero&&this.level.endless?1+this.percent/80:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
       ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(190,380),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
@@ -271,7 +275,7 @@ export class World {
   // Warga terlempar
   knock(c,from){
     c.down=true;c.dir=Math.sign(c.x-from)||1;c.vx=c.dir*range(380,640);c.vy=-range(560,820);c.y=0;
-    c.spin=c.dir*range(6,10);c.angle=0;c.life=1.15;c.hp=0;
+    c.spin=c.dir*range(6,10);c.angle=0;c.life=1.15;c.hp=0;this.civiliansDown++;
     this.addScore(40);this.rex.rage=clamp(this.rex.rage+1.5,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
   }
   // Pendaratan lompat
@@ -313,7 +317,7 @@ export class World {
   }
   // Musuh tumbang
   defeat(e){
-    const p=this.rex,big=e.type==='jeep'||e.type==='helicopter';
+    const p=this.rex,big=e.type==='jeep'||e.type==='helicopter';this.kills[e.type]=(this.kills[e.type]||0)+1;
     this.addScore(e.hero?1200:100);p.rage=Math.min(100,p.rage+(e.hero?20:6));
     if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
@@ -448,7 +452,7 @@ export class World {
     }
     // Tentara baru
     this.spawnTime-=dt;
-    const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+this.index*2+this.squadBonus;
+    const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+Math.round(this.tier*6)+this.squadBonus;
     if(this.phase==='fight'&&this.spawnTime<=0&&troops<cap){
       const pool=['infantry'];if(this.percent>=30)pool.push('bazooka');if(this.percent>=50)pool.push('jeep');if(this.percent>=70)pool.push('helicopter');
       // Regu bergantian

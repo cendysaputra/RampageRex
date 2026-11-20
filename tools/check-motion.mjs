@@ -10,7 +10,7 @@ import { missions, earned, starText } from '../web/src/missions.js';
 import { totalStars } from '../web/src/progress.js';
 import { makeEndless } from '../web/src/endless.js';
 
-const levels = await Promise.all([1, 2, 3, 4].map(async n =>
+const levels = await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
 const empty = new Set();
 const manifest = JSON.parse(await readFile(new URL('../web/assets/manifest.json', import.meta.url), 'utf8'));
@@ -300,7 +300,7 @@ for (const late of [.1, .3, .6]) {
 {
   const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   let progress = loadProgress(storage);
-  assert.deepEqual([progress.unlocked, progress.cleared, progress.best], [1, [false, false, false, false], [0, 0, 0, 0]]);
+  assert.deepEqual([progress.unlocked, progress.cleared, progress.best], [1, Array(8).fill(false), Array(8).fill(0)]);
   recordDistrict(progress, 0, 900, false);
   assert.equal(progress.unlocked, 1, 'a loss must not unlock the next district');
   recordDistrict(progress, 0, 1500, true);
@@ -308,8 +308,8 @@ for (const late of [.1, .3, .6]) {
   saveProgress(progress, storage);
   progress = loadProgress(storage);
   assert.deepEqual([progress.unlocked, progress.cleared[0], progress.best[0]], [2, true, 1500]);
-  recordDistrict(progress, 3, 10, true);
-  assert.equal(progress.unlocked, 4, 'unlocks never pass the last district');
+  recordDistrict(progress, 7, 10, true);
+  assert.equal(progress.unlocked, 8, 'unlocks never pass the last district');
   store.set('rex.progress', '{broken');
   assert.equal(loadProgress(storage).unlocked, 1, 'corrupt saves fall back to a fresh start');
   assert.equal(resetProgress(storage).unlocked, 1);
@@ -375,7 +375,7 @@ for (const late of [.1, .3, .6]) {
 
 // Misi dan bintang
 {
-  assert.equal(missions.length, 4);
+  assert.equal(missions.length, 8);
   for (const row of missions) assert.equal(row.length, 3);
   const world = makeWorld();
   assert.deepEqual(earned(world, 0), [false, false, false]);
@@ -383,15 +383,15 @@ for (const late of [.1, .3, .6]) {
   assert.deepEqual(earned(world, 0), [true, true, true]);
   world.time = 500;
   assert.deepEqual(earned(world, 0), [true, false, true], 'the time mission needs a fast clear');
-  const ultis = new World(levels[1], 1);
+  const ultis = new World(levels[2], 2);
   ultis.status = 'won'; ultis.cancelled = 2;
-  assert.equal(earned(ultis, 1)[2], true);
-  const props = new World(levels[2], 2);
+  assert.equal(earned(ultis, 2)[2], true);
+  const props = new World(levels[4], 4);
   for (const p of props.props) props.damageProp(p, Infinity);
-  assert.equal(earned(props, 2)[2], true, 'wrecking every prop earns the district 3 star');
-  const hp = new World(levels[3], 3);
+  assert.equal(earned(props, 4)[2], true, 'wrecking every prop earns the Pelabuhan star');
+  const hp = new World(levels[7], 7);
   hp.status = 'won'; hp.rex.hp = hp.rex.max / 2 - 1;
-  assert.equal(earned(hp, 3)[2], false);
+  assert.equal(earned(hp, 7)[2], false);
   const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   const progress = loadProgress(storage);
   recordDistrict(progress, 0, 10, true, [true, false, true]);
@@ -405,8 +405,8 @@ for (const late of [.1, .3, .6]) {
 // Mode tanpa akhir
 {
   const level = makeEndless(levels);
-  assert.equal(level.length, 2 * levels.reduce((n, l) => n + l.length, 0));
-  assert.equal(level.buildings.length, 2 * levels.reduce((n, l) => n + l.buildings.length, 0));
+  assert.equal(level.length, levels.reduce((n, l) => n + l.length, 0));
+  assert.equal(level.buildings.length, levels.reduce((n, l) => n + l.buildings.length, 0));
   assert.ok(level.buildings.every((b, i, all) => i === 0 || b.x > all[i - 1].x), 'segments follow each other');
   assert.equal(level.bosses.length % 3, 0);
   const world = new World(level, 3);
@@ -439,7 +439,32 @@ for (const late of [.1, .3, .6]) {
   world.rex.hp = 100;
   world.damageProp(warung, Infinity);
   assert.equal(world.rex.hp, 160, 'the warung makan heals Rex');
-  for (const level of levels.slice(0, 4)) assert.ok(['spbu', 'warung-makan'].every(t => level.props.some(p => p.type === t)));
+  for (const level of levels) assert.ok(['spbu', 'warung-makan'].every(t => level.props.some(p => p.type === t)));
+}
+
+// Simpanan lama 4 distrik
+{
+  const store = new Map([['rex.progress', JSON.stringify({ unlocked: 3, cleared: [true, true, false, false], best: [100, 200, 0, 0], stars: [[true, false, true], [true, true, true], [false, false, false], [false, false, false]], endless: 50 })]]);
+  const storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  const moved = loadProgress(storage);
+  assert.deepEqual(moved.cleared, [true, false, true, false, false, false, false, false], 'old districts move to their new slots');
+  assert.deepEqual(moved.best.slice(0, 3), [100, 0, 200]);
+  assert.deepEqual(moved.stars[2], [true, true, true]);
+  assert.equal(moved.unlocked, 5, 'Pelabuhan stays open after the move');
+  assert.equal(moved.endless, 50);
+}
+// Distrik baru
+{
+  const names = levels.map(l => l.setting);
+  assert.deepEqual(names, ['ruko', 'market', 'office', 'station', 'port', 'toll', 'beach', 'square']);
+  for (const [i, level] of levels.entries()) {
+    const world = new World(level, i);
+    assert.ok(world.props.every(p => p.type), `${level.name}: props are typed`);
+    const xs = level.props.map(p => p.x).sort((a, b) => a - b);
+    assert.ok(xs.every((x, j) => !j || x - xs[j - 1] > 40), `${level.name}: props do not stack`);
+  }
+  const first = new World(levels[0], 0), last = new World(levels[7], 7);
+  assert.ok(last.power > first.power && Math.abs(last.power - 1.36) < 1e-9, 'difficulty peaks in the last district');
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

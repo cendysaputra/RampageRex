@@ -1,264 +1,249 @@
 {
-  "name": "Pelabuhan",
-  "setting": "port",
+  "name": "Pusat Kota",
+  "setting": "office",
   "target": 100,
   "bosses": [
     {
-      "at": 45,
+      "at": 35,
       "type": "perisai"
     },
     {
-      "at": 45,
+      "at": 35,
       "type": "rajawali"
     },
     {
-      "at": 45,
+      "at": 35,
       "type": "jaring"
     }
   ],
-  "length": 15150,
+  "length": 14090,
   "start": 380,
   "buildings": [
     {
       "x": 760,
+      "width": 430,
+      "upper": 2,
+      "color": "mint"
+    },
+    {
+      "x": 1450,
       "width": 540,
-      "upper": 0,
+      "upper": 1,
       "color": "pink"
     },
     {
-      "x": 1560,
-      "width": 470,
-      "upper": 1,
-      "color": "blue"
-    },
-    {
-      "x": 2027,
+      "x": 1955,
       "width": 430,
       "upper": 0,
       "color": "kopdes"
     },
     {
-      "x": 2510,
-      "width": 500,
-      "upper": 0,
-      "color": "mustard"
+      "x": 2470,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
     },
     {
-      "x": 3095,
-      "width": 430,
-      "upper": 0,
-      "color": "mint"
+      "x": 3025,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
     },
     {
       "x": 3825,
-      "width": 540,
-      "upper": 1,
-      "color": "pink"
-    },
-    {
-      "x": 4625,
-      "width": 470,
-      "upper": 1,
-      "color": "blue"
-    },
-    {
-      "x": 5575,
-      "width": 500,
-      "upper": 0,
-      "color": "mustard"
-    },
-    {
-      "x": 6160,
       "width": 430,
       "upper": 1,
       "color": "mint"
+    },
+    {
+      "x": 4515,
+      "width": 540,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 5535,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 6090,
+      "width": 500,
+      "upper": 1,
+      "color": "mustard"
     },
     {
       "x": 6890,
+      "width": 430,
+      "upper": 2,
+      "color": "mint"
+    },
+    {
+      "x": 7580,
       "width": 540,
-      "upper": 0,
+      "upper": 2,
       "color": "pink"
     },
     {
-      "x": 7690,
+      "x": 8600,
       "width": 470,
-      "upper": 0,
+      "upper": 1,
       "color": "blue"
     },
     {
-      "x": 8640,
+      "x": 9155,
       "width": 500,
-      "upper": 1,
+      "upper": 2,
       "color": "mustard"
-    },
-    {
-      "x": 9225,
-      "width": 430,
-      "upper": 1,
-      "color": "mint"
     },
     {
       "x": 9955,
-      "width": 540,
-      "upper": 0,
-      "color": "pink"
-    },
-    {
-      "x": 10755,
-      "width": 470,
-      "upper": 1,
-      "color": "blue"
-    },
-    {
-      "x": 11705,
-      "width": 500,
-      "upper": 0,
-      "color": "mustard"
-    },
-    {
-      "x": 12290,
       "width": 430,
-      "upper": 0,
+      "upper": 2,
       "color": "mint"
     },
     {
-      "x": 13020,
+      "x": 10645,
       "width": 540,
       "upper": 1,
       "color": "pink"
     },
     {
-      "x": 13820,
+      "x": 11665,
       "width": 470,
-      "upper": 1,
+      "upper": 2,
       "color": "blue"
+    },
+    {
+      "x": 12220,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 13020,
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
     }
   ],
   "props": [
     {
-      "x": 882,
+      "x": 838,
       "type": "street-lamp"
     },
     {
-      "x": 3947,
+      "x": 3903,
       "type": "street-lamp"
     },
     {
-      "x": 7012,
+      "x": 6968,
       "type": "street-lamp"
     },
     {
-      "x": 10077,
+      "x": 10033,
       "type": "street-lamp"
     },
     {
-      "x": 13142,
-      "type": "street-lamp"
+      "x": 523.5,
+      "type": "electric-pole"
     },
     {
-      "x": 463.0,
+      "x": 1153.0,
       "type": "tree"
     },
     {
-      "x": 1301.5,
-      "type": "tent-stall"
-    },
-    {
-      "x": 1800,
+      "x": 1700,
       "type": "mobil-sppg"
     },
     {
-      "x": 2235.0,
+      "x": 2211.5,
+      "type": "tent-stall"
+    },
+    {
+      "x": 2750.0,
       "type": "food-cart"
     },
     {
-      "x": 2858.5,
+      "x": 3588.5,
       "type": "electric-pole"
     },
     {
-      "x": 3528.0,
+      "x": 4218.0,
       "type": "billboard"
     },
     {
-      "x": 4366.5,
-      "type": "angkot"
-    },
-    {
-      "x": 4833,
+      "x": 4747,
       "type": "spbu"
     },
     {
-      "x": 5300.0,
-      "type": "electric-pole"
-    },
-    {
-      "x": 5923.5,
-      "type": "tree"
-    },
-    {
-      "x": 6593.0,
-      "type": "tent-stall"
-    },
-    {
-      "x": 7431.5,
-      "type": "food-cart"
-    },
-    {
-      "x": 7898,
-      "type": "warung-makan"
-    },
-    {
-      "x": 8365.0,
-      "type": "electric-pole"
-    },
-    {
-      "x": 8988.5,
-      "type": "billboard"
-    },
-    {
-      "x": 9658.0,
+      "x": 5276.5,
       "type": "angkot"
     },
     {
-      "x": 10496.5,
+      "x": 5815.0,
       "type": "electric-pole"
     },
     {
-      "x": 11430.0,
+      "x": 6653.5,
       "type": "tree"
     },
     {
-      "x": 12053.5,
+      "x": 7283.0,
       "type": "tent-stall"
     },
     {
-      "x": 12723.0,
+      "x": 7812,
+      "type": "warung-makan"
+    },
+    {
+      "x": 8341.5,
       "type": "food-cart"
     },
     {
-      "x": 13561.5,
+      "x": 8880.0,
       "type": "electric-pole"
+    },
+    {
+      "x": 9718.5,
+      "type": "billboard"
+    },
+    {
+      "x": 10348.0,
+      "type": "angkot"
+    },
+    {
+      "x": 11406.5,
+      "type": "electric-pole"
+    },
+    {
+      "x": 11945.0,
+      "type": "tree"
+    },
+    {
+      "x": 12783.5,
+      "type": "tent-stall"
     }
   ],
   "spawns": [
     1040,
-    1320,
-    2270,
-    2855,
+    1210,
+    2230,
+    2785,
     3585,
-    4385,
-    5335,
-    5920,
+    4275,
+    5295,
+    5850,
     6650,
-    7450,
-    8400,
-    8985,
+    7340,
+    8360,
+    8915,
     9715,
-    10515,
-    11465,
-    12050,
+    10405,
+    11425,
+    11980,
     12780,
-    13580,
-    14530
+    13470
   ]
 }
