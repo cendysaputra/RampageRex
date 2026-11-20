@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { World } from '../src/world.js';
+import { World, cooldowns } from '../src/world.js';
 import { attackPose, damp, spritePose } from '../src/motion.js';
 import { rexFramePath, rexPose } from '../src/rex-animation.js';
 
@@ -165,6 +165,62 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   roared.startAttack('roar');
   roared.strike(roared.rex.attack);
   assert.equal(roared.cast, null, `${type}: roar must cancel the ulti`);
+}
+
+// Setelah 100%: tentara kabur, Rex harus ke ujung, lalu keluar layar sendiri
+{
+  const world = new World(levels[0], 0);
+  world.rex.x = levels[0].length / 2;
+  world.spawn('infantry', world.rex.x + 300);
+  world.triggered = new Set(levels[0].bosses.map((_, i) => i));
+  world.lost = world.total;
+  world.update(1 / 60, empty);
+  assert.equal(world.phase, 'clear');
+  assert.ok(world.enemies.every(e => e.flee), 'soldiers must flee once the district is flat');
+  for (let i = 0; i < 120; i++) world.update(1 / 60, empty);
+  assert.equal(world.status, 'playing', 'standing still must not finish the district');
+  let t = 0;
+  while (world.phase === 'clear' && t < 60) { world.update(1 / 60, new Set(['right'])); t += 1 / 60; }
+  assert.equal(world.phase, 'exit', 'reaching the end must start the exit walk');
+  const at = world.rex.x;
+  for (let i = 0; i < 60 * 3; i++) world.update(1 / 60, empty);
+  assert.equal(world.status, 'won');
+  assert.ok(world.rex.x > at + 500 && world.rex.x > world.camera + world.view, 'Rex must walk off screen on his own');
+}
+
+// Lompat: kebal di udara, mendarat membuat tentara terpaku lebih lama dari raungan
+{
+  const world = makeWorld();
+  const soldier = world.spawn('infantry', world.rex.x + 400);
+  world.rex.cd.jump = 0;
+  world.startAttack('jump');
+  assert.equal(world.rex.cd.jump, cooldowns.jump);
+  for (let i = 0; i < 30; i++) world.update(1 / 60, empty);
+  assert.ok(world.rex.lift > 100, 'Rex must be airborne');
+  const hp = world.rex.hp;
+  world.hurt(50);
+  assert.equal(world.rex.hp, hp, 'Rex must dodge damage in the air');
+  let pose = rexPose(world.rex, animation);
+  assert.ok(pose.from && pose.to);
+  for (let i = 0; i < 40; i++) world.update(1 / 60, empty);
+  assert.equal(world.rex.lift, 0, 'Rex must land');
+  assert.ok(soldier.stun > 3.5, 'landing must stun longer than a roar');
+  for (let i = 0; i < 60; i++) world.update(1 / 60, empty);
+  assert.equal(world.rex.attack, null);
+}
+
+// Kalah: Rex tumbang dulu, layar hasil menyusul
+{
+  const world = makeWorld();
+  world.rex.hp = 0;
+  world.update(1 / 60, empty);
+  assert.equal(world.phase, 'dying');
+  assert.equal(world.status, 'playing', 'defeat must play the fall before the result');
+  assert.ok(rexPose(world.rex, animation, .5).from);
+  for (let i = 0; i < 60 * 2; i++) world.update(1 / 60, empty);
+  assert.equal(world.status, 'playing');
+  for (let i = 0; i < 60; i++) world.update(1 / 60, empty);
+  assert.equal(world.status, 'lost');
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

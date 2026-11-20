@@ -40,6 +40,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
 #stage.leaving{opacity:0;pointer-events:none;transition:opacity .3s ease-in}
 .stage-band{width:min(640px,100%);text-align:center;padding:18px 20px 16px;color:var(--ink);background:var(--cream);border:var(--edge);border-radius:6px;box-shadow:6px 6px 0 var(--ink);transform:rotate(-1.5deg)}
 .stage-band p{margin:0}
+#stage-result{font-weight:800;font-size:15px;letter-spacing:.02em;margin-bottom:6px!important}
+#stage-result:empty{display:none}
 #stage-number{font-family:var(--shout);font-size:22px;letter-spacing:.08em;color:#ab5924}
 #stage-name{margin:2px 0 6px;font-family:var(--shout);font-weight:400;font-size:clamp(44px,9vw,84px);line-height:1;letter-spacing:.03em}
 #stage-goal{font-weight:700;font-size:18px}
@@ -165,7 +167,6 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
   #bosses>div{min-width:170px;grid-template-columns:30px 1fr}
   #bosses img{width:30px;height:30px}
   .actions{display:grid;grid-template-columns:repeat(2,minmax(68px,auto))}
-  .actions .ulti{grid-column:span 2}
   #panel-actions{flex-direction:column;align-items:stretch}
 }
 
