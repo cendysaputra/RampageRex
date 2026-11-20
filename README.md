@@ -61,6 +61,21 @@ Menu **Pengaturan** (dari menu utama atau saat jeda) berisi tingkat kesulitan **
   <img src="docs/screenshots/jump.webp" alt="Gelombang kejut saat Rex mendarat dari lompatan" width="49%">
 </p>
 
+### Kombo dan bintang
+
+Setiap serangan yang mengenai sesuatu menambah **kombo**. Setiap 10 hit menaikkan pengali skor ×0,5, sampai ×3, dan kombo putus kalau 2,5 detik tidak ada yang kena.
+
+Setiap distrik punya tiga misi bintang:
+
+| Distrik | ★ | ★★ | ★★★ |
+| --- | --- | --- | --- |
+| Jalan Ruko | Ratakan distrik | Selesai dalam 7 menit | Capai kombo 25 |
+| Pusat Kota | Ratakan distrik | Selesai dalam 8 menit | Gagalkan 2 ulti pahlawan |
+| Pelabuhan | Ratakan distrik | Selesai dalam 8 menit | Hancurkan semua properti jalan |
+| Alun-Alun | Ratakan distrik | Selesai dalam 9 menit | Selesai dengan darah ≥ 50% |
+
+Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk membuka **warna Rex** di Pengaturan: Hutan (2 ★), Samudra (4 ★), Senja (7 ★), Emas (10 ★), dan Bayangan (12 ★).
+
 ### Tips
 
 - Chip skill di bawah layar menampilkan sisa detik cooldown. Lompat baru bisa dipakai 6 detik dan Ulti 15 detik setelah distrik dimulai.
