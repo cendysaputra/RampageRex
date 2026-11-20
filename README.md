@@ -74,7 +74,7 @@ Setiap distrik punya tiga misi bintang:
 | Pelabuhan | Ratakan distrik | Selesai dalam 8 menit | Hancurkan semua properti jalan |
 | Alun-Alun | Ratakan distrik | Selesai dalam 9 menit | Selesai dengan darah ≥ 50% |
 
-Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk membuka **warna Rex** di Pengaturan: Hutan (2 ★), Samudra (4 ★), Senja (7 ★), Emas (10 ★), dan Bayangan (12 ★).
+Bintang dari permainan yang berbeda tetap terkumpul.
 
 ### Tips
 
