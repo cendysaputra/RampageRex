@@ -46,6 +46,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
 #stage-name{margin:2px 0 6px;font-family:var(--shout);font-weight:400;font-size:clamp(44px,9vw,84px);line-height:1;letter-spacing:.03em}
 #stage-goal{font-weight:700;font-size:18px}
 #stage-missions{margin-top:6px!important;font-size:14px;font-weight:700;color:#5b4a2c}
+.stage-progress{height:6px;margin:10px auto 0;width:min(320px,80%);background:#00000026;overflow:hidden}
+.stage-progress i{display:block;height:100%;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .15s}
 #stage-status{margin-top:8px!important;font-size:15px;opacity:.75}
 @keyframes stage-in{from{opacity:0}}
 @media (prefers-reduced-motion:reduce){#stage{animation:none}#stage.leaving{transition:none}}

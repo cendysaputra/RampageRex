@@ -1,0 +1,17 @@
+{
+  "name": "Rampage Rex",
+  "short_name": "Rampage Rex",
+  "description": "Kamu jadi Rex. Hancurkan delapan distrik kota dan hadapi para penjaganya.",
+  "lang": "id",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#101e1c",
+  "theme_color": "#101e1c",
+  "icons": [
+    { "src": "assets/ui/app/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/ui/app/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/ui/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

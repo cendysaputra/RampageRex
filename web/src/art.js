@@ -73,7 +73,7 @@ export class Art {
   // Punya latar
   hasBackdrop(setting){return !!this.meta['backgrounds/'+setting+'/sky.png']}
   // Pramuat level
-  async preload(level){
+  async preload(level,onProgress=()=>{}){
     const heroes=level.bosses.flatMap(b=>['characters/heroes/'+b.type+'/parts/','characters/heroes/'+b.type+'/portrait']);
     // Aset bos
     if(level.boss)heroes.push('characters/heroes/'+level.boss+'/atlas','characters/heroes/'+level.boss+'/cutin');
@@ -91,8 +91,8 @@ export class Art {
       ||props.some(t=>k==='props/'+t||k==='props/'+t+'-damaged'||k==='props/'+t+'-wreck')
       ||rexPaths.includes(k)
       ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','characters/soldiers/tank','characters/soldiers/firetruck','characters/soldiers/drone','fx/steel-net'].includes(k));
-    let cursor=0;
-    await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length)await this.load(paths[cursor++])}));
+    let cursor=0,done=0;onProgress(0);
+    await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length){await this.load(paths[cursor++]);onProgress(++done/paths.length)}}));
     await(this.rexFramesReady??=this.prepareRexFrames());
     if(level.boss)await(this.robotReady??=this.prepareRobot());
   }
