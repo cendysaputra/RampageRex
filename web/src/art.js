@@ -5,23 +5,25 @@ import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
-const people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6;
+const people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/tank',vehicles.tank],['characters/soldiers/firetruck',vehicles.firetruck],['characters/soldiers/drone',vehicles.drone],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 // Warna ulti pahlawan
 const castColors={robot:['#f2b33d','#24365c','#8ff4ff'],perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
+// Tingkat resolusi
+const caps=[2,1.5,1.25,1];
 // Lebar robot
 const robotWidth=544;
 const backdropLayers=['sky','far-city','mid-city','street'];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
 // Lebar bitmap
-function bitmapWidth(path,source,scale=1){
-  if(path.startsWith('characters/heroes/'))return Math.min(source,Math.ceil(samples*heroScale*(heroWidths[path.split('/').pop()]||source)));
+function bitmapWidth(path,source,scale=1,density=samples){
+  if(path.startsWith('characters/heroes/'))return Math.min(source,Math.ceil(density*heroScale*(heroWidths[path.split('/').pop()]||source)));
   const match=drawnWidths.find(([prefix])=>path.startsWith(prefix));
-  return match?Math.min(source,Math.ceil(match[1]*samples*scale)):source;
+  return match?Math.min(source,Math.ceil(match[1]*density*scale)):source;
 }
 // Area potong
 function cropRect(meta,path){
@@ -46,7 +48,7 @@ export class Art {
   // Dekode gambar
   async decode(path){
     const url='./assets/'+path+'.'+this.extension,m=this.meta[path+'.png'],crop=this.crops.get(path);
-    const scale=bitmapWidth(path,m.width,m.scale||1)/m.width,width=Math.max(1,Math.ceil(crop.width*scale)),height=Math.max(1,Math.ceil(crop.height*scale));
+    const scale=bitmapWidth(path,m.width,m.scale||1,this.lite?liteSamples:samples)/m.width,width=Math.max(1,Math.ceil(crop.width*scale)),height=Math.max(1,Math.ceil(crop.height*scale));
     let picture;
     if(typeof createImageBitmap==='function'){
       try{
@@ -321,7 +323,7 @@ function districtScenery(c,setting,cam,w){
 // Renderer
 export class Renderer {
   constructor(canvas,art){
-    this.canvas=canvas;this.c=canvas.getContext('2d',{alpha:false});this.art=art;this.stale=true;
+    this.canvas=canvas;this.c=canvas.getContext('2d',{alpha:false});this.frameCount=0;this.good=0;this.art=art;this.stale=true;
     this.motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
     const mark=()=>{this.stale=true};addEventListener('resize',mark);
     if(typeof ResizeObserver==='function')new ResizeObserver(mark).observe(canvas);
@@ -331,7 +333,7 @@ export class Renderer {
     const canvas=this.canvas,w=canvas.clientWidth,h=canvas.clientHeight;this.w=w;this.h=h;if(!w||!h)return;
     // Batas resolusi
     // Batas piksel
-    let dpr=Math.min(this.art.lite?1:2,devicePixelRatio||1);const over=w*h*dpr*dpr/(this.art.lite?1.4e6:3.7e6);if(over>1)dpr/=Math.sqrt(over);
+    let dpr=Math.min(this.art.lite?1:this.cap||2,devicePixelRatio||1);const over=w*h*dpr*dpr/(this.art.lite?1.4e6:3.7e6);if(over>1)dpr/=Math.sqrt(over);
     const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
     if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh}
     // Kualitas sampling
@@ -356,7 +358,17 @@ export class Renderer {
     this.stale=false;
   }
   // Gambar frame
+  // Resolusi adaptif
+  adapt(){
+    const now=performance.now(),gap=now-(this.lastFrame||now);this.lastFrame=now;
+    if(!this.adaptive||this.art.lite||gap<=0||gap>250)return;
+    this.frameSum=(this.frameSum||0)+gap;if(++this.frameCount<60)return;
+    const avg=this.frameSum/this.frameCount,cap=this.cap||2,step=caps.indexOf(cap);this.frameSum=this.frameCount=0;
+    if(avg>24&&step<caps.length-1){this.cap=caps[step+1];this.good=0;this.stale=true}
+    else if(avg<14&&step>0&&++this.good>=3){this.cap=caps[step-1];this.good=0;this.stale=true}
+  }
   render(g){
+    this.adapt();
     if(this.setting!==g.level.setting){this.setting=g.level.setting;this.stale=true}
     if(this.stale)this.measure();
     const c=this.c,a=this.art,{w,h,bw,bh,scale}=this;if(!w||!h)return;
