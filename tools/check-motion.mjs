@@ -167,4 +167,25 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   assert.equal(roared.cast, null, `${type}: roar must cancel the ulti`);
 }
 
+// Setelah 100%: tentara kabur, Rex harus ke ujung, lalu keluar layar sendiri
+{
+  const world = new World(levels[0], 0);
+  world.rex.x = levels[0].length / 2;
+  world.spawn('infantry', world.rex.x + 300);
+  world.triggered = new Set(levels[0].bosses.map((_, i) => i));
+  world.lost = world.total;
+  world.update(1 / 60, empty);
+  assert.equal(world.phase, 'clear');
+  assert.ok(world.enemies.every(e => e.flee), 'soldiers must flee once the district is flat');
+  for (let i = 0; i < 120; i++) world.update(1 / 60, empty);
+  assert.equal(world.status, 'playing', 'standing still must not finish the district');
+  let t = 0;
+  while (world.phase === 'clear' && t < 60) { world.update(1 / 60, new Set(['right'])); t += 1 / 60; }
+  assert.equal(world.phase, 'exit', 'reaching the end must start the exit walk');
+  const at = world.rex.x;
+  for (let i = 0; i < 60 * 3; i++) world.update(1 / 60, empty);
+  assert.equal(world.status, 'won');
+  assert.ok(world.rex.x > at + 500 && world.rex.x > world.camera + world.view, 'Rex must walk off screen on his own');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

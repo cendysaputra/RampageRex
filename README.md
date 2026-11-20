@@ -24,7 +24,7 @@ python -m http.server 8000
 
 Lalu buka `http://localhost:8000`. Game membaca modul JavaScript, data level, dan aset lewat HTTP, jadi tidak bisa dibuka langsung sebagai file. Tidak ada paket yang perlu dipasang.
 
-Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya**. Kalau HP Rex habis, distrik diulang.
+Tujuan tiap distrik: **ratakan 100% bangunan** dan **kalahkan semua pahlawannya**. Setelah itu tentara kabur dan panah muncul di ujung jalan: bawa Rex ke sana, lalu ia berjalan keluar layar sendiri menuju distrik berikutnya. Kalau HP Rex habis, distrik diulang.
 
 ## 🕹️ Kontrol
 

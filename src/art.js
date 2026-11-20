@@ -1,4 +1,4 @@
-import { clamp, moduleState } from './world.js';
+import { clamp, moduleState, exitTime } from './world.js';
 import { attackPose, smooth } from './motion.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
@@ -299,6 +299,16 @@ export class Renderer {
         c.fillStyle='#102321';c.fillRect(e.x-31,top-3,62,11);c.fillStyle=ratio>.5?'#ffd477':'#e8536d';c.fillRect(e.x-28,top,56*ratio,5)}
       if(e.mode==='aim'||e.mode==='recover'){c.fillStyle=e.mode==='aim'?'#ffd477':'#a8f2d7';c.font='30px Bangers,Impact,sans-serif';c.fillText(e.mode==='aim'?'!':'…',e.x-7,e.y-152)}
     }
+    // Penanda ujung distrik
+    if(g.phase!=='fight'&&visible(g.exitX,300)){
+      const pulse=reduced?.5:.5+.5*Math.sin(t*6);
+      c.save();c.lineJoin='round';c.lineWidth=14;
+      for(let i=0;i<3;i++){
+        const x=g.exitX+i*62+(reduced?0:((t*90)%62));c.globalAlpha=.45+.55*((i+pulse)%1.2/1.2);
+        c.strokeStyle='#102321';c.lineWidth=20;c.beginPath();c.moveTo(x,40);c.lineTo(x+34,80);c.lineTo(x,120);c.stroke();
+        c.strokeStyle='#ff9b40';c.lineWidth=12;c.beginPath();c.moveTo(x,40);c.lineTo(x+34,80);c.lineTo(x,120);c.stroke();
+      }c.restore();
+    }
     shadow(g.rex.x-15,2,212);c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
     rexRig(c,a,g.rex,t,reduced);c.restore();
@@ -350,6 +360,7 @@ export class Renderer {
     c.restore();
     this.ultimateOverlay(c,g,view,logicalH,reduced);
     this.heroOverlay(c,g,view,logicalH,reduced);
+    this.exitOverlay(c,g,view,logicalH,reduced,floor);
   }
   // Efek ulti
   ultimateOverlay(c,g,view,logicalH,reduced){
@@ -410,5 +421,21 @@ export class Renderer {
       c.restore();
     }
     if(flash>0&&!reduced&&g.cast){c.fillStyle=castColors[g.cast.type][2]+Math.round(flash*150).toString(16).padStart(2,'0');c.fillRect(0,0,view,logicalH)}
+  }
+  // Arah ke ujung distrik dan layar meredup saat Rex keluar
+  exitOverlay(c,g,view,logicalH,reduced,floor){
+    if(g.phase==='clear'&&g.exitX>g.camera+view-60){
+      const bob=reduced?0:Math.sin(g.time*5)*8,x=view-46+bob,y=floor-260;
+      c.save();c.lineJoin='round';
+      c.fillStyle='#ff9b40';c.strokeStyle='#102321';c.lineWidth=6;
+      c.beginPath();c.moveTo(x+28,y);c.lineTo(x-14,y-34);c.lineTo(x-14,y+34);c.closePath();c.stroke();c.fill();
+      c.font='700 22px "Baloo 2",sans-serif';c.textAlign='right';c.textBaseline='middle';c.lineWidth=6;
+      const label=Math.ceil((g.exitX-g.rex.x)/100)+' m';c.strokeText(label,x-26,y);c.fillStyle='#fff0ce';c.fillText(label,x-26,y);
+      c.restore();
+    }
+    if(g.phase==='exit'){
+      const k=smooth((g.time-g.exitAt-(exitTime-.9))/.9);
+      if(k>0){c.fillStyle='rgba(11,23,25,'+k+')';c.fillRect(0,0,view,logicalH)}
+    }
   }
 }

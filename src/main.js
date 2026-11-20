@@ -58,17 +58,17 @@ function stageCard(index,manifest,level){
 // Tutup kartu
 function stageOut(){const card=el('stage');card.classList.add('leaving');setTimeout(()=>{if(card.classList.contains('leaving'))card.hidden=true},320)}
 // Mulai level
-async function start(index=0,carried=0){
+async function start(index=0,carried=0,result=''){
   if(screen==='loading')return;
   close();clearInput();screen='loading';el('menu').hidden=true;el('hud').hidden=true;
   el('start').disabled=el('help').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
-  const shownAt=performance.now();stageCard(index);
+  const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4].map(n=>json('./data/levels/level-0'+n+'.json')))]);
     const [manifest,levels]=await boot;stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
     renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],index);
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
-    await new Promise(r=>setTimeout(r,Math.max(0,1400-(performance.now()-shownAt))));
+    await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
     stageOut();el('hud').hidden=false;screen='playing';el('pause').focus({preventScroll:true});clearInput();
   }catch(err){
     boot=null;art=null;renderer=null;el('stage').hidden=true;el('menu').hidden=false;screen='menu';el('load-status').textContent='Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.';console.error(err);
@@ -85,6 +85,8 @@ function finish(){
   screen='result';const win=world.status==='won',score=previousScore+world.score;
   if(score>record){record=score;save('rex.best',record);recordLabel()}
   const more=win&&levelIndex<3;
+  // Rex sudah berjalan keluar layar: lanjut ke kartu distrik berikutnya tanpa pop-up
+  if(more){el('hud').hidden=true;start(levelIndex+1,score,world.level.name+' rata · Skor '+score.toLocaleString('id-ID'));return}
   modal(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang',
     '<p>'+world.level.name+' · destruksi '+Math.floor(world.percent)+'% · Skor '+score.toLocaleString('id-ID')+'</p>',
     [[more?'Lanjut ke distrik '+(levelIndex+2):win?'Main dari awal':'Coba lagi',()=>more?start(levelIndex+1,score):win?start():start(levelIndex,previousScore)],['Menu utama',menu]]);
@@ -106,7 +108,7 @@ function updateHud(){
   const fury=p.fury>0;if(shown.get('fury')!==fury){shown.set('fury',fury);el('hp').closest('.player-card').toggleAttribute('data-fury',fury)}
   let next='',names='';
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+heroNames[e.type]}
-  text('objective',names?'Kalahkan '+names:world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan');
+  text('objective',world.phase!=='fight'?'Jalan ke ujung distrik →':names?'Kalahkan '+names:world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan');
   if(next!==bossKey){bossKey=next;el('bosses').replaceChildren(...world.enemies.filter(e=>e.hero).map(e=>{
     const card=document.createElement('div');card.innerHTML='<img src="./assets/characters/heroes/'+e.type+'/portrait.webp" alt="" width="40" height="40"><strong>'+heroNames[e.type]+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
   }))}
