@@ -2,6 +2,8 @@ import { damp as ease, spritePose } from './motion.js';
 // Batasi nilai
 export const clamp = (n, low, high) => Math.max(low, Math.min(n, high));
 export const people = ['office-worker','shopper','schoolkid','elder','bakso-vendor'];
+// Pekerja yang keluar dari Kopdes
+export const kopdesWorker='kopdes-worker';
 export const heroNames = {perisai:'Perisai',rajawali:'Rajawali',jaring:'Jaring'};
 export const hints = {
   perisai:'Hindari tubrukannya, lalu sabet dengan ekor.',
@@ -67,6 +69,8 @@ const civilianHp=110;
 const slamStun={troop:4.5,hero:1.6};
 // Durasi Rex berjalan keluar layar, termasuk layar meredup
 export const exitTime=2.6;
+// Jarak Rex yang membuat warga santai panik
+const calmRadius=560;
 // Batas tentara di layar
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
@@ -93,7 +97,34 @@ export class World {
     // Musuh makin keras di distrik berikutnya
     this.power=1+index*.12;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
+    this.populate();
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
+  }
+  // Warga yang sedang beraktivitas di jalan sebelum Rex datang
+  populate(){
+    const start=this.level.start+900;let pick=0;
+    for(const [i,b] of this.buildings.entries()){
+      if(b.x<start)continue;
+      const kopdes=b.color==='kopdes',size=kopdes?2:i%3===2?0:1+(i%2);
+      // Dua orang berhadapan = mengobrol; satu orang = menunggu, belanja, atau menengok sekitar
+      const centre=b.x+range(-b.width*.25,b.width*.25);
+      for(let n=0;n<size;n++){
+        const type=kopdes?kopdesWorker:people[(pick++)%people.length],dir=size===2?(n?-1:1):Math.random()<.5?-1:1;
+        this.civilians.push({type,x:centre+(size===2?(n?34:-34):0),dir,speed:range(250,350),phase:Math.random()*5,walk:0,lane:range(8,26),
+          hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0,calm:true,chat:size===2,activity:range(0,9)});
+      }
+    }
+    // Pedagang di dekat gerobak dan warung tenda
+    for(const prop of this.props)if(prop.x>start&&(prop.type==='food-cart'||prop.type==='tent-stall'))
+      this.civilians.push({type:prop.type==='food-cart'?'bakso-vendor':people[(pick++)%people.length],x:prop.x+70,dir:-1,speed:range(250,350),phase:Math.random()*5,walk:0,lane:range(8,20),
+        hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0,calm:true,chat:false,activity:range(0,9)});
+  }
+  // Warga santai di sekitar titik ini mulai panik
+  alarmNear(x,radius){for(const c of this.civilians)if(c.calm&&Math.abs(c.x-x)<radius)this.panic(c)}
+  // Panik: berhenti beraktivitas, menjauhi Rex
+  panic(c){
+    if(!c.calm)return;c.calm=false;c.chat=false;c.alarm=.7;c.dir=c.x>=this.rex.x?1:-1;
+    c.frame=c.fromFrame='run-a';c.frameMix=1;
   }
   // Persen hancur
   get percent(){return 100*this.lost/this.total}
@@ -115,10 +146,10 @@ export class World {
     const before=moduleState(m),delta=Math.min(m.hp,damage);m.hp-=delta;this.lost+=delta;this.score+=Math.round(delta);
     this.rex.rage=clamp(this.rex.rage+delta*.065,0,100);
     if(!b.evacuated){
-      b.evacuated=true;this.sound('panic');
+      b.evacuated=true;this.sound('panic');this.alarmNear(b.x,b.width/2+520);
       for(let n=0;n<2+Math.floor(this.percent/22);n++){
         const x=b.x+range(-b.width*.35,b.width*.35);
-        this.civilians.push({type:people[(this.buildings.indexOf(b)+n)%people.length],x,dir:x>=this.rex.x?1:-1,speed:range(250,350),phase:Math.random()*5,walk:0,lane:range(6,28),hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0});
+        this.civilians.push({type:b.color==='kopdes'?kopdesWorker:people[(this.buildings.indexOf(b)+n)%people.length],x,dir:x>=this.rex.x?1:-1,speed:range(250,350),phase:Math.random()*5,walk:0,lane:range(6,28),hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0});
       }
     }
     if(before!==moduleState(m)){
@@ -164,7 +195,7 @@ export class World {
         if(!e.hero)e.stun=2.6;
         if(e.type==='rajawali'){e.mode='ground';e.timer=3.4}
       }
-      for(const c of this.civilians)c.speed=Math.min(500,c.speed+80);
+      for(const c of this.civilians){c.speed=Math.min(500,c.speed+80);if(c.calm&&c.x>=this.camera-40&&c.x<=this.camera+this.view+40)this.panic(c)}
       // Raungan memotong ulti pahlawan
       if(this.cast&&!this.cast.done&&this.cast.hero.x>=this.camera-40&&this.cast.hero.x<=this.camera+this.view+40)this.cancelCast();
       return;
@@ -201,6 +232,7 @@ export class World {
   }
   // Lukai warga
   hitCivilian(c,damage,from){
+    this.panic(c);
     c.max??=civilianHp;c.hp=(c.hp??c.max)-damage;c.hit=.2;
     if(c.hp<=0){this.knock(c,from);return}
     // Terhuyung seperti tentara
@@ -222,7 +254,7 @@ export class World {
       if(e.type==='rajawali'){e.mode='ground';e.timer=4.5}
     }
     if(this.cast&&!this.cast.done&&this.cast.hero.x>=left&&this.cast.hero.x<=right)this.cancelCast();
-    for(const c of this.civilians)if(!c.down&&c.x>=left&&c.x<=right){c.stun=Math.max(c.stun||0,1.2);c.vx=0}
+    for(const c of this.civilians)if(!c.down&&c.x>=left&&c.x<=right){this.panic(c);c.stun=Math.max(c.stun||0,1.2);c.vx=0}
     this.fx('dust',p.x-150,0,2);this.fx('dust',p.x+150,0,2);this.fx('debris',p.x,-20,4);
   }
   // Gempa ulti
@@ -444,13 +476,22 @@ export class World {
     // Warga
     for(const c of this.civilians){
       if(c.down){c.life-=dt;c.x+=c.vx*dt;c.y+=c.vy*dt;c.vy+=1500*dt;c.angle+=c.spin*dt;spritePose(c,'stumble',dt);continue}
-      c.hit=Math.max(0,(c.hit||0)-dt);
+      c.hit=Math.max(0,(c.hit||0)-dt);c.alarm=Math.max(0,(c.alarm||0)-dt);
+      if(c.calm){
+        // Rex terlalu dekat: panik
+        if(Math.abs(c.x-p.x)<calmRadius)this.panic(c);
+        else{
+          // Sesekali menoleh ke arah lain kalau tidak sedang mengobrol
+          c.activity+=dt;if(!c.chat&&c.activity>9){c.activity=0;c.dir*=-1}
+          continue;
+        }
+      }
       if(c.stun>0){c.stun-=dt;c.x+=c.vx*dt;c.vx*=Math.pow(.05,dt);spritePose(c,'stumble',dt);continue}
       c.x+=c.dir*c.speed*dt;c.walk+=c.speed*dt/28;
       const glance=(this.time+c.phase)%5>4.6,stumble=(this.time+c.phase)%8>7.8;
       spritePose(c,stumble?'stumble':glance?'look-back':Math.sin(c.walk)>=0?'run-a':'run-b',dt);
     }
-    keep(this.civilians,c=>(!c.down||c.life>0)&&c.x>this.camera-170&&c.x<this.camera+this.view+170);
+    keep(this.civilians,c=>c.calm||(!c.down||c.life>0)&&c.x>this.camera-170&&c.x<this.camera+this.view+170);
     // Efek
     for(const f of this.effects){f.life-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.kind==='debris'||f.kind==='decor')f.vy+=880*dt}
     keep(this.effects,f=>f.life>0);this.shake=Math.max(0,this.shake-dt*25);

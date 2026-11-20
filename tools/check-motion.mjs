@@ -223,4 +223,27 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   assert.equal(world.status, 'lost');
 }
 
+// Warga beraktivitas sampai Rex mendekat; Kopdes mengeluarkan pekerjanya
+{
+  const world = new World(levels[1], 1);
+  world.spawnTime = Infinity;
+  const calm = world.civilians.filter(c => c.calm);
+  assert.ok(calm.length >= 8, 'streets must start with people going about their day');
+  assert.ok(calm.some(c => c.type === 'kopdes-worker'), 'Kopdes workers must stand outside the Kopdes');
+  const first = calm[0], before = first.x;
+  for (let i = 0; i < 60; i++) world.update(1 / 60, empty);
+  assert.equal(first.x, before, 'calm people stay put while Rex is far away');
+  assert.ok(world.civilians.includes(first), 'calm people off screen must not be culled');
+  world.rex.x = first.x - 300;
+  world.update(1 / 60, empty);
+  assert.equal(first.calm, false, 'Rex nearby must make them panic');
+  for (let i = 0; i < 30; i++) world.update(1 / 60, empty);
+  assert.ok(Math.abs(first.x - world.rex.x) > 300, 'panicking people run away from Rex');
+  const kopdes = world.buildings.find(b => b.color === 'kopdes');
+  assert.ok(kopdes, 'district 2 must have a Kopdes');
+  world.civilians.length = 0;
+  world.damageModule(kopdes, 0, 10);
+  assert.ok(world.civilians.length && world.civilians.every(c => c.type === 'kopdes-worker'), 'Kopdes evacuates its workers');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

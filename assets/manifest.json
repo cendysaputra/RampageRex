@@ -3260,6 +3260,146 @@
         0
       ],
       "alpha": true
+    },
+    "buildings/ruko-01/colors/roof-kopdes.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 10,
+        "y": 146,
+        "width": 964,
+        "height": 135
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "kopdes"
+    },
+    "buildings/ruko-01/colors/ground-kopdes.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 19,
+        "y": 12,
+        "width": 946,
+        "height": 433
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "kopdes"
+    },
+    "characters/civilians/kopdes-worker/frames/run-a.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 67,
+        "y": 40,
+        "width": 259,
+        "height": 373
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/kopdes-worker/frames/run-b.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 77,
+        "y": 38,
+        "width": 252,
+        "height": 375
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/kopdes-worker/frames/look-back.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 74,
+        "y": 33,
+        "width": 257,
+        "height": 380
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/kopdes-worker/frames/stumble.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 12,
+        "y": 65,
+        "width": 342,
+        "height": 348
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/kopdes-worker/master.png": {
+      "width": 270,
+      "height": 560,
+      "bounds": {
+        "x": 12,
+        "y": 34,
+        "width": 246,
+        "height": 514
+      },
+      "pivot": [
+        135,
+        548
+      ],
+      "alpha": true,
+      "logicalHeight": 199
     }
   },
   "missing": [],
