@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/characters/rex/master.webp" alt="Rex, dinosaurus merah berpelat punggung oranye" width="620">
+<img src="web/assets/characters/rex/master.webp" alt="Rex, dinosaurus merah berpelat punggung oranye" width="620">
 
 # Rampage Rex
 
@@ -68,9 +68,9 @@ Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="assets/characters/heroes/perisai/portrait.webp" alt="Perisai" width="130"><br><b>Perisai</b></td>
-    <td align="center" width="33%"><img src="assets/characters/heroes/rajawali/portrait.webp" alt="Rajawali" width="130"><br><b>Rajawali</b></td>
-    <td align="center" width="33%"><img src="assets/characters/heroes/jaring/portrait.webp" alt="Jaring" width="130"><br><b>Jaring</b></td>
+    <td align="center" width="33%"><img src="web/assets/characters/heroes/perisai/portrait.webp" alt="Perisai" width="130"><br><b>Perisai</b></td>
+    <td align="center" width="33%"><img src="web/assets/characters/heroes/rajawali/portrait.webp" alt="Rajawali" width="130"><br><b>Rajawali</b></td>
+    <td align="center" width="33%"><img src="web/assets/characters/heroes/jaring/portrait.webp" alt="Jaring" width="130"><br><b>Jaring</b></td>
   </tr>
   <tr>
     <td valign="top">Menghadang di depan, menubruk dengan perisai, dan memblokir gigitan dari depan.<br><br><b>Kelemahan:</b> hindari tubrukannya, lalu sabet dengan ekor saat ia lengah.</td>
@@ -97,10 +97,10 @@ Hanya satu penjaga yang bisa memakai ulti dalam satu waktu. Saat panelnya muncul
 
 <table>
   <tr>
-    <td align="center"><img src="assets/characters/soldiers/infantry/master.webp" alt="Infanteri" height="110"><br><b>Infanteri</b><br>sejak awal</td>
-    <td align="center"><img src="assets/characters/soldiers/bazooka/master.webp" alt="Bazooka" height="110"><br><b>Bazooka</b><br>destruksi 30%</td>
-    <td align="center"><img src="assets/characters/soldiers/jeep.webp" alt="Jeep" height="110"><br><b>Jeep</b><br>destruksi 50%</td>
-    <td align="center"><img src="assets/characters/soldiers/helicopter.webp" alt="Helikopter" height="110"><br><b>Helikopter</b><br>destruksi 70%</td>
+    <td align="center"><img src="web/assets/characters/soldiers/infantry/master.webp" alt="Infanteri" height="110"><br><b>Infanteri</b><br>sejak awal</td>
+    <td align="center"><img src="web/assets/characters/soldiers/bazooka/master.webp" alt="Bazooka" height="110"><br><b>Bazooka</b><br>destruksi 30%</td>
+    <td align="center"><img src="web/assets/characters/soldiers/jeep.webp" alt="Jeep" height="110"><br><b>Jeep</b><br>destruksi 50%</td>
+    <td align="center"><img src="web/assets/characters/soldiers/helicopter.webp" alt="Helikopter" height="110"><br><b>Helikopter</b><br>destruksi 70%</td>
   </tr>
 </table>
 
@@ -109,12 +109,12 @@ Tentara datang beregu dari depan dan belakang sampai belasan orang di layar, jad
 ## Warga
 
 <p align="center">
-  <img src="assets/characters/civilians/office-worker/master.webp" alt="Pekerja kantoran" height="96">
-  <img src="assets/characters/civilians/shopper/master.webp" alt="Ibu belanja" height="96">
-  <img src="assets/characters/civilians/schoolkid/master.webp" alt="Anak sekolah" height="96">
-  <img src="assets/characters/civilians/elder/master.webp" alt="Kakek" height="96">
-  <img src="assets/characters/civilians/bakso-vendor/master.webp" alt="Pedagang bakso" height="96">
-  <img src="assets/characters/civilians/kopdes-worker/master.webp" alt="Pekerja Kopdes" height="96">
+  <img src="web/assets/characters/civilians/office-worker/master.webp" alt="Pekerja kantoran" height="96">
+  <img src="web/assets/characters/civilians/shopper/master.webp" alt="Ibu belanja" height="96">
+  <img src="web/assets/characters/civilians/schoolkid/master.webp" alt="Anak sekolah" height="96">
+  <img src="web/assets/characters/civilians/elder/master.webp" alt="Kakek" height="96">
+  <img src="web/assets/characters/civilians/bakso-vendor/master.webp" alt="Pedagang bakso" height="96">
+  <img src="web/assets/characters/civilians/kopdes-worker/master.webp" alt="Pekerja Kopdes" height="96">
 </p>
 
 Sebelum Rex datang, warga beraktivitas di jalan: mengobrol, menunggu di depan toko, atau berjualan di dekat gerobak. Begitu Rex mendekat atau bangunan di dekat mereka diserang, mereka panik dan berlarian. Warga tidak menyerang, tapi bisa dikalahkan: serangan pertama membuat mereka terhuyung, serangan kedua melempar mereka keluar layar.
@@ -141,4 +141,4 @@ Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjan
 
 ## Lisensi
 
-Kode dan aset game ini berlisensi [MIT](LICENSE) © 2026 Cendy Saputra, kecuali huruf Bangers dan Baloo 2 di `assets/fonts/` yang memakai SIL Open Font License 1.1.
+Kode dan aset game ini berlisensi [MIT](LICENSE) © 2026 Cendy Saputra, kecuali huruf Bangers dan Baloo 2 di `web/assets/fonts/` yang memakai SIL Open Font License 1.1.

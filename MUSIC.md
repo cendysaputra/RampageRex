@@ -1,6 +1,6 @@
 # MUSIC — Prompt musik Suno AI
 
-Daftar musik untuk Rampage Rex beserta prompt Suno AI. Saat ini game hanya punya efek suara sintetis (`src/audio.js`). Belum ada musik latar.
+Daftar musik untuk Rampage Rex beserta prompt Suno AI. Saat ini game hanya punya efek suara sintetis (`web/src/audio.js`). Belum ada musik latar.
 
 ## Cara pakai
 
@@ -28,7 +28,7 @@ Monster raksasa yang lucu mengamuk di kota Indonesia saat senja. Musiknya heroik
 | 8 | Distrik selesai | Rex berjalan keluar layar | `clear.ogg` | ±8 detik | Tidak |
 | 9 | Kalah | Rex tumbang | `defeat.ogg` | ±6 detik | Tidak |
 
-Simpan semua file di `assets/music/`.
+Simpan semua file di `web/assets/music/`.
 
 ---
 
@@ -189,8 +189,8 @@ Struktur:
 2. **Potong untuk loop:** Suno tidak menjamin hasilnya bisa diulang mulus. Untuk lagu yang di-loop (menu, distrik, hero), potong tepat di awal ketukan, lalu pastikan akhir lagu menyambung ke awalnya, misalnya pakai Audacity. Buang intro panjang kalau mengganggu saat lagu berulang.
 3. **Samakan volume:** normalisasi semua lagu ke tingkat kekerasan yang sama (sekitar −16 LUFS) supaya efek suara tetap terdengar.
 4. **Ekspor:** OGG Vorbis 128 kbps, stereo, 44,1 kHz. Ukurannya sekitar 1 MB per menit, jadi total semua lagu kira-kira 10–12 MB.
-5. **Simpan:** taruh di `assets/music/` dengan nama file sesuai tabel di atas.
-6. **Sambungkan ke game:** setelah filenya ada, musik perlu disambungkan ke `src/main.js` dan `src/audio.js`:
+5. **Simpan:** taruh di `web/assets/music/` dengan nama file sesuai tabel di atas.
+6. **Sambungkan ke game:** setelah filenya ada, musik perlu disambungkan ke `web/src/main.js` dan `web/src/audio.js`:
    - lagu berganti sesuai layar dan fase permainan, dengan transisi halus;
    - musik ikut tombol suara yang sudah ada;
    - musik berhenti saat game dijeda;

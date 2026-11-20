@@ -122,7 +122,7 @@ Pakai 2.1 sebagai image reference.
 Using the attached Rex as the exact character reference (same colors, outline weight, shading, proportions), produce a CUTOUT ANIMATION PARTS SHEET: body parts separated with clear transparent gaps between them, all strict side view facing right, same scale as the reference. Parts: (1) upper head and skull without lower jaw, (2) lower jaw alone, (3) torso with neck and belly, (4) tail split into three segments base / middle / tip, (5) near arm, (6) far arm in a darker shade, (7) near leg thigh-and-shin, (8) near foot, (9) far leg thigh-and-shin in a darker shade, (10) far foot in a darker shade, (11) closed-eye overlay, (12) angry-eye overlay. Every joint end is rounded with extra overlapping material so parts can rotate without gaps. Parts do not touch on the sheet. No labels, no numbers, no text.
 ```
 
-> Potong tiap part ke PNG sendiri di `assets/characters/rex/parts/`, lalu tentukan titik pivot sendi.
+> Potong tiap part ke PNG sendiri di `web/assets/characters/rex/parts/`, lalu tentukan titik pivot sendi.
 
 ---
 
@@ -320,11 +320,11 @@ A wide horizontally seamless street ground strip on transparent background above
 
 Ulti sudah berjalan di game dengan pose pinjaman (raung + injak) dan banner cut-in yang memakai pose Rex yang diperbesar. Dua gambar di bawah menggantikan keduanya. Kilatan layar, gelombang kejut, dan garis kecepatan digambar lewat kode, jadi **jangan** dimasukkan ke gambar.
 
-Referensi identitas untuk kedua prompt: `assets/characters/rex/master.png` dan `assets/characters/rex/animations/walk.png`. Ikuti cara kerja di `assets/characters/rex/animations/README.md` (simpan PNG asli, catat prompt akhirnya di sana).
+Referensi identitas untuk kedua prompt: `web/assets/characters/rex/master.png` dan `web/assets/characters/rex/animations/walk.png`. Ikuti cara kerja di `REX-ANIMATIONS.md` (simpan PNG asli, catat prompt akhirnya di sana).
 
 ### 9.1 Atlas animasi ulti (8 pose)
 
-Simpan sebagai `assets/characters/rex/animations/ulti.png`.
+Simpan sebagai `web/assets/characters/rex/animations/ulti.png`.
 
 ```
 Production transparent PNG sprite animation atlas for this exact Rex dinosaur. Match the red chunky Rex's identity and polished cartoon rendering in both references precisely: cream segmented belly, orange dorsal plates, dark maroon outlines and dark crimson spots, yellow eye, three red cheek scars, small clawed arms, long tapering tail, warm top rim lighting. Output one square transparent RGBA image, largest available resolution, with EXACTLY TWO equal columns and FOUR equal rows: EIGHT full-body sprites, read left to right then top to bottom. No grid, borders, text, ground, shadows or checkerboard. Every cell has the same fixed camera and the same body scale, hips at 58 percent of the cell width, planted feet on a ground line at 90 percent of the cell height, and at least 32 pixels of fully transparent margin on all sides. Rex faces RIGHT in every frame.
@@ -344,7 +344,7 @@ Eight clearly different, individually clean poses with big readable silhouette c
 
 ### 9.2 Ilustrasi cut-in (hiasan banner kiri)
 
-Simpan sebagai `assets/fx/ulti-cutin.png`. Banner tampil miring di sisi kiri layar selama ancang-ancang; judul "AMUKAN REX!" ditulis kode di pojok kiri bawah.
+Simpan sebagai `web/assets/fx/ulti-cutin.png`. Banner tampil miring di sisi kiri layar selama ancang-ancang; judul "AMUKAN REX!" ditulis kode di pojok kiri bawah.
 
 ```
 Dramatic close-up key art of this exact Rex dinosaur for a fighting-game style super move cut-in banner. Same character identity and polished cartoon cel shading as the references: red skin with dark crimson spots and dark maroon outlines, cream segmented belly and jaw, orange dorsal plates, yellow eye, three red cheek scars. Wide horizontal composition, 16:9, high resolution, genuine transparent RGBA background.
@@ -359,11 +359,11 @@ Thick confident antialiased outlines, clean silhouette, rich saturated colour. N
 ### 9.3 Yang perlu dihubungkan setelah gambar jadi
 
 1. Jalankan `python tools/to-webp.py` untuk membuat salinan WebP.
-2. Tambahkan ke `assets/manifest.json`:
+2. Tambahkan ke `web/assets/manifest.json`:
    - di `assets`: `"characters/rex/animations/ulti.png"` dan `"fx/ulti-cutin.png"`, masing-masing dengan `width`, `height`, `"pivot": [0, 0]`, `"alpha": true` (tanpa `bounds`, supaya gambar tidak dipangkas);
    - di `rexAnimations.atlases`: `"ulti": {"path": "characters/rex/animations/ulti", "frames": [...]}` dengan delapan baris `[x, y, lebar, tinggi, pivotX, pivotY]` seperti atlas lain (pivot = titik tanah di bawah pinggul), ditambah `"scale"` bila ukuran badan perlu disamakan dengan atlas jalan;
    - di `rexAnimations.clips`: `"ulti": {"atlas": "ulti", "frames": [0, 1, 2, 3, 4, 5, 6, 7], "contact": 5}`. `contact` adalah indeks pose hantaman (pose ke-6), yang tampil tepat saat damage.
-3. Tidak perlu mengubah kode: `src/rex-animation.js` otomatis memakai klip `ulti` bila ada, dan `src/art.js` otomatis memakai `fx/ulti-cutin` di banner.
+3. Tidak perlu mengubah kode: `web/src/rex-animation.js` otomatis memakai klip `ulti` bila ada, dan `web/src/art.js` otomatis memakai `fx/ulti-cutin` di banner.
 4. Jalankan `npm run check`, lalu coba Ulti (tombol R) di browser pada layar desktop dan portrait.
 
 ---
@@ -372,13 +372,13 @@ Thick confident antialiased outlines, clean silhouette, rich saturated colour. N
 
 Gambar utama halaman sebelum main. Menggantikan susunan sekarang (langit, siluet kota, dan ilustrasi Rex tampak samping). Ini gambar penuh **tanpa** latar transparan, dan **tanpa teks apa pun**: judul, tombol, dan label digambar oleh halaman di atasnya.
 
-Referensi identitas: `assets/characters/rex/master.webp`, `assets/fx/ulti-cutin.webp` (wajah Rex tampak tiga perempat), lima `master.png` warga di `assets/characters/civilians/`, serta `assets/buildings/ruko-01/colors/` untuk gaya ruko.
+Referensi identitas: `web/assets/characters/rex/master.webp`, `web/assets/fx/ulti-cutin.webp` (wajah Rex tampak tiga perempat), lima `master.png` warga di `web/assets/characters/civilians/`, serta `web/assets/buildings/ruko-01/colors/` untuk gaya ruko.
 
 Dibuat dua versi karena tata letak menu berbeda: di layar lebar teks ada di kiri, di layar tegak teks ada di bawah.
 
 ### 10.1 Versi lebar (desktop dan ponsel mendatar)
 
-Simpan sebagai `assets/backgrounds/menu-wide.png`.
+Simpan sebagai `web/assets/backgrounds/menu-wide.png`.
 
 ```
 Full-bleed key art illustration for a video game title screen, wide 16:9 landscape, high resolution, opaque (no transparency). Same polished 2D cartoon style as the references: thick confident dark teal outlines, rich cel shading, saturated colour, warm orange rim light from a low sunset, deep teal shadows.
@@ -396,7 +396,7 @@ No text, no letters, no numbers, no logos, no signage lettering (shop signs and 
 
 ### 10.2 Versi tegak (ponsel berdiri)
 
-Simpan sebagai `assets/backgrounds/menu-tall.png`.
+Simpan sebagai `web/assets/backgrounds/menu-tall.png`.
 
 ```
 Full-bleed key art illustration for a video game title screen, tall 9:16 portrait, high resolution, opaque (no transparency). The same scene, characters, palette and polished cartoon style as the wide version in reference 1; match it precisely so the two read as one artwork.
@@ -414,7 +414,7 @@ No text, no letters, no numbers, no logos, no signage lettering (signs show only
 
 1. Simpan salinan WebP di sebelahnya (`menu-wide.webp`, `menu-tall.webp`), kualitas 90. Kedua gambar ini tidak perlu masuk manifest karena tidak digambar di canvas.
 2. Periksa di tiga ukuran layar: 1440×900, 390×844, dan 844×390. Judul "Rampage Rex", dua tombol, dan baris bawah harus tetap terbaca di atas gambar tanpa menutupi wajah Rex atau para warga.
-3. Kedua gambar sudah terpasang: `index.html` memilihnya lewat `<picture>` menurut orientasi layar, dan posisinya diatur `.cover` di `style.css`. Gambar pengganti cukup ditaruh dengan nama file yang sama.
+3. Kedua gambar sudah terpasang: `web/index.html` memilihnya lewat `<picture>` menurut orientasi layar, dan posisinya diatur `.cover` di `web/style.css`. Gambar pengganti cukup ditaruh dengan nama file yang sama.
 
 ---
 
@@ -434,12 +434,12 @@ Tiap set terdiri dari empat lapis dengan **ukuran kanvas persis sama** dengan la
 Aturan untuk semua lapis:
 
 - **Menyambung mulus ke kiri dan kanan** (seamless horizontal). Tepi kiri dan kanan harus cocok saat gambar diulang.
-- Gaya sama dengan latar sekarang: pakai `assets/backgrounds/sky.webp`, `far-city.webp`, `mid-city.webp`, dan `street.webp` sebagai referensi gaya dan komposisi.
+- Gaya sama dengan latar sekarang: pakai `web/assets/backgrounds/sky.webp`, `far-city.webp`, `mid-city.webp`, dan `street.webp` sebagai referensi gaya dan komposisi.
 - Tanpa teks, huruf, angka, logo, atau watermark. Papan dan rambu hanya bentuk abstrak.
 - Tanpa karakter, kendaraan, atau benda yang bisa dihancurkan: itu digambar game di atasnya.
 - Di `street.png`, trotoar ada di bagian atas dan permukaan jalan di bawahnya, dengan tinggi trotoar sama seperti jalan sekarang. Kaki karakter berpijak sekitar 66 px dari tepi atas gambar.
 
-Simpan di `assets/backgrounds/<nama-set>/`, dengan nama set `office`, `port`, dan `square` (sama dengan `setting` di `data/levels/`).
+Simpan di `web/assets/backgrounds/<nama-set>/`, dengan nama set `office`, `port`, dan `square` (sama dengan `setting` di `web/data/levels/`).
 
 ### 11.1 Pusat Kota (`office`)
 
@@ -509,8 +509,8 @@ Warna dasar jalan untuk kode (`ground`): ambil warna batu paling bawah gambar.
 
 ### 11.4 Yang perlu dihubungkan setelah gambar jadi
 
-1. Taruh PNG di `assets/backgrounds/office/`, `assets/backgrounds/port/`, dan `assets/backgrounds/square/`.
-2. Tambahkan 12 entri ke `assets` di `assets/manifest.json`, misalnya `"backgrounds/office/sky.png"`, dengan nilai yang sama seperti entri `backgrounds/sky.png`, `far-city.png`, `mid-city.png`, dan `street.png` yang sudah ada (ukuran, `bounds`, `pivot`, `alpha`, `repeatX`). Pada tiap entri `street.png`, tambahkan `"ground": "#rrggbb"` berisi warna jalan paling bawah.
+1. Taruh PNG di `web/assets/backgrounds/office/`, `web/assets/backgrounds/port/`, dan `web/assets/backgrounds/square/`.
+2. Tambahkan 12 entri ke `assets` di `web/assets/manifest.json`, misalnya `"backgrounds/office/sky.png"`, dengan nilai yang sama seperti entri `backgrounds/sky.png`, `far-city.png`, `mid-city.png`, dan `street.png` yang sudah ada (ukuran, `bounds`, `pivot`, `alpha`, `repeatX`). Pada tiap entri `street.png`, tambahkan `"ground": "#rrggbb"` berisi warna jalan paling bawah.
 3. Jalankan `python tools/to-webp.py`, periksa hasilnya, lalu hapus PNG-nya.
 4. Tidak perlu mengubah kode. Distrik yang punya `sky.png` sendiri di manifest otomatis memakai setnya; siluet dan rona ungu buatan kode untuk distrik itu otomatis mati. Set yang belum lengkap jangan didaftarkan dulu.
 5. Jalankan `npm run check`, lalu lihat tiap distrik di layar 1440×900 dan 390×844. Sambungan antar-ulangan gambar tidak boleh terlihat saat Rex berjalan.
@@ -525,11 +525,11 @@ Kedua gerakan ini sudah jalan di game dengan pose pinjaman dan gerakan dari kode
 
 Dua atlas di bawah menggantikan pose pinjaman itu. **Jangan** gambar efek (debu, gelombang, bintang, garis kecepatan, bayangan): semuanya sudah dibuat kode, dan tinggi lompatan juga diatur kode, jadi Rex tetap digambar dengan kaki di garis tanah sel.
 
-Referensi identitas untuk kedua prompt: `assets/characters/rex/master.png` dan atlas `assets/characters/rex/animations/walk.png`. Ikuti cara kerja di `assets/characters/rex/animations/README.md` (simpan PNG asli, catat prompt akhirnya di sana).
+Referensi identitas untuk kedua prompt: `web/assets/characters/rex/master.png` dan atlas `web/assets/characters/rex/animations/walk.png`. Ikuti cara kerja di `REX-ANIMATIONS.md` (simpan PNG asli, catat prompt akhirnya di sana).
 
 ### 12.1 Atlas lompat gertakan (8 pose)
 
-Simpan sebagai `assets/characters/rex/animations/jump.png`.
+Simpan sebagai `web/assets/characters/rex/animations/jump.png`.
 
 ```
 Production transparent PNG sprite animation atlas for this exact Rex dinosaur. Match the red chunky Rex's identity and polished cartoon rendering in both references precisely: red skin with dark crimson spots and dark maroon outlines, cream segmented belly, orange dorsal plates, yellow eye, three red cheek scars, small clawed arms, long tapering tail, warm top rim lighting. Output one square transparent RGBA image, largest available resolution, with EXACTLY TWO equal columns and FOUR equal rows: EIGHT full-body sprites, read left to right then top to bottom. No grid, borders, text, ground, shadows or checkerboard. Every cell has the same fixed camera and the same body scale, hips at 58 percent of the cell width, and at least 32 pixels of fully transparent margin on all sides. Rex faces RIGHT in every frame. Draw every pose with the lowest point of the body near a baseline at 90 percent of the cell height: the jump height is added later by the game, so do not move him up inside the cell.
@@ -549,7 +549,7 @@ Eight clearly different, individually clean poses with big readable silhouette c
 
 ### 12.2 Atlas tumbang (6 pose)
 
-Simpan sebagai `assets/characters/rex/animations/defeat.png`.
+Simpan sebagai `web/assets/characters/rex/animations/defeat.png`.
 
 ```
 Production transparent PNG sprite animation atlas for this exact Rex dinosaur. Match the red chunky Rex's identity and polished cartoon rendering in both references precisely: red skin with dark crimson spots and dark maroon outlines, cream segmented belly, orange dorsal plates, yellow eye, three red cheek scars, small clawed arms, long tapering tail, warm top rim lighting. Output one wide transparent RGBA image, largest available resolution, with EXACTLY THREE equal columns and TWO equal rows: SIX full-body sprites, read left to right then top to bottom. No grid, borders, text, ground, shadows or checkerboard. Every cell has the same fixed camera and the same body scale, and at least 32 pixels of fully transparent margin on all sides. The lowest point of the body always touches a ground line at 90 percent of the cell height, and the point under his hips stays at 58 percent of the cell width. Rex faces RIGHT in every frame.
@@ -568,14 +568,14 @@ Six clearly different, individually clean poses with big readable silhouette cha
 ### 12.3 Yang perlu dihubungkan setelah gambar jadi
 
 1. Jalankan `python tools/to-webp.py` untuk membuat salinan WebP.
-2. Tambahkan ke `assets/manifest.json`:
+2. Tambahkan ke `web/assets/manifest.json`:
    - di `assets`: `"characters/rex/animations/jump.png"` dan `"characters/rex/animations/defeat.png"`, masing-masing dengan `width`, `height`, `"pivot": [0, 0]`, `"alpha": true` (tanpa `bounds`);
    - di `rexAnimations.atlases`: `"jump"` dan `"defeat"` dengan `path` dan baris `frames` `[x, y, lebar, tinggi, pivotX, pivotY]` seperti atlas lain (pivot = titik tanah di bawah pinggul), ditambah `"scale"` bila ukuran badan perlu disamakan dengan atlas jalan;
    - di `rexAnimations.clips`:
      - `"jump": {"atlas": "jump", "frames": [0, 1, 2, 3, 4, 5, 6, 7], "contact": 5}`. `contact` adalah pose mendarat (pose ke-6), yang tampil tepat saat gelombang kejut muncul.
      - `"defeat": {"atlas": "defeat", "frames": [0, 1, 2, 3, 4, 5], "fall": 1.1}`. `fall` adalah detik sampai pose terakhir tercapai; pose terakhir ditahan sampai layar hasil.
-3. Tidak perlu mengubah kode: `src/rex-animation.js` otomatis memakai klip `jump` dan `defeat` bila ada. Begitu klip `defeat` terdaftar, kemiringan buatan kode otomatis mati dan bintang pusing pindah ke posisi kepala yang rebah.
-4. Jalankan `npm run check`, lalu coba lompat (Spasi) dan biarkan Rex kalah di browser pada layar desktop dan portrait. Bila bintang pusing tidak pas di atas kepala, sesuaikan angka `-200` di fungsi `rexRig` pada `src/art.js`.
+3. Tidak perlu mengubah kode: `web/src/rex-animation.js` otomatis memakai klip `jump` dan `defeat` bila ada. Begitu klip `defeat` terdaftar, kemiringan buatan kode otomatis mati dan bintang pusing pindah ke posisi kepala yang rebah.
+4. Jalankan `npm run check`, lalu coba lompat (Spasi) dan biarkan Rex kalah di browser pada layar desktop dan portrait. Bila bintang pusing tidak pas di atas kepala, sesuaikan angka `-200` di fungsi `rexRig` pada `web/src/art.js`.
 
 ---
 

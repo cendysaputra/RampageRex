@@ -8,7 +8,7 @@ Keterangan, efek, dan suara tiap adegan dicatat di sini supaya gambar dibuat ses
 
 | Hal | Ketentuan |
 | --- | --- |
-| Lokasi file | `assets/story/scene-01/` sampai `assets/story/scene-07/` |
+| Lokasi file | `web/assets/story/scene-01/` sampai `web/assets/story/scene-07/` |
 | Nama file | `bg.png`, `mid.png`, `fg.png` di folder tiap adegan |
 | Ukuran | 1920 × 1080 (16:9) untuk **ketiga** lapis, posisinya saling pas kalau ditumpuk |
 | `bg` | lapis paling belakang, **tidak transparan**, penuh sampai tepi |
@@ -19,7 +19,7 @@ Keterangan, efek, dan suara tiap adegan dicatat di sini supaya gambar dibuat ses
 | Teks di gambar | tidak ada: tanpa huruf, angka, balon kata, efek suara tertulis, logo, atau watermark |
 | Bingkai | tidak ada: tanpa garis panel, tanpa kertas, gambar penuh sampai tepi |
 | Area bawah | 15% bagian bawah tenang dan agak gelap, karena teks narasi duduk di sana |
-| Gaya | tinta sepia seperti panel yang sekarang (`assets/story/opening-01.png` sampai `opening-07.png`): garis tinta tebal, arsir, warna kertas tua, kontras kuat |
+| Gaya | tinta sepia seperti panel yang sekarang (`web/assets/story/opening-01.png` sampai `opening-07.png`): garis tinta tebal, arsir, warna kertas tua, kontras kuat |
 
 Cara kerja yang disarankan untuk tiap adegan:
 
@@ -29,7 +29,7 @@ Cara kerja yang disarankan untuk tiap adegan:
 4. Buat `bg.png` dari gambar utuh dengan objek `fg` dan `mid` dihapus lalu bagian belakangnya diisi (inpaint), supaya tidak ada bayangan ganda atau lubang saat lapis bergeser.
 5. Tumpuk `bg` + `mid` + `fg` dan pastikan hasilnya sama persis dengan gambar utuh.
 
-Referensi identitas: `assets/characters/rex/master.webp` (Rex dewasa) dan panel lama `opening-04.png` (Rex kecil). Urutan pengerjaan supaya karakter konsisten: 01, 03, 04, 05, 06, 07, lalu 02.
+Referensi identitas: `web/assets/characters/rex/master.webp` (Rex dewasa) dan panel lama `opening-04.png` (Rex kecil). Urutan pengerjaan supaya karakter konsisten: 01, 03, 04, 05, 06, 07, lalu 02.
 
 ## Brief bersama
 
@@ -49,7 +49,7 @@ Deskripsi karakter yang dipakai berulang, salin persis:
 
 ## Adegan 01 — Langit malam
 
-Folder: `assets/story/scene-01/` (referensi lama: `opening-01.png`)
+Folder: `web/assets/story/scene-01/` (referensi lama: `opening-01.png`)
 
 - **`bg`:** Langit malam, bintang, dan punggung bukit di kejauhan.
 - **`mid`:** Siluet atap kampung, kubah masjid, dan menara.
@@ -65,7 +65,7 @@ A vast clear night sky seen from a hill at the edge of a small Indonesian town. 
 
 ## Adegan 02 — Meteor jatuh ke hutan
 
-Folder: `assets/story/scene-02/` (referensi lama: `opening-02.png`)
+Folder: `web/assets/story/scene-02/` (referensi lama: `opening-02.png`)
 
 - **`bg`:** Langit malam, kanopi hutan, dan cahaya kota di kejauhan.
 - **`mid`:** Ledakan putih-oranye, gelombang kejut, dan asap.
@@ -81,7 +81,7 @@ The moment of impact in a dense tropical forest at the edge of the town, at nigh
 
 ## Adegan 03 — Ternyata sebutir telur
 
-Folder: `assets/story/scene-03/` (referensi lama: `opening-03.png`)
+Folder: `web/assets/story/scene-03/` (referensi lama: `opening-03.png`)
 
 - **`bg`:** Hutan malam, bulan, dan sorot cahaya bulan.
 - **`mid`:** Bibir kawah, akar hangus, dan api kecil.
@@ -97,7 +97,7 @@ The quiet aftermath, moments later. A shallow smoking crater in the forest floor
 
 ## Adegan 04 — Menetas
 
-Folder: `assets/story/scene-04/` (referensi lama: `opening-04.png`)
+Folder: `web/assets/story/scene-04/` (referensi lama: `opening-04.png`)
 
 - **`bg`:** Hutan saat fajar dan kabut tipis.
 - **`mid`:** Pecahan cangkang yang beterbangan dan separuh bawah telur.
@@ -113,7 +113,7 @@ A close-up at ground level inside the crater at dawn. The spotted egg from the r
 
 ## Adegan 05 — Hidup dan berburu di hutan
 
-Folder: `assets/story/scene-05/` (referensi lama: `opening-05.png`)
+Folder: `web/assets/story/scene-05/` (referensi lama: `opening-05.png`)
 
 - **`bg`:** Air terjun, pepohonan, dan sinar matahari.
 - **`mid`:** Babi hutan dan ayam hutan yang kabur di antara pakis.
@@ -129,7 +129,7 @@ Daytime in the lush tropical forest, a few months later. The young Rex from the 
 
 ## Adegan 06 — Dewasa, mulai menyerang manusia
 
-Folder: `assets/story/scene-06/` (referensi lama: `opening-06.png`)
+Folder: `web/assets/story/scene-06/` (referensi lama: `opening-06.png`)
 
 - **`bg`:** Pepohonan tepi hutan dan langit sore.
 - **`mid`:** Kamp penebang: truk terguling, gubuk, dan orang-orang yang lari.
@@ -145,7 +145,7 @@ The edge of the forest at late afternoon, years later. The exact adult Rex from 
 
 ## Adegan 07 — Menatap kota
 
-Folder: `assets/story/scene-07/` (referensi lama: `opening-07.png`)
+Folder: `web/assets/story/scene-07/` (referensi lama: `opening-07.png`)
 
 - **`bg`:** Langit senja, matahari, dan kota di kejauhan.
 - **`mid`:** Deretan ruko, masjid, dan menara yang lebih dekat.
@@ -167,7 +167,7 @@ Tidak ada gambar. Setelah adegan 07, layar memudar ke hitam selama kira-kira sat
 
 ## Checklist tiap adegan
 
-- [ ] Tiga file `bg.png`, `mid.png`, `fg.png` di `assets/story/scene-NN/`, semuanya 1920 × 1080.
+- [ ] Tiga file `bg.png`, `mid.png`, `fg.png` di `web/assets/story/scene-NN/`, semuanya 1920 × 1080.
 - [ ] `bg` penuh tanpa transparansi; `mid` dan `fg` transparan di luar objeknya.
 - [ ] Ditumpuk berurutan `bg` → `mid` → `fg`, hasilnya sama dengan gambar utuh, tanpa lubang atau bayangan ganda.
 - [ ] Tidak ada teks, angka, balon kata, efek suara tertulis, bingkai, atau tepi kertas.
@@ -178,13 +178,13 @@ Tidak ada gambar. Setelah adegan 07, layar memudar ke hitam selama kira-kira sat
 ## Setelah gambar jadi
 
 1. Buat salinan WebP kualitas 90 di sebelah tiap PNG (`bg.webp`, `mid.webp`, `fg.webp`). Game hanya memuat WebP.
-2. Tambahkan nomor adegan ke `assets/story/layers.json`, misalnya `{ "layered": [1, 3, 4] }`. Adegan yang belum terdaftar tetap memakai panel lama `opening-NN.webp` di atas salinan buramnya, jadi adegan boleh dikirim satu per satu.
-3. Tidak perlu mengubah kode atau `assets/manifest.json`.
+2. Tambahkan nomor adegan ke `web/assets/story/layers.json`, misalnya `{ "layered": [1, 3, 4] }`. Adegan yang belum terdaftar tetap memakai panel lama `opening-NN.webp` di atas salinan buramnya, jadi adegan boleh dikirim satu per satu.
+3. Tidak perlu mengubah kode atau `web/assets/manifest.json`.
 4. Setelah ketujuh adegan berlapis, panel lama `opening-NN.png/.webp` boleh dihapus.
 
 ## Cara pemutar bekerja
 
-- Pemutar ada di `src/opening.js`, gayanya di blok `#opening` di `style.css`.
+- Pemutar ada di `web/src/opening.js`, gayanya di blok `#opening` di `web/style.css`.
 - Tiap adegan punya gerak kamera (`cam`: geser dan zoom dari awal ke akhir) dan kedalaman tiap lapis (`layers`). Lapis dengan kedalaman lebih besar bergeser lebih jauh, jadi `fg` terasa paling dekat. `move` menambah gerak sendiri, misalnya meteor yang melintas di adegan 01.
 - Pergantian adegan: pudar (01, 03, 05, 07), kilat putih dan guncangan (02), letupan cepat (04), potong langsung dengan dua guncangan (06). Adegan 03 punya cahaya berdenyut dari telur.
 - Semua gerak hanya memakai `transform` dan `opacity`. Dengan `prefers-reduced-motion`, kamera diam dan adegan hanya memudar.
