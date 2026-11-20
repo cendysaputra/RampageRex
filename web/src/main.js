@@ -3,8 +3,8 @@ import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
 import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
-import {loadProgress,saveProgress,recordDistrict,resetProgress} from './progress.js';
-import {loadSettings,saveSettings,buzz,padSizes} from './settings.js';
+import {loadProgress,saveProgress,recordDistrict,resetProgress,totalStars} from './progress.js';
+import {loadSettings,saveSettings,buzz,padSizes,skins,canTint} from './settings.js';
 import {Tutorial} from './tutorial.js';
 import {missions,earned,starText} from './missions.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
@@ -27,7 +27,9 @@ function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on
 function recordLabel(){el('record').textContent=record?'Rekor '+record.toLocaleString('id-ID'):'Belum ada rekor'}
 let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0;
 // Terapkan pengaturan
-function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad}
+function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad;if(renderer)renderer.skin=skinFilter()}
+// Filter kulit
+function skinFilter(){const s=skins[settings.skin];return canTint&&s&&totalStars(progress)>=s.stars?s.filter:'none'}
 applySettings();
 // Tombol distrik
 function districtLabel(){el('districts').hidden=progress.unlocked<2}
@@ -104,6 +106,12 @@ function openSettings(paused=false){
   };
   group('Tingkat kesulitan',Object.fromEntries(Object.entries(difficulties).map(([k,d])=>[k,d.label])),settings.difficulty,
     key=>{settings.difficulty=key;saveSettings(settings)},paused?'Berlaku mulai distrik berikutnya.':'Santai: musuh lebih sedikit dan tidak terlalu sakit.');
+  // Warna Rex
+  if(canTint){
+    const stars=totalStars(progress),open=Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,stars>=s.stars?s.label:s.label+' · '+s.stars+'★']));
+    group('Warna Rex',open,settings.skin,key=>{settings.skin=key;saveSettings(settings);applySettings()},'Bintang terkumpul: '+stars+' dari 12.');
+    for(const [i,[,s]] of Object.entries(skins).entries())form.lastChild.querySelector('.choices').children[i].disabled=stars<s.stars;
+  }
   // Volume efek
   const sound=document.createElement('label'),range=document.createElement('input'),value=document.createElement('output');
   sound.className='slider';sound.textContent='Efek suara';range.type='range';range.min=0;range.max=100;range.step=5;range.value=settings.sfx;value.textContent=settings.sfx+'%';
@@ -150,7 +158,7 @@ async function start(index=0,carried=0,result=''){
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],index,{difficulty:settings.difficulty});
+    renderer??=new Renderer(el('world'),art);renderer.skin=skinFilter();levelIndex=index;previousScore=carried;world=new World(levels[index],index,{difficulty:settings.difficulty});
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));

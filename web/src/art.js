@@ -155,7 +155,7 @@ export class Art {
 }
 
 // Gambar Rex
-function rexRig(c,a,p,t,reduced,down=-1){
+function rexRig(c,a,p,t,reduced,down=-1,skin='none'){
   const pose=rexPose(p,a.rexAnimations,down),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
   c.save();c.translate(p.x,reduced||p.attack||down>=0?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
   // Gaya lompat
@@ -171,7 +171,9 @@ function rexRig(c,a,p,t,reduced,down=-1){
     const fall=smooth((down-.45)/.4),bounce=down>.85?Math.sin((down-.85)*14)*Math.exp(-(down-.85)*6)*.04:0;
     c.translate(150,0);c.rotate(wobble+fall*.36+bounce);c.translate(-150,fall*38);c.scale(1+fall*.05,1-fall*.08);
   }
+  if(skin!=='none')c.filter=skin;
   a.blend(c,pose.from,pose.to,pose.mix,0,0,a.rexAnimations.width);
+  if(skin!=='none')c.filter='none';
   if(p.bigNet>0)a.sprite(c,'fx/steel-net',10,-8,520,1,Math.sin(t*3)*.03);
   else if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
   if(roar>.2){
@@ -363,7 +365,7 @@ export class Renderer {
     }
     shadow(g.rex.x-15,2,212*(1-g.rex.lift/700));c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
-    rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1);c.restore();
+    rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1,this.skin||'none');c.restore();
     // Warga
     for(const civ of g.civilians){
       if(!visible(civ.x,180))continue;
@@ -449,7 +451,9 @@ export class Renderer {
       for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173-(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
         c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
       const m=this.art.meta['fx/ulti-cutin.png'],scale=Math.max((width+lean)/m.width,height/m.height),bump=reduced?0:(1-smooth(age/.3))*40;
+      if(this.skin&&this.skin!=='none')c.filter=this.skin;
       c.drawImage(this.art.images.get('fx/ulti-cutin'),(width+lean-m.width*scale)/2-bump,(height-m.height*scale)/2,m.width*scale,m.height*scale);
+      c.filter='none';
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font=Math.round(height*.22)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';

@@ -3,7 +3,18 @@ import { difficulties } from './world.js';
 // Kunci simpanan
 const KEY = 'rex.settings';
 export const padSizes = { s: 'Kecil', m: 'Sedang', l: 'Besar' };
-export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal' };
+// Warna Rex
+export const skins = {
+  merah: { label: 'Merah', stars: 0, filter: 'none' },
+  hutan: { label: 'Hutan', stars: 2, filter: 'hue-rotate(110deg) saturate(.9)' },
+  samudra: { label: 'Samudra', stars: 4, filter: 'hue-rotate(205deg)' },
+  senja: { label: 'Senja', stars: 7, filter: 'hue-rotate(265deg) saturate(1.1)' },
+  emas: { label: 'Emas', stars: 10, filter: 'sepia(1) saturate(3) hue-rotate(-6deg) brightness(1.22)' },
+  bayangan: { label: 'Bayangan', stars: 12, filter: 'grayscale(1) contrast(1.25) brightness(.85)' }
+};
+// Dukungan filter
+export const canTint = typeof CanvasRenderingContext2D !== 'undefined' && 'filter' in CanvasRenderingContext2D.prototype;
+export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah' };
 
 // Baca pengaturan
 export function loadSettings(storage = globalThis.localStorage) {
@@ -14,7 +25,8 @@ export function loadSettings(storage = globalThis.localStorage) {
     sfx: Number.isFinite(sfx) ? Math.max(0, Math.min(100, Math.round(sfx))) : defaults.sfx,
     vibrate: typeof data.vibrate === 'boolean' ? data.vibrate : defaults.vibrate,
     pad: data.pad in padSizes ? data.pad : defaults.pad,
-    difficulty: data.difficulty in difficulties ? data.difficulty : defaults.difficulty
+    difficulty: data.difficulty in difficulties ? data.difficulty : defaults.difficulty,
+    skin: data.skin in skins ? data.skin : defaults.skin
   };
 }
 
