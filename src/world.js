@@ -2,7 +2,7 @@ import { damp as ease, spritePose } from './motion.js';
 // Batasi nilai
 export const clamp = (n, low, high) => Math.max(low, Math.min(n, high));
 export const people = ['office-worker','shopper','schoolkid','elder','bakso-vendor'];
-// Pekerja yang keluar dari Kopdes
+// Pekerja Kopdes
 export const kopdesWorker='kopdes-worker';
 export const heroNames = {perisai:'Perisai',rajawali:'Rajawali',jaring:'Jaring'};
 export const hints = {
@@ -16,17 +16,17 @@ const abilities = {
   tail: {duration:.62, impact:.26, damage:88, range:[-530,18], height:[-240,0]},
   stomp:{duration:.72, impact:.31, damage:84, range:[-245,245], height:[-115,5]},
   roar: {duration:.9, impact:.23, damage:0},
-  // Lompat gertakan: impact = saat mendarat
+  // Lompat gertakan
   jump: {duration:1.25, impact:.95, damage:0},
   // Ulti
   ulti: {duration:1.9, impact:1.05, damage:150}
 };
-// Tinggi lompatan Rex (piksel) menurut umur serangan
+// Tinggi lompatan
 export function jumpLift(age){
   const up=.18,land=.95;if(age<=up||age>=land)return 0;
   const k=(age-up)/(land-up);return 300*4*k*(1-k);
 }
-// Durasi animasi Rex tumbang sebelum layar hasil
+// Durasi tumbang
 export const dieTime=2.8;
 // Darah Rex
 const rexHp=400;
@@ -54,7 +54,7 @@ function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list
 const propHitboxes={'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
   billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
-// Formasi pahlawan: Perisai di depan, Rajawali di udara, Jaring memotong jalan mundur
+// Formasi pahlawan
 const flank={perisai:520,rajawali:780,jaring:-600};
 const delays={perisai:0,rajawali:.9,jaring:1.8};
 // Ulti pahlawan
@@ -63,15 +63,15 @@ export const heroUltis={
   rajawali:{name:'HUJAN LASER!',reach:1300,damage:14},
   jaring:{name:'JARING RAKSASA!',reach:1150,damage:45,stun:.8,slow:5}
 };
-// Darah warga: dua serangan biasa, sama seperti tentara
+// Darah warga
 const civilianHp=110;
-// Lama terpaku setelah Rex mendarat (raungan: 2,6 dtk)
+// Lama terpaku
 const slamStun={troop:4.5,hero:1.6};
-// Durasi Rex berjalan keluar layar, termasuk layar meredup
+// Durasi keluar
 export const exitTime=2.6;
-// Jarak Rex yang membuat warga santai panik
+// Jarak panik
 const calmRadius=560;
-// Batas tentara di layar
+// Batas tentara
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
 // Dunia permainan
@@ -92,21 +92,21 @@ export class World {
     this.props=(level.props||[]).map(prop=>({...prop,hp:150}));
     this.enemies=[];this.civilians=[];this.shots=[];this.effects=[];this.events=[];
     this.triggered=new Set();this.spawnTime=2;this.squads=0;this.enemyCount=0;this.camera=0;this.look=1;this.quakeAt=-9;this.jumpAt=-9;this.dieAt=0;this.view=1920;this.stepTime=0;this.shake=0;this.status='playing';
-    // Fase akhir: fight -> clear (jalan ke ujung) -> exit (Rex keluar layar)
+    // Fase akhir
     this.phase='fight';this.exitX=level.length-420;this.exitAt=0;
-    // Musuh makin keras di distrik berikutnya
+    // Kekuatan musuh
     this.power=1+index*.12;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
   }
-  // Warga yang sedang beraktivitas di jalan sebelum Rex datang
+  // Warga beraktivitas
   populate(){
     const start=this.level.start+900;let pick=0;
     for(const [i,b] of this.buildings.entries()){
       if(b.x<start)continue;
       const kopdes=b.color==='kopdes',size=kopdes?2:i%3===2?0:1+(i%2);
-      // Dua orang berhadapan = mengobrol; satu orang = menunggu, belanja, atau menengok sekitar
+      // Susun kelompok
       const centre=b.x+range(-b.width*.25,b.width*.25);
       for(let n=0;n<size;n++){
         const type=kopdes?kopdesWorker:people[(pick++)%people.length],dir=size===2?(n?-1:1):Math.random()<.5?-1:1;
@@ -114,14 +114,14 @@ export class World {
           hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0,calm:true,chat:size===2,activity:range(0,9)});
       }
     }
-    // Pedagang di dekat gerobak dan warung tenda
+    // Pedagang gerobak
     for(const prop of this.props)if(prop.x>start&&(prop.type==='food-cart'||prop.type==='tent-stall'))
       this.civilians.push({type:prop.type==='food-cart'?'bakso-vendor':people[(pick++)%people.length],x:prop.x+70,dir:-1,speed:range(250,350),phase:Math.random()*5,walk:0,lane:range(8,20),
         hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0,calm:true,chat:false,activity:range(0,9)});
   }
-  // Warga santai di sekitar titik ini mulai panik
+  // Picu panik
   alarmNear(x,radius){for(const c of this.civilians)if(c.calm&&Math.abs(c.x-x)<radius)this.panic(c)}
-  // Panik: berhenti beraktivitas, menjauhi Rex
+  // Warga panik
   panic(c){
     if(!c.calm)return;c.calm=false;c.chat=false;c.alarm=.7;c.dir=c.x>=this.rex.x?1:-1;
     c.frame=c.fromFrame='run-a';c.frameMix=1;
@@ -171,7 +171,7 @@ export class World {
   // Munculkan musuh
   spawn(type,x){
     const hero=type in heroNames;
-    // Pahlawan lebih tipis di distrik awal karena selalu datang bertiga
+    // Darah pahlawan
     const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.index*.1:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
       ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(190,380),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
@@ -196,7 +196,7 @@ export class World {
         if(e.type==='rajawali'){e.mode='ground';e.timer=3.4}
       }
       for(const c of this.civilians){c.speed=Math.min(500,c.speed+80);if(c.calm&&c.x>=this.camera-40&&c.x<=this.camera+this.view+40)this.panic(c)}
-      // Raungan memotong ulti pahlawan
+      // Batalkan ulti
       if(this.cast&&!this.cast.done&&this.cast.hero.x>=this.camera-40&&this.cast.hero.x<=this.camera+this.view+40)this.cancelCast();
       return;
     }
@@ -244,7 +244,7 @@ export class World {
     c.spin=c.dir*range(6,10);c.angle=0;c.life=1.15;c.hp=0;
     this.score+=40;this.rex.rage=clamp(this.rex.rage+1.5,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
   }
-  // Mendarat dari lompatan: gertakan, tanpa damage, tapi semua di layar terpaku lebih lama dari raungan
+  // Pendaratan lompat
   slam(){
     const p=this.rex,left=this.camera-60,right=this.camera+this.view+60;
     this.shake=Math.max(this.shake,18);this.jumpAt=this.time;this.sound('collapse');
@@ -412,7 +412,7 @@ export class World {
     const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+this.index*2;
     if(this.phase==='fight'&&this.spawnTime<=0&&troops<cap){
       const pool=['infantry'];if(this.percent>=30)pool.push('bazooka');if(this.percent>=50)pool.push('jeep');if(this.percent>=70)pool.push('helicopter');
-      // Regu datang bergantian dari depan dan belakang supaya Rex terkepung
+      // Regu bergantian
       const side=this.squads++%2?-1:1,target=p.x+side*(this.view*.49);
       const spawn=this.level.spawns.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a);
       const size=Math.min(cap-troops,2+Math.floor(this.percent/34)+(Math.random()<.4));
@@ -446,7 +446,7 @@ export class World {
       if(e.lift>0){e.lift=Math.max(0,e.lift+e.vy*dt);e.vy-=850*dt}
       if(e.stun>0){e.stun=Math.max(0,e.stun-dt);this.animateEnemy(e,dt,previousX);continue}
       const dist=Math.abs(p.x-e.x),dir=p.x>=e.x?1:-1;
-      // Tentara kabur setelah kota rata
+      // Tentara kabur
       if(e.flee){e.dir=-dir;e.x+=e.dir*(e.type==='jeep'?520:320)*dt;if(e.type==='helicopter')e.y-=160*dt;this.animateEnemy(e,dt,previousX);continue}
       if(e.hero){
         e.ultCd-=dt;
@@ -478,10 +478,10 @@ export class World {
       if(c.down){c.life-=dt;c.x+=c.vx*dt;c.y+=c.vy*dt;c.vy+=1500*dt;c.angle+=c.spin*dt;spritePose(c,'stumble',dt);continue}
       c.hit=Math.max(0,(c.hit||0)-dt);c.alarm=Math.max(0,(c.alarm||0)-dt);
       if(c.calm){
-        // Rex terlalu dekat: panik
+        // Rex mendekat
         if(Math.abs(c.x-p.x)<calmRadius)this.panic(c);
         else{
-          // Sesekali menoleh ke arah lain kalau tidak sedang mengobrol
+          // Menoleh sesekali
           c.activity+=dt;if(!c.chat&&c.activity>9){c.activity=0;c.dir*=-1}
           continue;
         }
@@ -498,7 +498,7 @@ export class World {
     for(const b of this.buildings)for(const m of b.modules)m.fall=Math.max(0,m.fall-dt);
     // Menang kalah
     if(p.hp<=0&&this.phase!=='exit'&&this.phase!=='dying'){
-      // Rex tumbang dulu, layar hasil menyusul
+      // Rex tumbang
       this.phase='dying';this.dieAt=this.time;p.attack=null;p.vx=0;this.shots.length=0;this.rain=null;this.cast=null;
       this.shake=16;this.messageUntil=0;this.sound('roar');
     }

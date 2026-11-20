@@ -86,7 +86,7 @@ function finish(){
   screen='result';const win=world.status==='won',score=previousScore+world.score;
   if(score>record){record=score;save('rex.best',record);recordLabel()}
   const more=win&&levelIndex<3;
-  // Rex sudah berjalan keluar layar: lanjut ke kartu distrik berikutnya tanpa pop-up
+  // Lanjut distrik
   if(more){el('hud').hidden=true;start(levelIndex+1,score,world.level.name+' rata · Skor '+score.toLocaleString('id-ID'));return}
   modal(win?(more?'Distrik runtuh!':'Kota ditaklukkan!'):'Rex tumbang',
     '<p>'+world.level.name+' · destruksi '+Math.floor(world.percent)+'% · Skor '+score.toLocaleString('id-ID')+'</p>',

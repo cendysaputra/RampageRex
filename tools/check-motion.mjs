@@ -112,7 +112,7 @@ for (const [index, level] of levels.entries()) {
   assert.ok(heroes.some(e => e.x < world.rex.x) && heroes.some(e => e.x > world.rex.x), 'heroes must flank Rex');
 }
 
-// Warga terhuyung lalu tumbang seperti tentara
+// Warga terhuyung
 {
   const world = makeWorld();
   const civilian = { type: 'shopper', x: world.rex.x + 150, dir: 1, speed: 0, phase: 0, walk: 0, lane: 15 };
@@ -131,7 +131,7 @@ for (const [index, level] of levels.entries()) {
   assert.ok(!world.civilians.includes(civilian), 'defeated civilians must clear');
 }
 
-// Tentara datang beregu dari dua sisi
+// Regu tentara
 {
   const world = new World(levels[0], 0);
   world.rex.x = levels[0].length / 2;
@@ -144,10 +144,10 @@ for (const [index, level] of levels.entries()) {
 // Target destruksi 100%
 for (const level of levels) assert.equal(level.target, 100);
 
-// Setiap distrik punya Kopdes
+// Kopdes tiap distrik
 for (const level of levels) assert.ok(level.buildings.some(b => b.color === 'kopdes' && b.upper === 0), `${level.name} needs a Kopdes`);
 
-// Ulti pahlawan mengenai sekali, raungan membatalkannya
+// Ulti pahlawan
 for (const type of ['perisai', 'rajawali', 'jaring']) {
   const world = makeWorld();
   const hero = world.spawn(type, world.rex.x + 400);
@@ -170,7 +170,7 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   assert.equal(roared.cast, null, `${type}: roar must cancel the ulti`);
 }
 
-// Setelah 100%: tentara kabur, Rex harus ke ujung, lalu keluar layar sendiri
+// Keluar distrik
 {
   const world = new World(levels[0], 0);
   world.rex.x = levels[0].length / 2;
@@ -191,7 +191,7 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   assert.ok(world.rex.x > at + 500 && world.rex.x > world.camera + world.view, 'Rex must walk off screen on his own');
 }
 
-// Lompat: kebal di udara, mendarat membuat tentara terpaku lebih lama dari raungan
+// Lompat gertakan
 {
   const world = makeWorld();
   const soldier = world.spawn('infantry', world.rex.x + 400);
@@ -212,7 +212,7 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   assert.equal(world.rex.attack, null);
 }
 
-// Kalah: Rex tumbang dulu, layar hasil menyusul
+// Rex tumbang
 {
   const world = makeWorld();
   world.rex.hp = 0;
@@ -226,7 +226,7 @@ for (const type of ['perisai', 'rajawali', 'jaring']) {
   assert.equal(world.status, 'lost');
 }
 
-// Warga beraktivitas sampai Rex mendekat; Kopdes mengeluarkan pekerjanya
+// Warga beraktivitas
 {
   const world = new World(levels[1], 1);
   world.spawnTime = Infinity;
