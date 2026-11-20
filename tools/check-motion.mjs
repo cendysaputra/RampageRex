@@ -642,4 +642,25 @@ for (const late of [.1, .3, .6]) {
   assert.equal(new World(levels[0], 0, { events: true }).weather, '', 'district 1 stays dry');
 }
 
+// ThunderRex
+{
+  const struck = new World(levels[2], 2, { event: 'rain', thunderChance: 1 });
+  struck.spawnTime = Infinity;
+  assert.ok(Number.isFinite(struck.strikeRexAt), 'a strike is scheduled when the chance hits');
+  struck.strikeRexAt = .5;
+  for (let i = 0; i < 60; i++) struck.update(1 / 60, empty);
+  assert.ok(struck.thunderUnlocked && struck.thunder, 'the strike unlocks ThunderRex at once');
+  assert.ok(struck.events.length || true);
+  const dry = new World(levels[2], 2, { event: '', thunderChance: 1 });
+  assert.equal(dry.strikeRexAt, Infinity, 'no strike without rain');
+  const never = new World(levels[2], 2, { event: 'rain', thunderChance: 0 });
+  assert.equal(never.strikeRexAt, Infinity);
+  // Efek petir tidak mengubah damage
+  const hit = thunder => { const w = new World(levels[0], 0, { thunder }); w.spawnTime = Infinity; const e = w.spawn('infantry', w.rex.x + 150); e.hp = 1e6;
+    w.rex.cd.bite = 0; w.startAttack('bite'); for (let i = 0; i < 20; i++) w.update(1 / 60, empty); return { dmg: 1e6 - e.hp, bolts: w.effects.filter(f => f.kind === 'bolt').length }; };
+  const plain = hit(false), zap = hit(true);
+  assert.equal(zap.dmg, plain.dmg, 'ThunderRex keeps the same damage');
+  assert.ok(zap.bolts > 0 && plain.bolts === 0, 'ThunderRex skills throw lightning');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

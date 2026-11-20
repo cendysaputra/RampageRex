@@ -9,7 +9,8 @@ export const skins = {
   merah: { label: 'Merah', stars: 0, folder: '' },
   batik: { label: 'Batik', stars: 4, folder: 'batik' },
   hutan: { label: 'Hutan', stars: 8, folder: 'hutan' },
-  mecha: { label: 'Mecha', stars: 12, folder: 'mecha' }
+  mecha: { label: 'Mecha', stars: 12, folder: 'mecha' },
+  thunder: { label: 'ThunderRex', stars: 0, folder: 'thunder', rare: true }
 };
 // Mode grafis
 export const graphics = { auto: 'Otomatis', tinggi: 'Tinggi', ringan: 'Ringan' };

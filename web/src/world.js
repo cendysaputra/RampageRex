@@ -94,6 +94,8 @@ const sprayRange=480,rageDrain=14,furyDrain=1.5;
 const robot={reach:240,speed:150,windup:.75,punch:50,netEvery:4.5};
 // Hujan deras
 const rainChance=.3,rainSlow=.7;
+// Peluang sambaran ke Rex
+export const thunderChance=.01;
 // Batas tentara
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
@@ -127,6 +129,9 @@ export class World {
     this.populate();
     // Event jalan
     this.weather=options.event??(options.events&&index>0&&Math.random()<rainChance?'rain':'');
+    // Petir
+    this.thunder=!!options.thunder;this.boltAt=-9;this.boltX=0;this.struckAt=-9;this.thunderUnlocked=false;
+    this.nextBolt=range(4,9);this.strikeRexAt=this.weather==='rain'&&Math.random()<(options.thunderChance??thunderChance)?range(15,45):Infinity;
     this.say(this.weather==='rain'?t('Hujan deras! Tentara dan warga melambat.'):t('{name} · Hancurkan {n}% kota',{name:t(level.name),n:level.target}),3.2);
   }
   // Warga beraktivitas
@@ -248,7 +253,7 @@ export class World {
   }
   // Hantam target
   strike(a){
-    const p=this.rex;this.sound(a.key);this.shake=Math.max(this.shake,a.key==='bite'?4:9);
+    const p=this.rex;this.sound(a.key);if(this.thunder)this.zap(a.key);this.shake=Math.max(this.shake,a.key==='bite'?4:9);
     if(a.key==='ulti'){this.quake(a.damage*(p.fury>0?2:1)*this.mods.damage.ulti);return}
     if(a.key==='jump'){this.slam();return}
     if(a.key==='roar'){
@@ -312,6 +317,12 @@ export class World {
     this.addScore(40);this.rex.rage=clamp(this.rex.rage+1.5*this.mods.rage,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
   }
   // Pendaratan lompat
+  // Efek petir skill
+  zap(key){
+    const p=this.rex,d=p.dir;this.sound('zap');
+    const at={bite:[[260,-260]],tail:[[-300,-120]],stomp:[[-180,0],[180,0]],roar:[[320,-200],[520,-120],[720,-160]],jump:[[-320,0],[0,0],[320,0]],ulti:[[-600,0],[-300,0],[0,0],[300,0],[600,0],[900,0]]}[key]||[];
+    for(const [dx,y] of at)this.effects.push({kind:'bolt',x:p.x+dx*d,y,vx:0,vy:0,life:.4,max:.4,size:key==='ulti'?1.5:1.1,spin:0,seed:Math.random()});
+  }
   slam(){
     const p=this.rex,left=this.camera-60,right=this.camera+this.view+60;
     this.shake=Math.max(this.shake,18);this.jumpAt=this.time;this.sound('collapse');
@@ -455,6 +466,16 @@ export class World {
     this.time+=dt;const p=this.rex;
     // Tanpa akhir
     if(this.level.endless)this.power=this.basePower*(1+this.percent/50);
+    // Petir di langit
+    if(this.weather==='rain'&&this.phase==='fight'){
+      if(this.time>=this.nextBolt){this.boltAt=this.time;this.boltX=this.camera+range(.1,.9)*this.view;this.nextBolt=this.time+range(5,11);this.sound('thunder')}
+      if(this.time>=this.strikeRexAt){
+        // Rex tersambar
+        this.strikeRexAt=Infinity;this.struckAt=this.boltAt=this.time;this.boltX=this.rex.x;this.thunderUnlocked=true;this.thunder=true;
+        this.rex.rage=100;this.shake=26;this.sound('thunder');this.sound('zap');
+        this.say(t('Rex tersambar petir! Skin ThunderRex terbuka!'),4.5);
+      }
+    }
     // Kombo putus
     if(this.combo&&(this.comboTime-=dt)<=0)this.combo=0;
     // Pewaktu

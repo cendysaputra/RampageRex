@@ -32,7 +32,13 @@ function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on
 function recordLabel(){el('record').textContent=record?t('Rekor {n}',{n:num(record)}):t('Belum ada rekor')}
 let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,picked=[],stats=loadStats(),daily=null,dailyRecord=loadDaily();
 // Skin aktif
-function activeSkin(){const s=skins[settings.skin];return s&&totalStars(progress)>=s.stars?s.folder:''}
+// Skin langka
+function hasThunder(){return getSaved('rex.thunder','')==='1'}
+// Boleh dipakai
+function skinOpen(s){return s.rare?hasThunder():totalStars(progress)>=s.stars}
+function activeSkin(){const s=skins[settings.skin];return s&&skinOpen(s)&&art?.hasSkin(s.folder)?s.folder:''}
+// Efek petir aktif
+function thunderOn(){return settings.skin==='thunder'&&hasThunder()}
 // Terapkan bahasa
 function applyLang(){setLang(settings.lang);translatePage();soundLabel();recordLabel();trophyLabel()}
 // Terapkan pengaturan
@@ -154,9 +160,9 @@ function openSettings(paused=false){
     (weakDevice()?'Perangkat ini disarankan memakai Ringan.':'Ringan: resolusi lebih rendah dan efek lebih sedikit untuk HP lama.'));
   // Skin Rex
   const stars=totalStars(progress);
-  group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,stars>=s.stars?s.label:t(s.label)+' · '+s.stars+'★'])),settings.skin,
+  group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,skinOpen(s)?s.label:s.rare?'??? · '+t('langka'):t(s.label)+' · '+s.stars+'★'])),settings.skin,
     key=>{settings.skin=key;saveSettings(settings)},t('Bintang terkumpul: {n} dari {total}.',{n:stars,total:missions.length*3})+(paused?' '+t('Berlaku mulai distrik berikutnya.'):''));
-  for(const [i,s] of Object.values(skins).entries())form.lastChild.querySelector('.choices').children[i].disabled=stars<s.stars;
+  for(const [i,s] of Object.values(skins).entries())form.lastChild.querySelector('.choices').children[i].disabled=!skinOpen(s);
   // Volume efek
   const sound=document.createElement('label'),range=document.createElement('input'),value=document.createElement('output');
   sound.className='slider';sound.textContent=t('Efek suara');range.type='range';range.min=0;range.max=100;range.step=5;range.value=settings.sfx;value.textContent=settings.sfx+'%';
@@ -206,7 +212,7 @@ async function start(index=0,carried=0,result='',kept=[]){
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());art.setLite(useLite(settings));if(renderer)renderer.stale=true;
     await art.preload(levels[index],ratio=>{el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status',t('Memuat distrik… {n}%',{n:Math.round(ratio*100)}))});
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true});
+    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn()});
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status',t('Siap mengamuk!'));
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -324,6 +330,8 @@ function frame(now){
       world.update(elapsed/steps,input);taps.clear();
     }
     if(guide&&world.status==='playing'){guide.update(world);showGuide()}
+    // Simpan ThunderRex
+    if(world.thunderUnlocked&&!hasThunder()){save('rex.thunder','1');buzz(settings,'ulti')}
     for(const name of world.events.splice(0)){snd.play(name);buzz(settings,name)}
     renderer.render(world);updateHud();if(world.status!=='playing')finish();
   }

@@ -788,6 +788,30 @@ Feature graphic 1024x500 for the game Rampage Rex: the attached red dinosaur Rex
 
 ---
 
+## 19. Skin langka ThunderRex
+
+Skin langka yang didapat dengan peluang 1% saat Rex tersambar petir ketika hujan. Efek kilat di setiap skill, aura listrik, dan cut-in "AMUKAN PETIR!" sudah dibuat lewat kode. Gambar di bawah memberi Rex tampilan yang megah.
+
+**Sumber (edit source):** setiap atlas di `web/assets/characters/rex/animations/` dan `web/assets/fx/ulti-cutin.webp`, sama seperti skin di bagian 13.
+
+**Simpan ke:** `web/assets/characters/rex/skins/thunder/` dengan nama yang sama:
+
+```
+walk.webp  bite-roar.webp  tail-stomp.webp  ulti.webp  jump.webp  knockdown.webp  ulti-cutin.webp
+```
+
+Gunakan prompt edit bagian 13.2 dengan `[SKIN]`:
+
+```
+a majestic legendary storm dinosaur: deep midnight-blue and storm-grey scales with glowing electric-cyan lightning veins running along the neck, flanks, legs and tail, dorsal plates turned into translucent crystal spikes crackling with white-blue electricity, a pale silver belly, eyes glowing bright white-yellow, small sparks dancing on the claws and teeth. Keep it readable and cartoon-styled with the same bold outline, epic but not scary
+```
+
+Untuk `ulti-cutin.webp`, tambahkan: `dark storm clouds and a lightning bolt glow behind the head, electric-cyan rim light`.
+
+**Setelah gambar jadi:** kirim foldernya. Kode langsung mendeteksi atlas di folder itu dan memakainya. Tanpa gambar, ThunderRex tetap jalan dengan tubuh Rex merah ditambah efek petir.
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).

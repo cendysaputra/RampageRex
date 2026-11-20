@@ -98,6 +98,7 @@ const en = {
   'Ratakan {name} dan kalahkan {n} tentara': 'Wreck {name} and defeat {n} soldiers', 'Ratakan {name} dengan darah ≥ {n}%': 'Wreck {name} with ≥ {n}% health',
   'Ratakan {name} tanpa ulti': 'Wreck {name} without using the ulti', 'Ratakan {name} dan kalahkan {n} warga': 'Wreck {name} and defeat {n} civilians',
   // Pesan permainan
+  'Rex tersambar petir! Skin ThunderRex terbuka!': 'Rex was struck by lightning! ThunderRex skin unlocked!', 'Skin langka terbuka': 'Rare skin unlocked', 'ThunderRex': 'ThunderRex', 'langka': 'rare', 'AMUKAN PETIR!': 'THUNDER RAMPAGE!',
   'Hujan deras! Tentara dan warga melambat.': 'Heavy rain! Soldiers and civilians slow down.',
   '{name} · Hancurkan {n}% kota': '{name} · Wreck {n}% of the city', 'SPBU meledak!': 'Petrol station exploded!',
   'Rex makan! +{n} darah': 'Rex eats! +{n} health', 'Rex sudah kenyang.': 'Rex is full.', '{skill} siap dalam {n} dtk.': '{skill} ready in {n}s.',

@@ -99,7 +99,7 @@ Setiap hari ada satu misi baru di bagian atas **Pilih distrik**, misalnya "Ratak
 
 ### Event jalan
 
-Mulai distrik 2, kadang turun **hujan deras**: langit mendung, dan tentara serta warga bergerak lebih lambat di jalan yang licin.
+Mulai distrik 2, kadang turun **hujan deras**: langit mendung, dan tentara serta warga bergerak lebih lambat di jalan yang licin. Saat hujan, petir menyambar di kejauhan, dan sesekali (peluang 1%) petir menyambar Rex sendiri. Saat itu Rage langsung penuh dan skin langka **ThunderRex** terbuka. Dengan skin ini, setiap skill Rex mengeluarkan kilat dan tubuhnya diselimuti aura listrik, tanpa mengubah damage.
 
 ### Pencapaian
 
