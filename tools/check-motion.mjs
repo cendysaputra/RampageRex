@@ -9,7 +9,7 @@ const levels = await Promise.all([1, 2, 3, 4].map(async n =>
 const empty = new Set();
 const manifest = JSON.parse(await readFile(new URL('../assets/manifest.json', import.meta.url), 'utf8'));
 const animation = manifest.rexAnimations;
-assert.equal(Object.values(animation.atlases).reduce((sum, atlas) => sum + atlas.frames.length, 0), 32);
+assert.equal(Object.values(animation.atlases).reduce((sum, atlas) => sum + atlas.frames.length, 0), 46);
 for (const atlas of Object.values(animation.atlases)) {
   const image = manifest.assets[atlas.path + '.png'];
   for (const [x, y, w, h, px, py] of atlas.frames) {

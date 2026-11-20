@@ -74,7 +74,7 @@ try {
       for (const atlas of Object.values(manifest.rexAnimations.atlases)) await alternate.load(atlas.path);
       await alternate.prepareRexFrames();
       const frames = [...alternate.images.entries()].filter(([path]) => path.startsWith('characters/rex/animation-frames/'));
-      fallback = frames.length === 32 && frames.every(([, image]) => image instanceof HTMLCanvasElement && image.width > 0);
+      fallback = frames.length === 46 && frames.every(([, image]) => image instanceof HTMLCanvasElement && image.width > 0);
     } finally { window.createImageBitmap = nativeBitmap; }
     const count = art.images.size;
     const generatedFrames = [...art.images.keys()].filter(path => path.startsWith('characters/rex/animation-frames/')).length;
@@ -82,7 +82,7 @@ try {
     return { count, generatedFrames, decodedPixels, originalPixels, fallback };
   });
   assert.equal(assets.fallback, true);
-  assert.equal(assets.generatedFrames, 32);
+  assert.equal(assets.generatedFrames, 46);
   // Uji distrik
   const scenes = [];
   for (let district = 1; district <= 4; district++) {

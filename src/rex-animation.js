@@ -17,6 +17,13 @@ export function rexPose(rex, animation, down = -1) {
   if (down >= 0) {
     const clip = animation.clips.defeat;
     if (!clip) return { from: idle, to: frame('stomp', 2), mix: smooth(down / .25) };
+    // Tempo per frame dari atlas; frame terakhir ditahan
+    if (clip.frameMs) {
+      let left = down * 1000, index = 0;
+      while (index < clip.frames.length - 1 && left >= clip.frameMs[index]) left -= clip.frameMs[index++];
+      const next = Math.min(index + 1, clip.frames.length - 1);
+      return { from: frame('defeat', index), to: frame('defeat', next), mix: smooth((left / clip.frameMs[index] - .8) / .2) };
+    }
     const position = Math.min(down * clip.frames.length / (clip.fall ?? 1), clip.frames.length - 1);
     const index = Math.floor(position), next = Math.min(index + 1, clip.frames.length - 1);
     return { from: frame('defeat', index), to: frame('defeat', next), mix: smooth((position - index - .7) / .3) };

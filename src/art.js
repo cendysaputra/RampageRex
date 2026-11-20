@@ -148,7 +148,7 @@ function rexRig(c,a,p,t,reduced,down=-1){
   // Lompat: jongkok, melar di udara, gepeng saat mendarat
   if(p.attack?.key==='jump'){
     const age=p.attack.age,crouch=age<.18?Math.sin(age/.18*Math.PI):0,land=age>.95?Math.max(0,1-(age-.95)/.2):0;
-    const squash=reduced?0:.1*crouch+.14*land-(p.lift>0?.05:0);
+    const squash=reduced||a.rexAnimations.clips.jump?0:.1*crouch+.14*land-(p.lift>0?.05:0);
     c.translate(0,-p.lift);c.scale(1+squash*.6,1-squash);
   }
   c.save();
@@ -170,7 +170,7 @@ function rexRig(c,a,p,t,reduced,down=-1){
   if(down>.9){
     const show=smooth((down-.9)/.3);c.globalAlpha=show;c.fillStyle='#ffd45c';c.strokeStyle='#102321';c.lineWidth=4;c.lineJoin='round';
     for(let i=0;i<3;i++){
-      const angle=(reduced?0:t*3)+i*Math.PI*2/3,x=320+Math.cos(angle)*70,y=(a.rexAnimations.clips.defeat?-200:-262)+Math.sin(angle)*14;
+      const angle=(reduced?0:t*3)+i*Math.PI*2/3,x=(a.rexAnimations.clips.defeat?270:320)+Math.cos(angle)*70,y=(a.rexAnimations.clips.defeat?-150:-262)+Math.sin(angle)*14;
       c.beginPath();for(let k=0;k<10;k++){const radius=k%2?8:19,q=-Math.PI/2+k*Math.PI/5;c.lineTo(x+Math.cos(q)*radius,y+Math.sin(q)*radius)}
       c.closePath();c.stroke();c.fill();
     }
