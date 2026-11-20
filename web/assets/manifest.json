@@ -4424,6 +4424,69 @@
         0
       ],
       "alpha": true
+    },
+    "characters/rex/skins/thunder/walk.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/thunder/bite-roar.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/thunder/tail-stomp.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/thunder/ulti.png": {
+      "width": 1254,
+      "height": 1254,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/thunder/jump.png": {
+      "width": 1254,
+      "height": 2080,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/thunder/knockdown.png": {
+      "width": 1254,
+      "height": 1125,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/rex/skins/thunder/ulti-cutin.png": {
+      "width": 1672,
+      "height": 941,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
     }
   },
   "review": [],
