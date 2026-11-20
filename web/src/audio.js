@@ -11,16 +11,16 @@ const sounds={
 };
 // Pemutar suara
 export class Sound {
-  constructor(){this.enabled=true;this.last=new Map()}
+  constructor(){this.enabled=true;this.volume=1;this.last=new Map()}
   // Aktifkan audio
   unlock(){try{this.ctx??=new (window.AudioContext||window.webkitAudioContext)();if(this.ctx.state==='suspended')this.ctx.resume().catch(()=>{})}catch{}}
   // Putar suara
   play(key){
-    if(!this.enabled||!this.ctx||this.ctx.state!=='running'||!sounds[key])return;
+    if(!this.enabled||this.volume<=0||!this.ctx||this.ctx.state!=='running'||!sounds[key])return;
     const t=this.ctx.currentTime;if(t-(this.last.get(key)??-1)<.055)return;this.last.set(key,t);
     const [f,end,dur,vol,type]=sounds[key],o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;
     o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(end,t+dur);
-    g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(vol,t+.009);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(Math.max(.001,vol*this.volume),t+.009);g.gain.exponentialRampToValueAtTime(.001,t+dur);
     o.connect(g).connect(this.ctx.destination);o.start(t);o.stop(t+dur+.02);o.onended=()=>{o.disconnect();g.disconnect()};
   }
 }

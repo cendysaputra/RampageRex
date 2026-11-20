@@ -4,6 +4,7 @@ import { World, cooldowns } from '../web/src/world.js';
 import { attackPose, damp, spritePose } from '../web/src/motion.js';
 import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
 import { loadProgress, saveProgress, recordDistrict, resetProgress } from '../web/src/progress.js';
+import { loadSettings, saveSettings, defaults } from '../web/src/settings.js';
 
 const levels = await Promise.all([1, 2, 3, 4].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -308,6 +309,20 @@ for (const late of [.1, .3, .6]) {
   store.set('rex.progress', '{broken');
   assert.equal(loadProgress(storage).unlocked, 1, 'corrupt saves fall back to a fresh start');
   assert.equal(resetProgress(storage).unlocked, 1);
+}
+
+// Pengaturan dan kesulitan
+{
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  assert.deepEqual(loadSettings(storage), defaults);
+  saveSettings({ sfx: 140, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
+  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk' }, 'invalid values fall back');
+  const easy = new World(levels[0], 0, { difficulty: 'santai' }), normal = new World(levels[0], 0), hard = new World(levels[0], 0, { difficulty: 'ngamuk' });
+  assert.ok(easy.power < normal.power && normal.power < hard.power, 'difficulty scales enemy damage');
+  assert.ok(easy.squadBonus < 0 && hard.squadBonus > 0, 'difficulty scales squad size');
+  const hp = normal.rex.hp;
+  normal.hurt(10);
+  assert.ok(normal.events.includes('hurt') && normal.rex.hp === hp - 10);
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

@@ -1,9 +1,10 @@
-import {World,heroNames,cooldowns} from './world.js';
+import {World,heroNames,cooldowns,difficulties} from './world.js';
 import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
 import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
-import {loadProgress,saveProgress,recordDistrict} from './progress.js';
+import {loadProgress,saveProgress,recordDistrict,resetProgress} from './progress.js';
+import {loadSettings,saveSettings,buzz,padSizes} from './settings.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
 const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
@@ -22,7 +23,10 @@ function soundLabel(){const btn=document.querySelector('.audio');btn.querySelect
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
 function recordLabel(){el('record').textContent=record?'Rekor '+record.toLocaleString('id-ID'):'Belum ada rekor'}
-let progress=loadProgress();
+let progress=loadProgress(),settings=loadSettings();
+// Terapkan pengaturan
+function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad}
+applySettings();
 // Tombol distrik
 function districtLabel(){el('districts').hidden=progress.unlocked<2}
 soundLabel();recordLabel();districtLabel();
@@ -67,6 +71,44 @@ async function chooseDistrict(){
   }
   list.querySelector('button:not(:disabled)')?.focus();
 }
+// Menu pengaturan
+function openSettings(paused=false){
+  screen=paused?'settings-paused':'settings';
+  const back=()=>{if(paused){screen='playing';pause()}else menu()};
+  modal('Pengaturan','<form class="settings" onsubmit="return false"></form>',[['Kembali',back]]);
+  const form=el('panel-copy').querySelector('.settings');
+  // Pilihan tombol
+  const group=(label,options,value,onPick,note='')=>{
+    const box=document.createElement('fieldset'),title=document.createElement('legend'),row=document.createElement('div');
+    title.textContent=label;row.className='choices';box.append(title,row);
+    for(const [key,text] of Object.entries(options)){
+      const b=document.createElement('button');b.type='button';b.textContent=text;b.setAttribute('aria-pressed',String(key===value));
+      b.onclick=()=>{onPick(key);for(const x of row.children)x.setAttribute('aria-pressed',String(x===b))};row.append(b);
+    }
+    if(note){const small=document.createElement('small');small.textContent=note;box.append(small)}
+    form.append(box);
+  };
+  group('Tingkat kesulitan',Object.fromEntries(Object.entries(difficulties).map(([k,d])=>[k,d.label])),settings.difficulty,
+    key=>{settings.difficulty=key;saveSettings(settings)},paused?'Berlaku mulai distrik berikutnya.':'Santai: musuh lebih sedikit dan tidak terlalu sakit.');
+  // Volume efek
+  const sound=document.createElement('label'),range=document.createElement('input'),value=document.createElement('output');
+  sound.className='slider';sound.textContent='Efek suara';range.type='range';range.min=0;range.max=100;range.step=5;range.value=settings.sfx;value.textContent=settings.sfx+'%';
+  range.oninput=()=>{settings.sfx=+range.value;value.textContent=range.value+'%';applySettings();saveSettings(settings)};
+  range.onchange=()=>{snd.unlock();snd.play('bite')};
+  sound.append(range,value);form.append(sound);
+  const touch=matchMedia('(pointer:coarse)').matches;
+  if(touch&&'vibrate' in navigator)group('Getaran',{on:'Nyala',off:'Mati'},settings.vibrate?'on':'off',key=>{settings.vibrate=key==='on';saveSettings(settings);if(settings.vibrate)buzz(settings,'stomp')});
+  if(touch||matchMedia('(max-width:720px)').matches)group('Ukuran tombol sentuh',padSizes,settings.pad,key=>{settings.pad=key;applySettings();saveSettings(settings)});
+  // Hapus progres
+  if(!paused){
+    const wipe=document.createElement('button');wipe.type='button';wipe.className='danger';wipe.textContent='Hapus progres';
+    wipe.onclick=()=>{
+      if(!wipe.dataset.armed){wipe.dataset.armed='1';wipe.textContent='Yakin? Tekan lagi untuk menghapus';return}
+      progress=resetProgress();record=0;save('rex.best',0);recordLabel();districtLabel();wipe.textContent='Progres dihapus';wipe.disabled=true;
+    };
+    form.append(wipe);
+  }
+}
 // Kartu distrik
 function stageCard(index,manifest,level){
   const card=el('stage');card.hidden=false;card.classList.remove('leaving');
@@ -83,11 +125,11 @@ function stageOut(){const card=el('stage');card.classList.add('leaving');setTime
 async function start(index=0,carried=0,result=''){
   if(screen==='loading')return;
   close();clearInput();screen='loading';el('menu').hidden=true;el('hud').hidden=true;
-  el('start').disabled=el('help').disabled=el('districts').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
+  el('start').disabled=el('help').disabled=el('districts').disabled=el('settings').disabled=true;el('load-status').textContent='';text('stage-status','Memuat distrik…');snd.unlock();
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);await art.preload(levels[index]);
-    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],index);
+    renderer??=new Renderer(el('world'),art);levelIndex=index;previousScore=carried;world=new World(levels[index],index,{difficulty:settings.difficulty});
     renderer.render(world);updateHud();text('stage-status','Siap mengamuk!');
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
     stageOut();el('hud').hidden=false;screen='playing';el('pause').focus({preventScroll:true});clearInput();
@@ -95,14 +137,14 @@ async function start(index=0,carried=0,result=''){
     if(document.hidden)pause();
   }catch(err){
     boot=null;art=null;renderer=null;el('stage').hidden=true;el('menu').hidden=false;screen='menu';el('load-status').textContent='Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.';console.error(err);
-  }finally{el('start').disabled=el('help').disabled=el('districts').disabled=false}
+  }finally{el('start').disabled=el('help').disabled=el('districts').disabled=el('settings').disabled=false}
 }
 // Lanjut main
 function resume(){close();clearInput();screen='playing';el('pause').focus({preventScroll:true})}
 // Jeda
 function pause(){if(screen!=='playing')return;screen='paused';modal('Jeda',
   '<p>Distrik '+(levelIndex+1)+', '+world.level.name+' · '+Math.floor(world.percent)+'% hancur</p>',
-  [['Lanjut main',resume],[snd.enabled?'Matikan suara':'Aktifkan suara',()=>{toggleSound();screen='playing';pause()}],['Menu utama',menu]])}
+  [['Lanjut main',resume],[snd.enabled?'Matikan suara':'Aktifkan suara',()=>{toggleSound();screen='playing';pause()}],['Pengaturan',()=>openSettings(true)],['Menu utama',menu]])}
 // Hasil level
 function finish(){
   screen='result';const win=world.status==='won',score=previousScore+world.score;
@@ -155,7 +197,7 @@ function frame(now){
       input.clear();for(const action of controls.values())input.add(action);for(const action of taps)input.add(action);
       world.update(elapsed/steps,input);taps.clear();
     }
-    for(const name of world.events.splice(0))snd.play(name);
+    for(const name of world.events.splice(0)){snd.play(name);buzz(settings,name)}
     renderer.render(world);updateHud();if(world.status!=='playing')finish();
   }
   requestAnimationFrame(frame);
@@ -184,7 +226,7 @@ document.querySelectorAll('[data-action]').forEach(b=>{
   for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,e=>controls.delete(e.pointerId));
 });
 // Batal dialog
-panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='help'||screen==='select')menu()});
+panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resume();else if(screen==='help'||screen==='select'||screen==='settings')menu();else if(screen==='settings-paused'){screen='playing';pause()}});
 // Jeda otomatis
 window.addEventListener('blur',()=>{clearInput();pause()});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();pause()}});
 // Tombol menu
@@ -195,5 +237,5 @@ el('start').onclick=async()=>{
   await playOpening(el('opening'),snd);
   await start();
 };
-el('help').onclick=help;el('districts').onclick=chooseDistrict;el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
+el('help').onclick=help;el('districts').onclick=chooseDistrict;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);

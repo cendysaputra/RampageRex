@@ -52,6 +52,8 @@ Progres tersimpan otomatis. Setiap distrik yang selesai membuka distrik berikutn
 
 Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
 
+Menu **Pengaturan** (dari menu utama atau saat jeda) berisi tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
+
 <p align="center">
   <img src="docs/screenshots/rex-ulti.webp" alt="Cut-in ulti Amukan Rex" width="49%">
   <img src="docs/screenshots/jump.webp" alt="Gelombang kejut saat Rex mendarat dari lompatan" width="49%">

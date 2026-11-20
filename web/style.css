@@ -139,6 +139,21 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
 .panel-inner dd{margin:0}
 .panel-inner dt{font-weight:800;white-space:nowrap;color:var(--orange)}
 #panel-actions{margin-top:22px}
+/* Pengaturan */
+.settings{display:grid;gap:16px;margin-top:12px}
+.settings fieldset{margin:0;padding:0;border:0;display:grid;gap:6px}
+.settings legend,.slider{font-weight:800;color:var(--orange);padding:0;margin-bottom:6px}
+.settings small{color:var(--muted);font-size:13px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices button{padding:8px 18px;font-size:15px;background:#1d302e}
+.choices button[aria-pressed="true"]{color:var(--ink);background:var(--orange)}
+.slider{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 12px}
+.slider input{grid-column:1;width:100%;accent-color:var(--orange)}
+.slider output{color:var(--cream);font-variant-numeric:tabular-nums;font-weight:700}
+.settings .danger{justify-self:start;padding:8px 18px;font-size:15px;color:#ffd0d6;background:#4a1f27}
+/* Ukuran tombol */
+[data-pad="s"] .pad button{min-width:44px;height:42px;font-size:14px}
+[data-pad="l"] .pad button{min-width:66px;height:64px;font-size:17px}
 /* Daftar distrik */
 .districts{display:grid;gap:8px;margin-top:14px}
 .district{display:grid;gap:2px;width:100%;padding:12px 26px 11px;text-align:left;background:#1d302e}

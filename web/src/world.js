@@ -54,6 +54,8 @@ function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list
 const propHitboxes={'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
   billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
+// Tingkat kesulitan
+export const difficulties={santai:{label:'Santai',power:.6,squad:-4},normal:{label:'Normal',power:1,squad:0},ngamuk:{label:'Ngamuk',power:1.35,squad:4}};
 // Formasi pahlawan
 const flank={perisai:520,rajawali:780,jaring:-600};
 const delays={perisai:0,rajawali:.9,jaring:1.8};
@@ -76,7 +78,7 @@ const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
 // Dunia permainan
 export class World {
-  constructor(level,index){
+  constructor(level,index,options={}){
     this.level=level;this.index=index;this.time=0;this.score=0;this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
@@ -95,7 +97,8 @@ export class World {
     // Fase akhir
     this.phase='fight';this.exitX=level.length-420;this.exitAt=0;
     // Kekuatan musuh
-    this.power=1+index*.12;
+    const mode=difficulties[options.difficulty]||difficulties.normal;
+    this.power=(1+index*.12)*mode.power;this.squadBonus=mode.squad;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
@@ -289,7 +292,7 @@ export class World {
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
   // Lukai Rex
-  hurt(amount,stun=0){const p=this.rex;if(this.immune())return false;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun);return true}
+  hurt(amount,stun=0){const p=this.rex;if(this.immune())return false;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;this.sound('hurt');if(p.fury<=0)p.stun=Math.max(p.stun,stun);return true}
   // Rex kebal
   immune(){const p=this.rex;return p.attack?.key==='ulti'||p.lift>0||this.phase==='dying'}
   // Mulai ulti pahlawan
@@ -414,7 +417,7 @@ export class World {
     }
     // Tentara baru
     this.spawnTime-=dt;
-    const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+this.index*2;
+    const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+this.index*2+this.squadBonus;
     if(this.phase==='fight'&&this.spawnTime<=0&&troops<cap){
       const pool=['infantry'];if(this.percent>=30)pool.push('bazooka');if(this.percent>=50)pool.push('jeep');if(this.percent>=70)pool.push('helicopter');
       // Regu bergantian
