@@ -52,7 +52,7 @@ Progres tersimpan otomatis. Setiap distrik yang selesai membuka distrik berikutn
 | **Ulti: Amukan Rex**, mengguncang seluruh layar | `R` | | 40 dtk |
 | Jeda | `Esc` atau `P` | | |
 
-Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
+Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar. Daftar kontrol lengkap bisa dibuka kapan saja dari tombol **Kontrol** di layar jeda.
 
 Menu **Pengaturan** (dari menu utama atau saat jeda) berisi tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
 
