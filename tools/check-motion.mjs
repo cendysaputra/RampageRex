@@ -12,6 +12,7 @@ import { t, setLang, keys as i18nKeys } from '../web/src/i18n.js';
 import { makeEndless } from '../web/src/endless.js';
 import { upgrades, offer, modifiers, MAX_STACK } from '../web/src/upgrades.js';
 import { achievements, loadStats, saveStats, addRun, unlock } from '../web/src/achievements.js';
+import { todayMission, missionTemplate, passed, loadDaily, completeDaily, dayKey } from '../web/src/daily.js';
 
 const levels = await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -601,6 +602,33 @@ for (const late of [.1, .3, .6]) {
   saveStats(stats, storage);
   assert.deepEqual(loadStats(storage).unlocked, stats.unlocked);
   assert.equal(new Set(achievements.map(a => a.id)).size, achievements.length);
+}
+
+// Misi harian
+{
+  const day = new Date(2026, 10, 21), next = new Date(2026, 10, 22), later = new Date(2026, 10, 25);
+  const a = todayMission(8, day), b = todayMission(8, day);
+  assert.deepEqual(a, b, 'the same day gives the same mission');
+  const week = Array.from({ length: 14 }, (_, i) => todayMission(8, new Date(2026, 10, 21 + i)));
+  assert.ok(new Set(week.map(m => m.district + ':' + m.kind)).size > 5, 'missions vary from day to day');
+  assert.ok(Array.from({ length: 30 }, (_, i) => todayMission(2, new Date(2026, 0, 1 + i))).every(m => m.district < 2), 'only unlocked districts are picked');
+  for (const kind of [0, 1, 2, 3, 4, 5]) assert.ok(i18nKeys.includes(missionTemplate({ kind })), 'daily mission text is translated');
+  const world = makeWorld();
+  assert.equal(passed({ kind: 4, n: 0 }, world), false, 'a loss never passes');
+  world.status = 'won';
+  assert.equal(passed({ kind: 4, n: 0 }, world), true);
+  world.usedUlti = true;
+  assert.equal(passed({ kind: 4, n: 0 }, world), false, 'using the ulti fails the no-ulti mission');
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  let rec = loadDaily(storage);
+  rec = completeDaily(rec, day, storage); rec = completeDaily(rec, day, storage);
+  assert.deepEqual([rec.streak, rec.total], [1, 1], 'a day counts once');
+  rec = completeDaily(rec, next, storage);
+  assert.equal(rec.streak, 2, 'consecutive days build a streak');
+  rec = completeDaily(rec, later, storage);
+  assert.equal(rec.streak, 1, 'a missed day resets the streak');
+  assert.equal(loadDaily(storage).total, 3);
+  assert.equal(dayKey(day), '2026-11-21');
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

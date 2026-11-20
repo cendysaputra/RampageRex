@@ -92,6 +92,11 @@ const en = {
   'Tank Terbalik': 'Tank Flipper', 'Balikkan 25 tank dengan ekor': 'Flip 25 tanks with your tail', 'Langit Bersih': 'Clear Skies', 'Jatuhkan 30 drone': 'Down 30 drones',
   'Penggagal Ulti': 'Ulti Breaker', 'Gagalkan 20 ulti pahlawan': 'Cancel 20 hero ultis', 'Kombo Maut': 'Deadly Combo', 'Capai kombo 60 dalam satu distrik': 'Reach a 60 combo in one district',
   'Tak Kenal Lelah': 'Relentless', 'Raih 50.000 skor di Mode Tanpa Akhir': 'Score 50,000 in Endless mode',
+  // Misi harian
+  'Misi harian': 'Daily mission', '{n} hari beruntun': '{n}-day streak', 'Misi harian berhasil!': 'Daily mission complete!', 'Misi harian gagal': 'Daily mission failed',
+  'Ratakan {name} dalam {n} menit': 'Wreck {name} within {n} minutes', 'Ratakan {name} dengan kombo {n}': 'Wreck {name} with a {n} combo',
+  'Ratakan {name} dan kalahkan {n} tentara': 'Wreck {name} and defeat {n} soldiers', 'Ratakan {name} dengan darah ≥ {n}%': 'Wreck {name} with ≥ {n}% health',
+  'Ratakan {name} tanpa ulti': 'Wreck {name} without using the ulti', 'Ratakan {name} dan kalahkan {n} warga': 'Wreck {name} and defeat {n} civilians',
   // Pesan permainan
   '{name} · Hancurkan {n}% kota': '{name} · Wreck {n}% of the city', 'SPBU meledak!': 'Petrol station exploded!',
   'Rex makan! +{n} darah': 'Rex eats! +{n} health', 'Rex sudah kenyang.': 'Rex is full.', '{skill} siap dalam {n} dtk.': '{skill} ready in {n}s.',

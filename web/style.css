@@ -180,6 +180,8 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
 .upgrade b{font-family:var(--shout);font-weight:400;font-size:24px;letter-spacing:.04em;line-height:1;color:var(--orange)}
 .upgrade small{font-size:14px;color:var(--cream)}
 .owned{font-size:13px;color:var(--muted)}
+.district.daily{box-shadow:inset 4px 0 0 var(--orange)}
+.district.daily b{color:var(--orange)}
 /* Pencapaian */
 .menu-bottom{gap:10px}
 .trophy-chip{padding:4px 14px 3px;font-size:14px;background:#13201fcc;clip-path:var(--slant-sm)}
@@ -191,7 +193,7 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
 .trophies i{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--orange);transform-origin:left}
 .trophy-new{color:var(--orange);font-weight:800}
 /* Daftar distrik */
-.districts{display:grid;gap:8px;margin-top:14px}
+.districts{display:grid;gap:8px;margin-top:14px;max-height:62dvh;overflow:auto;padding-right:4px}
 .district{display:grid;gap:2px;width:100%;padding:12px 26px 11px;text-align:left;background:#1d302e}
 .district b{font-family:var(--shout);font-weight:400;font-size:24px;letter-spacing:.04em;line-height:1}
 .district small{font-size:14px;color:var(--muted)}

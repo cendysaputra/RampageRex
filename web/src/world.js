@@ -99,7 +99,7 @@ const firstUlt={perisai:8,rajawali:14,jaring:20,robot:10},ultWindup=1.05;
 export class World {
   constructor(level,index,options={}){
     this.lite=!!options.lite;this.upgrades=options.upgrades||[];this.mods=modifiers(this.upgrades);
-    this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.flips=0;this.lost=0;this.total=0;
+    this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.flips=0;this.usedUlti=false;this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp+this.mods.hp,max:rexHp+this.mods.hp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
     this.buildings=level.buildings.map(b=>{
@@ -240,7 +240,7 @@ export class World {
     if(p.cd[key]>0){if(key==='ulti'||key==='roar'||key==='jump')this.say(t('{skill} siap dalam {n} dtk.',{skill:t(({ulti:'Ulti',roar:'Raung',jump:'Lompat'})[key]),n:Math.ceil(p.cd[key])}),.9);return}
     p.cd[key]=cooldowns[key]*this.mods.cooldown[key];
     p.attack={key,age:0,...abilities[key],done:false};
-    if(key==='ulti'){this.messageUntil=0;this.sound('ulti');if(this.cast&&!this.cast.done)this.cancelCast()}
+    if(key==='ulti'){this.usedUlti=true;this.messageUntil=0;this.sound('ulti');if(this.cast&&!this.cast.done)this.cancelCast()}
   }
   // Hantam target
   strike(a){

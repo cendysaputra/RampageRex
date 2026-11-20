@@ -10,6 +10,7 @@ import {missions,earned,starText,missionText} from './missions.js';
 import {t,num,setLang,deviceLang,translatePage,languages} from './i18n.js';
 import {makeEndless} from './endless.js';
 import {upgrades,offer} from './upgrades.js';
+import {todayMission,missionTemplate,passed,loadDaily,completeDaily} from './daily.js';
 import {achievements,loadStats,saveStats,addRun,unlock,progressOf,resetStats} from './achievements.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
@@ -29,7 +30,7 @@ function soundLabel(){const btn=document.querySelector('.audio');btn.querySelect
 function toggleSound(){snd.enabled=!snd.enabled;save('rex.sound',snd.enabled?'on':'off');soundLabel();if(snd.enabled){snd.unlock();snd.play('step')}}
 // Label rekor
 function recordLabel(){el('record').textContent=record?t('Rekor {n}',{n:num(record)}):t('Belum ada rekor')}
-let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,picked=[],stats=loadStats();
+let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,picked=[],stats=loadStats(),daily=null,dailyRecord=loadDaily();
 // Skin aktif
 function activeSkin(){const s=skins[settings.skin];return s&&totalStars(progress)>=s.stars?s.folder:''}
 // Terapkan bahasa
@@ -37,6 +38,8 @@ function applyLang(){setLang(settings.lang);translatePage();soundLabel();recordL
 // Terapkan pengaturan
 function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad}
 applySettings();setLang(settings.lang);translatePage();
+// Teks misi harian
+function dailyText(mission,levels){return t(missionTemplate(mission),{name:t(levels[mission.district].name),n:num(mission.n)})}
 // Label pencapaian
 function trophyLabel(){el('trophies').textContent=t('Pencapaian {n}/{total}',{n:stats.unlocked.length,total:achievements.length})}
 // Daftar pencapaian
@@ -95,13 +98,21 @@ async function chooseDistrict(){
   let levels;try{[,levels]=await levelData()}catch{boot=null;menu();el('load-status').textContent=t('Data distrik gagal dimuat.');return}
   modal(t('Pilih distrik'),'<div class="districts"></div>',[[t('Kembali'),menu]]);
   const list=el('panel-copy').querySelector('.districts');
+  // Misi harian
+  const mission=todayMission(progress.unlocked),done=dailyRecord.last===mission.day;
+  {
+    const b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
+    b.type='button';b.className='district daily';name.textContent=t('Misi harian')+(done?' ✓':'');
+    note.textContent=dailyText(mission,levels)+(dailyRecord.streak?' · '+t('{n} hari beruntun',{n:dailyRecord.streak}):'');
+    b.append(name,note);b.onclick=()=>{daily=mission;start(mission.district)};list.append(b);
+  }
   for(const [i,level] of levels.entries()){
     const endless=i===ENDLESS,open=endless?progress.cleared[0]:i<progress.unlocked,b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
     b.type='button';b.className='district';b.disabled=!open;
     name.textContent=(endless?'∞':i+1)+' · '+t(level.name);
     note.textContent=endless?(open?(progress.endless?t('Rekor {n}',{n:num(progress.endless)}):t('Bertahan selama mungkin')):t('Terbuka setelah Jalan Ruko selesai'))
       :!open?t('Terkunci'):starText(progress.stars[i])+' · '+(progress.cleared[i]?t('skor terbaik {n}',{n:num(progress.best[i])}):t('belum selesai'));
-    b.append(name,note);b.onclick=()=>start(i);list.append(b);
+    b.append(name,note);b.onclick=()=>{daily=null;start(i)};list.append(b);
   }
   list.querySelector('button:not(:disabled)')?.focus();
 }
@@ -177,7 +188,7 @@ function stageCard(index,manifest,level){
   const endless=index===ENDLESS;
   text('stage-number',endless?t('Mode'):t('Distrik {n}',{n:index+1}));text('stage-name',level?t(level.name):endless?t('Tanpa Akhir'):'');
   text('stage-goal',!level?'':endless?t('Bertahan dan hancurkan sebanyak mungkin'):t('Target destruksi {n}%',{n:level.target}));
-  text('stage-missions',level&&!endless?missions[index].map((m,i)=>(progress.stars[index][i]?'★ ':'☆ ')+missionText(m)).join('  ·  '):'');
+  text('stage-missions',daily&&level?'★ '+t('Misi harian')+': '+t(missionTemplate(daily),{name:t(level.name),n:num(daily.n)}):level&&!endless?missions[index].map((m,i)=>(progress.stars[index][i]?'★ ':'☆ ')+missionText(m)).join('  ·  '):'');
   if(manifest&&level){
     const layer=name=>{const own='backgrounds/'+level.setting+'/'+name;return './assets/'+(manifest.assets[own+'.png']?own:'backgrounds/'+name)+'.webp'};
     card.style.setProperty('--far','url('+layer('far-city')+')');card.style.setProperty('--sky','url('+layer('sky')+')');
@@ -253,6 +264,15 @@ function finish(){
   const stars=earned(world,levelIndex);recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress);districtLabel();
   if(score>record){record=score;save('rex.best',record);recordLabel()}
   const trophy=recordTrophies();
+  // Hasil misi harian
+  if(daily){
+    const ok=passed(daily,world);if(ok)completeDaily(dailyRecord);const mission=daily;daily=null;
+    modal(t(ok?'Misi harian berhasil!':win?'Misi harian gagal':'Rex tumbang'),
+      '<p>'+t('{name} · destruksi {pct}% · Skor {score}',{name:t(world.level.name),pct:Math.floor(world.percent),score:num(score)})+'</p><p>'+t('Misi harian')+': '+t(missionTemplate(mission),{name:t(world.level.name),n:num(mission.n)})+'</p>'
+      +(ok?'<p class="trophy-new">'+t('{n} hari beruntun',{n:dailyRecord.streak})+'</p>':'')+(trophy?'<p class="trophy-new">'+trophy.slice(3)+'</p>':''),
+      [[ok?t('Menu utama'):t('Coba lagi'),ok?menu:()=>{daily=mission;start(mission.district)}],...(ok?[]:[[t('Menu utama'),menu]])]);
+    return;
+  }
   const more=win&&levelIndex<ENDLESS-1;
   // Lanjut distrik
   if(more){el('hud').hidden=true;chooseUpgrade(levelIndex+1,score,t('{name} rata {stars} · Skor {score}',{name:t(world.level.name),stars:starText(stars),score:num(score)})+trophy);return}
@@ -338,7 +358,7 @@ panel.addEventListener('cancel',e=>{e.preventDefault();if(screen==='paused')resu
 window.addEventListener('blur',()=>{clearInput();pause()});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();pause()}});
 // Tombol menu
 el('start').onclick=async()=>{
-  if(screen!=='menu')return;
+  if(screen!=='menu')return;daily=null;
   screen='opening';snd.unlock();el('menu').hidden=true;
   await playCredit(el('credit'));
   await playOpening(el('opening'),snd);
