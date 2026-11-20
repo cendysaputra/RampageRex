@@ -1,3 +1,4 @@
+import { t } from './i18n.js';
 // Daftar adegan
 // Kamera dan lapis
 const scenes = [
@@ -115,7 +116,7 @@ export function playOpening(section, sound) {
         drift(flat, .7, undefined, scene);
       }
       if (scene.glow) shot.append(Object.assign(document.createElement('span'), { className: 'glow' }));
-      shot.setAttribute('aria-label', scene.line);
+      shot.setAttribute('aria-label', t(scene.line));
       return shot;
     }
     // Masuk adegan
@@ -146,7 +147,7 @@ export function playOpening(section, sound) {
       const scene = scenes[index];
       enter(build(scene, loaded), scene);
       index++;
-      caption.textContent = scene.line;
+      caption.textContent = t(scene.line);
       if (!calm) caption.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'ease-out' });
       scene.cues.forEach((cue, i) => later(() => sound.play(cue), i * 520));
       later(next, HOLD);

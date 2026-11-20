@@ -1,5 +1,6 @@
 import { clamp, moduleState, exitTime } from './world.js';
 import { attackPose, smooth } from './motion.js';
+import { t as tr } from './i18n.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
@@ -515,8 +516,8 @@ export class Renderer {
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font=Math.round(height*.22)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';
-      c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';c.strokeText('AMUKAN REX!',28,height-18);
-      c.fillStyle='#fff0ce';c.fillText('AMUKAN REX!',28,height-18);
+      c.lineWidth=10;c.strokeStyle='#102321';c.lineJoin='round';c.strokeText(tr('AMUKAN REX!'),28,height-18);
+      c.fillStyle='#fff0ce';c.fillText(tr('AMUKAN REX!'),28,height-18);
       c.restore();
     }
     if(flash>0&&!reduced){c.fillStyle='rgba(255,243,196,'+flash*.75+')';c.fillRect(0,0,view,logicalH)}
@@ -547,10 +548,10 @@ export class Renderer {
       c.restore();outline();
       c.strokeStyle='#fff0ce';c.lineWidth=7;c.stroke();
       c.font=Math.round(height*.2)+'px Bangers,Impact,sans-serif';c.textBaseline='bottom';c.lineJoin='round';
-      c.lineWidth=10;c.strokeStyle='#102321';c.strokeText(cast.name,28,height-18);
-      c.fillStyle='#fff0ce';c.fillText(cast.name,28,height-18);
+      c.lineWidth=10;c.strokeStyle='#102321';c.strokeText(tr(cast.name),28,height-18);
+      c.fillStyle='#fff0ce';c.fillText(tr(cast.name),28,height-18);
       c.font='700 '+Math.round(height*.075)+'px "Baloo 2",sans-serif';c.lineWidth=6;
-      const tip='Raung untuk menggagalkan!';c.strokeText(tip,lean+24,height*.12+Math.round(height*.075));c.fillStyle=glow;c.fillText(tip,lean+24,height*.12+Math.round(height*.075));
+      const tip=tr('Raung untuk menggagalkan!');c.strokeText(tip,lean+24,height*.12+Math.round(height*.075));c.fillStyle=glow;c.fillText(tip,lean+24,height*.12+Math.round(height*.075));
       c.restore();
     }
     if(flash>0&&!reduced&&g.cast){c.fillStyle=castColors[g.cast.type][2]+Math.round(flash*150).toString(16).padStart(2,'0');c.fillRect(0,0,view,logicalH)}
@@ -572,7 +573,7 @@ export class Renderer {
         c.fillStyle='rgba(11,23,25,'+k*.6+')';c.fillRect(0,0,view,logicalH);
         c.save();c.globalAlpha=k;c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';
         c.font=Math.round(Math.min(view*.12,150))+'px Bangers,Impact,sans-serif';c.lineWidth=14;c.strokeStyle='#102321';
-        const y=logicalH*.32-(reduced?0:(1-k)*30);c.strokeText('REX TUMBANG',view/2,y);c.fillStyle='#e8536d';c.fillText('REX TUMBANG',view/2,y);c.restore();
+        const y=logicalH*.32-(reduced?0:(1-k)*30);const down=tr('REX TUMBANG');c.strokeText(down,view/2,y);c.fillStyle='#e8536d';c.fillText(down,view/2,y);c.restore();
       }
     }
     if(g.phase==='exit'){

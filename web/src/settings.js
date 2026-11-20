@@ -1,4 +1,5 @@
 import { difficulties } from './world.js';
+import { languages, deviceLang } from './i18n.js';
 
 // Kunci simpanan
 const KEY = 'rex.settings';
@@ -20,7 +21,7 @@ export function weakDevice(nav = globalThis.navigator) {
 export function useLite(settings, nav) {
   return settings.graphics === 'ringan' || (settings.graphics === 'auto' && weakDevice(nav));
 }
-export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah', graphics: 'auto' };
+export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah', graphics: 'auto', lang: deviceLang() };
 
 // Baca pengaturan
 export function loadSettings(storage = globalThis.localStorage) {
@@ -33,7 +34,8 @@ export function loadSettings(storage = globalThis.localStorage) {
     pad: data.pad in padSizes ? data.pad : defaults.pad,
     difficulty: data.difficulty in difficulties ? data.difficulty : defaults.difficulty,
     skin: data.skin in skins ? data.skin : defaults.skin,
-    graphics: data.graphics in graphics ? data.graphics : defaults.graphics
+    graphics: data.graphics in graphics ? data.graphics : defaults.graphics,
+    lang: data.lang in languages ? data.lang : defaults.lang
   };
 }
 

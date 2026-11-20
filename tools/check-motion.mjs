@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { World, cooldowns } from '../web/src/world.js';
+import { World, cooldowns, heroNames as heroNamesCheck, hints as hintsCheck, heroUltis as heroUltisCheck, difficulties as difficultiesCheck } from '../web/src/world.js';
 import { attackPose, damp, spritePose } from '../web/src/motion.js';
 import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
 import { loadProgress, saveProgress, recordDistrict, resetProgress } from '../web/src/progress.js';
-import { loadSettings, saveSettings, defaults, useLite, weakDevice } from '../web/src/settings.js';
+import { loadSettings, saveSettings, defaults, useLite, weakDevice, skins as skinsCheck, graphics as graphicsCheck, padSizes as padSizesCheck } from '../web/src/settings.js';
 import { Tutorial, steps as tutorialSteps } from '../web/src/tutorial.js';
 import { missions, earned, starText } from '../web/src/missions.js';
 import { totalStars } from '../web/src/progress.js';
+import { t, setLang, keys as i18nKeys } from '../web/src/i18n.js';
 import { makeEndless } from '../web/src/endless.js';
 
 const levels = await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map(async n =>
@@ -320,7 +321,7 @@ for (const late of [.1, .3, .6]) {
   const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   assert.deepEqual(loadSettings(storage), defaults);
   saveSettings({ sfx: 140, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
-  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah', graphics: 'auto' }, 'invalid values fall back');
+  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah', graphics: 'auto', lang: defaults.lang }, 'invalid values fall back');
   saveSettings({ skin: 'mecha' }, storage);
   assert.equal(loadSettings(storage).skin, 'mecha');
   const easy = new World(levels[0], 0, { difficulty: 'santai' }), normal = new World(levels[0], 0), hard = new World(levels[0], 0, { difficulty: 'ngamuk' });
@@ -539,6 +540,27 @@ for (const late of [.1, .3, .6]) {
   const lite = new World(levels[0], 0, { lite: true }), full = new World(levels[0], 0);
   lite.fx('debris', 0, 0, 5); full.fx('debris', 0, 0, 5);
   assert.ok(lite.effects.length < full.effects.length, 'lite mode spawns fewer particles');
+}
+
+// Terjemahan lengkap
+{
+  const sources = await Promise.all(['main', 'world', 'art', 'missions', 'tutorial', 'opening', 'settings'].map(n => readFile(new URL(`../web/src/${n}.js`, import.meta.url), 'utf8')));
+  const html = await readFile(new URL('../web/index.html', import.meta.url), 'utf8');
+  const used = new Set();
+  for (const src of sources) for (const m of src.matchAll(/\bt(?:r)?\('((?:[^'\\]|\\.)+)'/g)) used.add(m[1].replace(/\\'/g, "'"));
+  for (const m of html.matchAll(/data-i18n(?:-label)?="([^"]+)"/g)) used.add(m[1]);
+  const known = new Set(i18nKeys);
+  const extra = [...levels.map(l => l.name), 'Tanpa Akhir', ...missions.flat().map(m => m.text), ...tutorialSteps.flatMap(s => [s.key, s.touch]),
+    ...Object.values(heroNamesCheck), ...Object.values(hintsCheck), ...Object.values(heroUltisCheck).map(u => u.name),
+    ...Object.values(difficultiesCheck).map(d => d.label), ...Object.values(skinsCheck).map(s => s.label), ...Object.values(graphicsCheck), ...Object.values(padSizesCheck)];
+  for (const src of sources) for (const m of src.matchAll(/line: '((?:[^'\\]|\\.)+)'/g)) extra.push(m[1]);
+  const missing = [...used, ...extra].filter(k => k && !known.has(k) && /[a-z]{3}/i.test(k) && !['Rage', 'REX', 'Ulti', 'Normal', 'Batik', 'Mecha', 'Perisai', 'Rajawali', 'Jaring'].includes(k));
+  assert.deepEqual([...new Set(missing)], [], 'every visible string has an English translation');
+  setLang('en');
+  assert.equal(t('Distrik {n}', { n: 3 }), 'District 3');
+  assert.equal(t('Jalan Ruko'), 'Ruko Street');
+  setLang('id');
+  assert.equal(t('Distrik {n}', { n: 3 }), 'Distrik 3');
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

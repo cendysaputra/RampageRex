@@ -1,4 +1,5 @@
 import { damp as ease, spritePose } from './motion.js';
+import { t } from './i18n.js';
 // Batasi nilai
 export const clamp = (n, low, high) => Math.max(low, Math.min(n, high));
 export const people = ['office-worker','shopper','schoolkid','elder','bakso-vendor'];
@@ -121,7 +122,7 @@ export class World {
     this.basePower=this.power=(1+this.tier*.36)*mode.power;this.squadBonus=mode.squad;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
-    this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
+    this.say(t('{name} · Hancurkan {n}% kota',{name:t(level.name),n:level.target}),3.2);
   }
   // Warga beraktivitas
   populate(){
@@ -203,7 +204,7 @@ export class World {
   propEffect(prop){
     if(prop.type==='spbu'){
       // SPBU meledak
-      this.say('SPBU meledak!',2);this.sound('collapse');this.shake=Math.max(this.shake,22);
+      this.say(t('SPBU meledak!'),2);this.sound('collapse');this.shake=Math.max(this.shake,22);
       for(let i=0;i<4;i++)this.fx('explosion',prop.x+range(-160,160),-60-range(0,180));
       const near=x=>Math.abs(x-prop.x)<blastRadius;
       for(const b of this.buildings)if(near(b.x))this.damageModule(b,0,blastDamage);
@@ -212,7 +213,7 @@ export class World {
       for(const other of this.props)if(other!==prop&&near(other.x))this.damageProp(other,blastDamage);
     }else if(prop.type==='warung-makan'){
       // Warung makan
-      const p=this.rex,heal=Math.min(warungHeal,p.max-p.hp);p.hp+=heal;this.say(heal?'Rex makan! +'+Math.round(heal)+' darah':'Rex sudah kenyang.',1.8);
+      const p=this.rex,heal=Math.min(warungHeal,p.max-p.hp);p.hp+=heal;this.say(heal?t('Rex makan! +{n} darah',{n:Math.round(heal)}):t('Rex sudah kenyang.'),1.8);
     }
   }
   // Munculkan musuh
@@ -227,7 +228,7 @@ export class World {
   // Mulai serangan
   startAttack(key){
     const p=this.rex;if(!abilities[key]||p.attack||p.stun>0||this.status!=='playing')return;
-    if(p.cd[key]>0){if(key==='ulti'||key==='roar'||key==='jump')this.say(({ulti:'Ulti',roar:'Raung',jump:'Lompat'})[key]+' siap dalam '+Math.ceil(p.cd[key])+' dtk.',.9);return}
+    if(p.cd[key]>0){if(key==='ulti'||key==='roar'||key==='jump')this.say(t('{skill} siap dalam {n} dtk.',{skill:t(({ulti:'Ulti',roar:'Raung',jump:'Lompat'})[key]),n:Math.ceil(p.cd[key])}),.9);return}
     p.cd[key]=cooldowns[key];
     p.attack={key,age:0,...abilities[key],done:false};
     if(key==='ulti'){this.messageUntil=0;this.sound('ulti');if(this.cast&&!this.cast.done)this.cancelCast()}
@@ -268,13 +269,13 @@ export class World {
       if(e.hp<=0||!overlap(hitbox,box(e.x,e.y-e.lift,bw,bh)))continue;
       if(e.type==='helicopter'&&(a.key!=='bite'||e.y< -395))continue;
       if(e.type==='rajawali'&&e.mode!=='ground'&&e.mode!=='dive')continue;
-      if(e.type==='perisai'&&a.key==='bite'&&e.mode!=='recover'&&Math.sign(p.x-e.x)===e.dir){this.say('Perisai memblokir gigitan.',1);continue}
-      if(e.type==='jaring'&&this.enemies.some(t=>t.owner===e&&t.hp>0)){this.say('Hancurkan turret Jaring dulu.',1.1);continue}
+      if(e.type==='perisai'&&a.key==='bite'&&e.mode!=='recover'&&Math.sign(p.x-e.x)===e.dir){this.say(t('Perisai memblokir gigitan.'),1);continue}
+      if(e.type==='jaring'&&this.enemies.some(t=>t.owner===e&&t.hp>0)){this.say(t('Hancurkan turret Jaring dulu.'),1.1);continue}
       const counter=(e.type==='perisai'&&a.key==='tail'&&e.mode==='recover')||(e.type==='jaring'&&a.key==='stomp')||(e.type==='rajawali'&&e.mode==='ground'&&a.key==='bite');
       // Lapis baja tank
       const armour=e.type==='tank'&&!(e.flipped>0)&&a.key!=='tail'?.4:e.flipped>0?1.5:1;
       e.hp-=damage*(counter?2:1)*armour;e.hit=.2;
-      if(a.key==='tail'&&e.type==='tank'){e.flipped=4;e.stun=4;e.vx=-p.dir*260;this.say('Tank terbalik!',1.2)}
+      if(a.key==='tail'&&e.type==='tank'){e.flipped=4;e.stun=4;e.vx=-p.dir*260;this.say(t('Tank terbalik!'),1.2)}
       else if(a.key==='tail'&&!e.hero){const fling=e.type==='jeep'||e.type==='firetruck';e.vx=-p.dir*(fling?920:420);e.stun=.65;if(fling){e.lift=1;e.vy=370}}
       if(e.hp<=0)this.defeat(e);
       else if(!e.hero&&a.key!=='tail')this.stagger(e,p.x);
@@ -346,7 +347,7 @@ export class World {
     const p=this.rex,big=heavy.has(e.type);this.kills[e.type]=(this.kills[e.type]||0)+1;
     this.addScore(e.type==='robot'?5000:e.hero?1200:100);if(e.type==='robot'){for(let i=0;i<5;i++)this.fx('explosion',e.x+range(-120,120),-range(60,320));this.shake=26}p.rage=Math.min(100,p.rage+(e.hero?20:6));
     if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
-    this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
+    this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(t('{name} tumbang!',{name:t(heroNames[e.type])}),2.5);
   }
   // Lukai Rex
   hurt(amount,stun=0){const p=this.rex;if(this.immune())return false;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;this.sound('hurt');if(p.fury<=0)p.stun=Math.max(p.stun,stun);return true}
@@ -360,7 +361,7 @@ export class World {
   // Batalkan ulti
   cancelCast(){
     const e=this.cast.hero;this.cast=null;e.ultCd=Math.max(e.ultCd,10);this.cancelled++;
-    this.say('Ulti '+heroNames[e.type]+' gagal!',1.6);this.sound('crack');
+    this.say(t('Ulti {name} gagal!',{name:t(heroNames[e.type])}),1.6);this.sound('crack');
   }
   // Dampak ulti pahlawan
   castStrike(cast){
@@ -445,8 +446,8 @@ export class World {
     if(this.combo&&(this.comboTime-=dt)<=0)this.combo=0;
     // Pewaktu
     for(const k of ['stun','slow','fury','hit','bigNet'])p[k]=Math.max(0,p[k]-dt);
-    for(const k in p.cd){const before=p.cd[k];p.cd[k]=Math.max(0,before-dt);if(k==='ulti'&&before>0&&!p.cd[k]){this.say('Ulti siap! Tekan R.',2);this.sound('alarm')}}
-    if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say('Rage penuh! Damage 2× selama 8 detik.',2.4);this.sound('roar')}
+    for(const k in p.cd){const before=p.cd[k];p.cd[k]=Math.max(0,before-dt);if(k==='ulti'&&before>0&&!p.cd[k]){this.say(t('Ulti siap! Tekan R.'),2);this.sound('alarm')}}
+    if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say(t('Rage penuh! Damage 2× selama 8 detik.'),2.4);this.sound('roar')}
     const exiting=this.phase==='exit',dying=this.phase==='dying';
     if(exiting){p.stun=0;p.slow=0;p.queued=null}
     if(dying){p.queued=null;p.attack=null}
@@ -487,7 +488,7 @@ export class World {
       for(const type of arrivals){
         const e=this.spawn(type,p.x+side*flank[type]);e.timer+=delays[type];e.ultCd=firstUlt[type];
       }
-      this.say(arrivals.length>1?'Para penjaga mengepung Rex! Pecah formasi mereka satu per satu.':heroNames[arrivals[0]]+' datang! '+hints[arrivals[0]],4);
+      this.say(arrivals.length>1?t('Para penjaga mengepung Rex! Pecah formasi mereka satu per satu.'):t('{name} datang! {hint}',{name:t(heroNames[arrivals[0]]),hint:t(hints[arrivals[0]])}),4);
       this.sound('alarm');
     }
     // Tentara baru
@@ -612,12 +613,12 @@ export class World {
       // Bos final
       this.bossSpawned=true;const side=p.x>this.level.length-1200?-1:1;
       const boss=this.spawn(this.level.boss,p.x+side*760);boss.dir=-side;boss.timer=2;boss.ultCd=firstUlt[this.level.boss];
-      this.say('Ketiga penjaga bergabung: ROBOT PENJAGA!',4);this.sound('alarm');this.shake=18;
+      this.say(t('Ketiga penjaga bergabung: ROBOT PENJAGA!'),4);this.sound('alarm');this.shake=18;
     }
     else if(this.phase==='fight'&&(!this.level.boss||this.bossSpawned)&&this.percent+.0001>=this.level.target&&this.triggered.size===this.level.bosses.length&&!this.enemies.some(e=>e.hero)){
       this.phase='clear';this.shots.length=0;this.rain=null;
       for(const e of this.enemies)e.flee=true;
-      this.say('Kota rata! Jalan ke ujung distrik →',4);this.sound('roar');
+      this.say(t('Kota rata! Jalan ke ujung distrik →'),4);this.sound('roar');
     }
     else if(this.phase==='clear'&&p.x>=this.exitX){this.phase='exit';this.exitAt=this.time;this.messageUntil=0;p.attack=null;this.sound('alarm')}
     else if(this.phase==='exit'&&this.time-this.exitAt>=exitTime)this.status='won';

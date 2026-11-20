@@ -1,3 +1,5 @@
+import { t } from './i18n.js';
+
 // Langkah tutorial
 export const steps = [
   { key: 'Tekan D atau → untuk berjalan.', touch: 'Tekan ▶ untuk berjalan.',
@@ -42,10 +44,10 @@ export class Tutorial {
   }
   // Teks langkah
   text(touch) {
-    return this.finished ? 'Tutorial selesai! Ratakan 100% kota.' : steps[this.step][touch ? 'touch' : 'key'];
+    return t(this.finished ? 'Tutorial selesai! Ratakan 100% kota.' : steps[this.step][touch ? 'touch' : 'key']);
   }
   // Nomor langkah
   label() {
-    return this.finished ? 'Selesai' : (this.step + 1) + '/' + steps.length;
+    return this.finished ? t('Selesai') : (this.step + 1) + '/' + steps.length;
   }
 }
