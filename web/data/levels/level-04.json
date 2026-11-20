@@ -190,6 +190,10 @@
       "type": "electric-pole"
     },
     {
+      "x": 4789,
+      "type": "spbu"
+    },
+    {
       "x": 5298.5,
       "type": "tree"
     },
@@ -204,6 +208,10 @@
     {
       "x": 7345.0,
       "type": "electric-pole"
+    },
+    {
+      "x": 7854,
+      "type": "warung-makan"
     },
     {
       "x": 8363.5,

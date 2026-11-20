@@ -2,7 +2,7 @@ import { clamp, moduleState, exitTime } from './world.js';
 import { attackPose, smooth } from './motion.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
-const propWidths={'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
+const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
 const people={civilian:85,infantry:86,bazooka:94},vehicles={jeep:180,helicopter:285},heroScale=.64,samples=1.6;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],

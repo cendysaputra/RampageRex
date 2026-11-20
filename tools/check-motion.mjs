@@ -422,4 +422,24 @@ for (const late of [.1, .3, .6]) {
   assert.equal(loadProgress(storage).endless, 4321);
 }
 
+// Bangunan spesial
+{
+  const world = makeWorld();
+  world.spawnTime = Infinity;
+  const spbu = world.props.find(p => p.type === 'spbu');
+  assert.ok(spbu, 'district 1 has an SPBU');
+  const soldier = world.spawn('infantry', spbu.x + 200), hp = world.rex.hp;
+  const building = world.buildings.reduce((a, b) => Math.abs(b.x - spbu.x) < Math.abs(a.x - spbu.x) ? b : a);
+  const before = building.modules[0].hp;
+  world.damageProp(spbu, Infinity);
+  assert.ok(soldier.hp <= 0 || soldier.hp < soldier.max, 'the blast hits nearby soldiers');
+  if (Math.abs(building.x - spbu.x) < 480) assert.ok(building.modules[0].hp < before, 'the blast hits nearby buildings');
+  assert.equal(world.rex.hp, hp, 'the blast never hurts Rex');
+  const warung = world.props.find(p => p.type === 'warung-makan');
+  world.rex.hp = 100;
+  world.damageProp(warung, Infinity);
+  assert.equal(world.rex.hp, 160, 'the warung makan heals Rex');
+  for (const level of levels.slice(0, 4)) assert.ok(['spbu', 'warung-makan'].every(t => level.props.some(p => p.type === t)));
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

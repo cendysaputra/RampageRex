@@ -184,6 +184,10 @@
       "type": "angkot"
     },
     {
+      "x": 4833,
+      "type": "spbu"
+    },
+    {
       "x": 5300.0,
       "type": "electric-pole"
     },
@@ -198,6 +202,10 @@
     {
       "x": 7431.5,
       "type": "food-cart"
+    },
+    {
+      "x": 7898,
+      "type": "warung-makan"
     },
     {
       "x": 8365.0,

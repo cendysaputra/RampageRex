@@ -51,7 +51,7 @@ function range(a,b){return a+Math.random()*(b-a)}
 // Saring daftar
 function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
 // Kotak properti
-const propHitboxes={'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
+const propHitboxes={'lapak-sayur':[208,150],'becak':[140,100],'tumpukan-karung':[188,70],'gerbong':[529,160],'bangku-peron':[135,55],'menara-sinyal':[179,230],'gerbang-tol':[266,210],'truk-kontainer':[332,150],'pembatas-beton':[118,50],'perahu-nelayan':[222,120],'pohon-kelapa':[299,300],'warung-pantai':[252,160],'spbu':[353,200],'warung-makan':[336,160],'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
   billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
 // Tingkat kesulitan
@@ -75,6 +75,8 @@ export const exitTime=2.6;
 const calmRadius=560;
 // Aturan kombo
 const comboWindow=2.5,comboStep=10,comboCap=3;
+// Efek bangunan spesial
+const blastRadius=480,blastDamage=260,warungHeal=60;
 // Batas tentara
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
@@ -178,7 +180,23 @@ export class World {
     this.fx('dust',prop.x,-46,prop.hp?1:2);
     this.sound(prop.hp?'crack':'collapse');
     // Hadiah rusak
-    if(!prop.hp){this.fx('debris',prop.x,-90,4);this.addScore(40);this.rex.rage=clamp(this.rex.rage+2,0,100)}
+    if(!prop.hp){this.fx('debris',prop.x,-90,4);this.addScore(40);this.rex.rage=clamp(this.rex.rage+2,0,100);this.propEffect(prop)}
+  }
+  // Efek properti
+  propEffect(prop){
+    if(prop.type==='spbu'){
+      // SPBU meledak
+      this.say('SPBU meledak!',2);this.sound('collapse');this.shake=Math.max(this.shake,22);
+      for(let i=0;i<4;i++)this.fx('explosion',prop.x+range(-160,160),-60-range(0,180));
+      const near=x=>Math.abs(x-prop.x)<blastRadius;
+      for(const b of this.buildings)if(near(b.x))this.damageModule(b,0,blastDamage);
+      for(const e of this.enemies)if(e.hp>0&&near(e.x)){e.hp-=e.hero?blastDamage*.5:blastDamage;e.hit=.2;e.stun=Math.max(e.stun,1.2);if(e.hp<=0)this.defeat(e)}
+      for(const c of this.civilians)if(!c.down&&near(c.x))this.knock(c,prop.x);
+      for(const other of this.props)if(other!==prop&&near(other.x))this.damageProp(other,blastDamage);
+    }else if(prop.type==='warung-makan'){
+      // Warung makan
+      const p=this.rex,heal=Math.min(warungHeal,p.max-p.hp);p.hp+=heal;this.say(heal?'Rex makan! +'+Math.round(heal)+' darah':'Rex sudah kenyang.',1.8);
+    }
   }
   // Munculkan musuh
   spawn(type,x){
