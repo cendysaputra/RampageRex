@@ -497,6 +497,66 @@
       },
       "state": "rubble"
     },
+    "buildings/ruko-01/colors/roof-kopdes.png": {
+      "width": 984,
+      "height": 293,
+      "bounds": {
+        "x": 10,
+        "y": 146,
+        "width": 964,
+        "height": 135
+      },
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          281
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 269
+      },
+      "state": "kopdes"
+    },
+    "buildings/ruko-01/colors/ground-kopdes.png": {
+      "width": 984,
+      "height": 457,
+      "bounds": {
+        "x": 19,
+        "y": 12,
+        "width": 946,
+        "height": 433
+      },
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true,
+      "connection": {
+        "top": [
+          492,
+          12
+        ],
+        "bottom": [
+          492,
+          445
+        ],
+        "left": 12,
+        "right": 972,
+        "width": 960,
+        "rise": 433
+      },
+      "state": "kopdes"
+    },
     "buildings/ruko-01/colors/ground-mint.png": {
       "width": 984,
       "height": 457,
