@@ -54,6 +54,8 @@ function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list
 const propHitboxes={'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
   billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
+// Tingkat kesulitan
+export const difficulties={santai:{label:'Santai',power:.6,squad:-4},normal:{label:'Normal',power:1,squad:0},ngamuk:{label:'Ngamuk',power:1.35,squad:4}};
 // Formasi pahlawan
 const flank={perisai:520,rajawali:780,jaring:-600};
 const delays={perisai:0,rajawali:.9,jaring:1.8};
@@ -71,13 +73,15 @@ const slamStun={troop:4.5,hero:1.6};
 export const exitTime=2.6;
 // Jarak panik
 const calmRadius=560;
+// Aturan kombo
+const comboWindow=2.5,comboStep=10,comboCap=3;
 // Batas tentara
 const squadCap=14;
 const firstUlt={perisai:8,rajawali:14,jaring:20},ultWindup=1.05;
 // Dunia permainan
 export class World {
-  constructor(level,index){
-    this.level=level;this.index=index;this.time=0;this.score=0;this.lost=0;this.total=0;
+  constructor(level,index,options={}){
+    this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp,max:rexHp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
       cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15},lift:0};
     this.buildings=level.buildings.map(b=>{
@@ -95,7 +99,8 @@ export class World {
     // Fase akhir
     this.phase='fight';this.exitX=level.length-420;this.exitAt=0;
     // Kekuatan musuh
-    this.power=1+index*.12;
+    const mode=difficulties[options.difficulty]||difficulties.normal;
+    this.basePower=this.power=(1+index*.12)*mode.power;this.squadBonus=mode.squad;
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
     this.say(level.name+' · Hancurkan '+level.target+'% kota',3.2);
@@ -126,6 +131,13 @@ export class World {
     if(!c.calm)return;c.calm=false;c.chat=false;c.alarm=.7;c.dir=c.x>=this.rex.x?1:-1;
     c.frame=c.fromFrame='run-a';c.frameMix=1;
   }
+  // Pengali kombo
+  get multiplier(){return Math.min(comboCap,1+Math.floor(this.combo/comboStep)*.5)}
+  // Tambah skor
+  addScore(points){
+    this.combo++;this.comboTime=comboWindow;this.maxCombo=Math.max(this.maxCombo,this.combo);
+    this.score+=Math.round(points*this.multiplier);
+  }
   // Persen hancur
   get percent(){return 100*this.lost/this.total}
   // Tampilkan pesan
@@ -143,7 +155,7 @@ export class World {
   // Rusak modul
   damageModule(b,i,damage){
     const m=b.modules[i];if(m.hp<=0)return;
-    const before=moduleState(m),delta=Math.min(m.hp,damage);m.hp-=delta;this.lost+=delta;this.score+=Math.round(delta);
+    const before=moduleState(m),delta=Math.min(m.hp,damage);m.hp-=delta;this.lost+=delta;this.addScore(delta);
     this.rex.rage=clamp(this.rex.rage+delta*.065,0,100);
     if(!b.evacuated){
       b.evacuated=true;this.sound('panic');this.alarmNear(b.x,b.width/2+520);
@@ -166,13 +178,13 @@ export class World {
     this.fx('dust',prop.x,-46,prop.hp?1:2);
     this.sound(prop.hp?'crack':'collapse');
     // Hadiah rusak
-    if(!prop.hp){this.fx('debris',prop.x,-90,4);this.score+=40;this.rex.rage=clamp(this.rex.rage+2,0,100)}
+    if(!prop.hp){this.fx('debris',prop.x,-90,4);this.addScore(40);this.rex.rage=clamp(this.rex.rage+2,0,100)}
   }
   // Munculkan musuh
   spawn(type,x){
     const hero=type in heroNames;
     // Darah pahlawan
-    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.index*.1:1);
+    const max={perisai:620,rajawali:500,jaring:470,infantry:190,bazooka:230,jeep:300,helicopter:200,turret:150}[type]*(hero?.7+this.index*.1:1)*(hero&&this.level.endless?1+this.percent/80:1);
     const e={type,x:clamp(x,70,this.level.length-70),y:type==='rajawali'?-440:type==='helicopter'?-410:0,dir:-1,hp:max,max,hero,
       ultCd:hero?14:0,hold:type==='bazooka'?range(420,560):range(190,380),mode:'approach',timer:type==='perisai'?1.3:2.1,shot:1.4,burst:0,stun:0,hit:0,vx:0,lift:0,vy:0,phase:range(0,6),walk:0,stride:0,lean:0,guard:0,owner:null};
     this.enemies.push(e);return e;
@@ -242,7 +254,7 @@ export class World {
   knock(c,from){
     c.down=true;c.dir=Math.sign(c.x-from)||1;c.vx=c.dir*range(380,640);c.vy=-range(560,820);c.y=0;
     c.spin=c.dir*range(6,10);c.angle=0;c.life=1.15;c.hp=0;
-    this.score+=40;this.rex.rage=clamp(this.rex.rage+1.5,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
+    this.addScore(40);this.rex.rage=clamp(this.rex.rage+1.5,0,100);this.fx('dust',c.x,c.lane,1);this.sound('panic');
   }
   // Pendaratan lompat
   slam(){
@@ -284,12 +296,12 @@ export class World {
   // Musuh tumbang
   defeat(e){
     const p=this.rex,big=e.type==='jeep'||e.type==='helicopter';
-    this.score+=e.hero?1200:100;p.rage=Math.min(100,p.rage+(e.hero?20:6));
+    this.addScore(e.hero?1200:100);p.rage=Math.min(100,p.rage+(e.hero?20:6));
     if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier));
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(heroNames[e.type]+' tumbang!',2.5);
   }
   // Lukai Rex
-  hurt(amount,stun=0){const p=this.rex;if(this.immune())return false;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;if(p.fury<=0)p.stun=Math.max(p.stun,stun);return true}
+  hurt(amount,stun=0){const p=this.rex;if(this.immune())return false;p.hp=Math.max(0,p.hp-amount*this.power);p.hit=.18;this.sound('hurt');if(p.fury<=0)p.stun=Math.max(p.stun,stun);return true}
   // Rex kebal
   immune(){const p=this.rex;return p.attack?.key==='ulti'||p.lift>0||this.phase==='dying'}
   // Mulai ulti pahlawan
@@ -299,7 +311,7 @@ export class World {
   }
   // Batalkan ulti
   cancelCast(){
-    const e=this.cast.hero;this.cast=null;e.ultCd=Math.max(e.ultCd,10);
+    const e=this.cast.hero;this.cast=null;e.ultCd=Math.max(e.ultCd,10);this.cancelled++;
     this.say('Ulti '+heroNames[e.type]+' gagal!',1.6);this.sound('crack');
   }
   // Dampak ulti pahlawan
@@ -365,6 +377,10 @@ export class World {
   update(dt,input){
     if(this.status!=='playing'||dt<=0)return;
     this.time+=dt;const p=this.rex;
+    // Tanpa akhir
+    if(this.level.endless)this.power=this.basePower*(1+this.percent/50);
+    // Kombo putus
+    if(this.combo&&(this.comboTime-=dt)<=0)this.combo=0;
     // Pewaktu
     for(const k of ['stun','slow','fury','hit','bigNet'])p[k]=Math.max(0,p[k]-dt);
     for(const k in p.cd){const before=p.cd[k];p.cd[k]=Math.max(0,before-dt);if(k==='ulti'&&before>0&&!p.cd[k]){this.say('Ulti siap! Tekan R.',2);this.sound('alarm')}}
@@ -414,7 +430,7 @@ export class World {
     }
     // Tentara baru
     this.spawnTime-=dt;
-    const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+this.index*2;
+    const troops=this.enemies.reduce((n,e)=>n+(!e.hero&&e.type!=='turret'),0),cap=squadCap+this.index*2+this.squadBonus;
     if(this.phase==='fight'&&this.spawnTime<=0&&troops<cap){
       const pool=['infantry'];if(this.percent>=30)pool.push('bazooka');if(this.percent>=50)pool.push('jeep');if(this.percent>=70)pool.push('helicopter');
       // Regu bergantian

@@ -3,6 +3,12 @@ import { readFile } from 'node:fs/promises';
 import { World, cooldowns } from '../web/src/world.js';
 import { attackPose, damp, spritePose } from '../web/src/motion.js';
 import { rexFramePath, rexPose } from '../web/src/rex-animation.js';
+import { loadProgress, saveProgress, recordDistrict, resetProgress } from '../web/src/progress.js';
+import { loadSettings, saveSettings, defaults } from '../web/src/settings.js';
+import { Tutorial, steps as tutorialSteps } from '../web/src/tutorial.js';
+import { missions, earned, starText } from '../web/src/missions.js';
+import { totalStars } from '../web/src/progress.js';
+import { makeEndless } from '../web/src/endless.js';
 
 const levels = await Promise.all([1, 2, 3, 4].map(async n =>
   JSON.parse(await readFile(new URL(`../web/data/levels/level-0${n}.json`, import.meta.url), 'utf8'))));
@@ -288,6 +294,130 @@ for (const late of [.1, .3, .6]) {
   let started = false;
   for (let i = 0; i < 40; i++) { world.update(1 / 60, empty); started ||= world.rex.attack?.key === 'bite'; }
   assert.ok(started, 'a tap during hitstun must fire once Rex recovers');
+}
+
+// Simpan progres
+{
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  let progress = loadProgress(storage);
+  assert.deepEqual([progress.unlocked, progress.cleared, progress.best], [1, [false, false, false, false], [0, 0, 0, 0]]);
+  recordDistrict(progress, 0, 900, false);
+  assert.equal(progress.unlocked, 1, 'a loss must not unlock the next district');
+  recordDistrict(progress, 0, 1500, true);
+  recordDistrict(progress, 0, 700, true);
+  saveProgress(progress, storage);
+  progress = loadProgress(storage);
+  assert.deepEqual([progress.unlocked, progress.cleared[0], progress.best[0]], [2, true, 1500]);
+  recordDistrict(progress, 3, 10, true);
+  assert.equal(progress.unlocked, 4, 'unlocks never pass the last district');
+  store.set('rex.progress', '{broken');
+  assert.equal(loadProgress(storage).unlocked, 1, 'corrupt saves fall back to a fresh start');
+  assert.equal(resetProgress(storage).unlocked, 1);
+}
+
+// Pengaturan dan kesulitan
+{
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  assert.deepEqual(loadSettings(storage), defaults);
+  saveSettings({ sfx: 140, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
+  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk' }, 'invalid values fall back');
+  const easy = new World(levels[0], 0, { difficulty: 'santai' }), normal = new World(levels[0], 0), hard = new World(levels[0], 0, { difficulty: 'ngamuk' });
+  assert.ok(easy.power < normal.power && normal.power < hard.power, 'difficulty scales enemy damage');
+  assert.ok(easy.squadBonus < 0 && hard.squadBonus > 0, 'difficulty scales squad size');
+  const hp = normal.rex.hp;
+  normal.hurt(10);
+  assert.ok(normal.events.includes('hurt') && normal.rex.hp === hp - 10);
+}
+
+// Tutorial distrik 1
+{
+  const world = new World(levels[0], 0), guide = new Tutorial(world);
+  const run = (frames, keys = []) => { for (let i = 0; i < frames; i++) { world.update(1 / 60, new Set(i ? [] : keys)); guide.update(world); } };
+  const hold = (frames, key) => { for (let i = 0; i < frames; i++) { world.update(1 / 60, new Set([key])); guide.update(world); } };
+  hold(90, 'right');
+  assert.equal(guide.step, 1, 'walking completes step 1');
+  for (let i = 0; i < 12 && guide.step === 1; i++) run(50, ['bite']);
+  assert.equal(guide.step, 2, 'biting a building completes step 2');
+  assert.equal(world.enemies.filter(e => !e.hero).length, 0, 'no soldiers during the first steps');
+  for (let i = 0; i < 20 && guide.step === 2; i++) { world.rex.cd.stomp = 0; run(60, ['stomp']); }
+  assert.equal(guide.step, 3, 'collapsing a ground floor completes step 3');
+  run(30);
+  assert.ok(world.enemies.some(e => !e.hero), 'soldiers arrive for the tail step');
+  world.rex.cd.tail = 0; run(60, ['tail']);
+  assert.equal(guide.step, 4, 'a tail swipe completes step 4');
+  assert.equal(world.rex.cd.jump, 0, 'jump is ready for its step');
+  run(90, ['jump']);
+  assert.equal(guide.step, 5, 'landing a jump completes step 5');
+  run(150, ['ulti']);
+  assert.ok(guide.finished, 'using the ulti finishes the tutorial');
+  assert.equal(guide.text(false), 'Tutorial selesai! Ratakan 100% kota.');
+  assert.equal(tutorialSteps.length, 6);
+}
+
+// Kombo
+{
+  const world = makeWorld();
+  for (let i = 0; i < 9; i++) world.addScore(10);
+  assert.equal(world.multiplier, 1);
+  world.addScore(10);
+  assert.equal(world.multiplier, 1.5, 'ten hits raise the multiplier');
+  const before = world.score;
+  world.addScore(100);
+  assert.equal(world.score - before, 150, 'points use the multiplier');
+  for (let i = 0; i < 100; i++) world.addScore(1);
+  assert.equal(world.multiplier, 3, 'multiplier caps at 3');
+  for (let i = 0; i < 160; i++) world.update(1 / 60, empty);
+  assert.equal(world.combo, 0, 'combo drops after 2.5 s without a hit');
+  assert.ok(world.maxCombo >= 111);
+}
+
+// Misi dan bintang
+{
+  assert.equal(missions.length, 4);
+  for (const row of missions) assert.equal(row.length, 3);
+  const world = makeWorld();
+  assert.deepEqual(earned(world, 0), [false, false, false]);
+  world.status = 'won'; world.time = 300; world.maxCombo = 30;
+  assert.deepEqual(earned(world, 0), [true, true, true]);
+  world.time = 500;
+  assert.deepEqual(earned(world, 0), [true, false, true], 'the time mission needs a fast clear');
+  const ultis = new World(levels[1], 1);
+  ultis.status = 'won'; ultis.cancelled = 2;
+  assert.equal(earned(ultis, 1)[2], true);
+  const props = new World(levels[2], 2);
+  for (const p of props.props) props.damageProp(p, Infinity);
+  assert.equal(earned(props, 2)[2], true, 'wrecking every prop earns the district 3 star');
+  const hp = new World(levels[3], 3);
+  hp.status = 'won'; hp.rex.hp = hp.rex.max / 2 - 1;
+  assert.equal(earned(hp, 3)[2], false);
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  const progress = loadProgress(storage);
+  recordDistrict(progress, 0, 10, true, [true, false, true]);
+  recordDistrict(progress, 0, 10, true, [true, true, false]);
+  assert.deepEqual(progress.stars[0], [true, true, true], 'stars from different runs add up');
+  saveProgress(progress, storage);
+  assert.equal(totalStars(loadProgress(storage)), 3);
+  assert.equal(starText([true, false, true]), '★☆★');
+}
+
+// Mode tanpa akhir
+{
+  const level = makeEndless(levels);
+  assert.equal(level.length, 2 * levels.reduce((n, l) => n + l.length, 0));
+  assert.equal(level.buildings.length, 2 * levels.reduce((n, l) => n + l.buildings.length, 0));
+  assert.ok(level.buildings.every((b, i, all) => i === 0 || b.x > all[i - 1].x), 'segments follow each other');
+  assert.equal(level.bosses.length % 3, 0);
+  const world = new World(level, 3);
+  world.spawnTime = Infinity;
+  world.rex.x = level.length / 2;
+  world.lost = world.total;
+  for (let i = 0; i < 60; i++) world.update(1 / 60, empty);
+  assert.equal(world.phase, 'fight', 'endless mode never clears');
+  assert.ok(world.power > world.basePower * 2.5, 'enemies hit harder as the city falls');
+  const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+  const progress = loadProgress(storage);
+  progress.endless = 4321; saveProgress(progress, storage);
+  assert.equal(loadProgress(storage).endless, 4321);
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

@@ -35,6 +35,10 @@ Di setiap distrik:
 
 Kalau darah Rex habis, Rex terhuyung lalu tumbang, dan distrik diulang dari awal.
 
+Saat pertama kali bermain, tutorial singkat di Jalan Ruko memandu enam langkah: berjalan, menggigit, meruntuhkan lantai dasar, melempar tentara dengan ekor, melompat, dan memakai ulti. Tentara baru datang setelah tiga langkah pertama selesai. Tutorial bisa dilewati, dan bisa diulang dari Pengaturan.
+
+Progres tersimpan otomatis. Setiap distrik yang selesai membuka distrik berikutnya, dan tombol **Pilih distrik** di menu membawamu langsung ke distrik mana pun yang sudah terbuka, lengkap dengan skor terbaiknya.
+
 ## Kontrol
 
 | Aksi | Keyboard | Mouse | Cooldown |
@@ -50,10 +54,27 @@ Kalau darah Rex habis, Rex terhuyung lalu tumbang, dan distrik diulang dari awal
 
 Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
 
+Menu **Pengaturan** (dari menu utama atau saat jeda) berisi tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
+
 <p align="center">
   <img src="docs/screenshots/rex-ulti.webp" alt="Cut-in ulti Amukan Rex" width="49%">
   <img src="docs/screenshots/jump.webp" alt="Gelombang kejut saat Rex mendarat dari lompatan" width="49%">
 </p>
+
+### Kombo dan bintang
+
+Setiap serangan yang mengenai sesuatu menambah **kombo**. Setiap 10 hit menaikkan pengali skor ×0,5, sampai ×3, dan kombo putus kalau 2,5 detik tidak ada yang kena.
+
+Setiap distrik punya tiga misi bintang:
+
+| Distrik | ★ | ★★ | ★★★ |
+| --- | --- | --- | --- |
+| Jalan Ruko | Ratakan distrik | Selesai dalam 7 menit | Capai kombo 25 |
+| Pusat Kota | Ratakan distrik | Selesai dalam 8 menit | Gagalkan 2 ulti pahlawan |
+| Pelabuhan | Ratakan distrik | Selesai dalam 8 menit | Hancurkan semua properti jalan |
+| Alun-Alun | Ratakan distrik | Selesai dalam 9 menit | Selesai dengan darah ≥ 50% |
+
+Bintang dari permainan yang berbeda tetap terkumpul.
 
 ### Tips
 
@@ -63,6 +84,10 @@ Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar.
 - Saat **Rage** penuh, damage Rex dua kali lipat selama 8 detik. Rage terisi dari menghancurkan bangunan dan mengalahkan musuh.
 - Pakai **lompat** untuk menghindari tembakan: Rex kebal selama di udara, dan saat mendarat tentara terpaku 4,5 detik, pahlawan 1,6 detik.
 - Musuh makin keras di distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
+
+### Mode Tanpa Akhir
+
+Setelah Jalan Ruko selesai, **Pilih distrik** membuka **∞ · Tanpa Akhir**: jalan sangat panjang yang menyambung keempat distrik dua kali. Penjaga datang bergelombang di setiap 12% kehancuran dengan darah yang makin tebal, dan serangan musuh makin sakit seiring kota hancur. Permainan berakhir saat Rex tumbang, dan skor terbaiknya tercatat sebagai rekor.
 
 ## Para penjaga kota
 
