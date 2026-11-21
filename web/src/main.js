@@ -467,5 +467,19 @@ if(dev){
 // Debug lokal
 if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get music(){return music},get world(){return world},get art(){return art},get renderer(){return renderer}};
 // Mode offline
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'))
+// Aplikasi Android
+const native=window.Capacitor?.isNativePlatform?.()===true;
+if(native){
+  document.documentElement.dataset.native='1';
+  // Tombol kembali
+  window.Capacitor.Plugins.App?.addListener('backButton',()=>{
+    if(screen==='playing')pause();
+    else if(screen==='paused')resume();
+    else if(screen==='menu'&&!panel.open)modal(t('Keluar dari game?'),'',[[t('Keluar'),()=>window.Capacitor.Plugins.App.exitApp()],[t('Kembali'),menu]]);
+    else if(panel.open)panel.dispatchEvent(new Event('cancel',{cancelable:true}));
+  });
+  // Jeda saat ditinggal
+  window.Capacitor.Plugins.App?.addListener('pause',()=>{clearInput();pause()});
+}
+if(!native&&'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'))
   addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
