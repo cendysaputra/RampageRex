@@ -99,7 +99,11 @@ Setiap hari ada satu misi baru di bagian atas **Pilih distrik**, misalnya "Ratak
 
 ### Event jalan
 
-Mulai distrik 2, kadang turun **hujan deras**: langit mendung, dan tentara serta warga bergerak lebih lambat di jalan yang licin. Saat hujan, petir menyambar di kejauhan, dan sesekali (peluang 1%) petir menyambar Rex sendiri. Saat itu Rage langsung penuh dan skin langka **ThunderRex** terbuka. Dengan skin ini, setiap skill Rex mengeluarkan kilat dan tubuhnya diselimuti aura listrik, tanpa mengubah damage.
+Mulai distrik 2, kadang turun **hujan deras**: langit mendung, dan tentara serta warga bergerak lebih lambat di jalan yang licin. Saat hujan, petir menyambar di kejauhan, dan sesekali (peluang 1%) petir menyambar Rex sendiri. Saat itu Rage langsung penuh dan skin langka **ThunderRex** terbuka. Dengan skin ini, skill Rex selain gigitan mengeluarkan kilat dan tubuhnya diselimuti aura listrik, tanpa mengubah damage.
+
+**Pawai 17 Agustus** selalu lewat di Alun-Alun dan kadang di distrik lain: barisan warga berbaju merah putih berjalan ke arah Rex, lalu bubar saat Rex mendekat. Di dekatnya berdiri tiang panjat pinang yang bisa dirobohkan.
+
+**Konvoi motor** kadang melintas kencang dari depan. Motor yang menabrak Rex atau terkena serangan terpental dan menambah skor, tanpa melukai Rex.
 
 ### Pencapaian
 

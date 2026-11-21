@@ -102,7 +102,7 @@ const en = {
   'Hujan deras! Tentara dan warga melambat.': 'Heavy rain! Soldiers and civilians slow down.',
   '{name} · Hancurkan {n}% kota': '{name} · Wreck {n}% of the city', 'SPBU meledak!': 'Petrol station exploded!',
   'Rex makan! +{n} darah': 'Rex eats! +{n} health', 'Rex sudah kenyang.': 'Rex is full.', '{skill} siap dalam {n} dtk.': '{skill} ready in {n}s.',
-  'Perisai memblokir gigitan.': 'Perisai blocks the bite.', 'Hancurkan turret Jaring dulu.': "Destroy Jaring's turret first.", 'Turret hancur! Injak Jaring sekarang.': 'Turret down! Stomp Jaring now.',
+  'Perisai memblokir gigitan.': 'Perisai blocks the bite.', 'Hancurkan turret Jaring dulu.': "Destroy Jaring's turret first.", 'Turret hancur! Injak Jaring sekarang.': 'Turret down! Stomp Jaring now.', 'Konvoi motor lewat!': 'Motorbike convoy incoming!', 'Pawai 17 Agustus lewat!': 'Independence Day parade ahead!',
   '{name} tumbang!': '{name} is down!', 'Ulti {name} gagal!': "{name}'s ulti cancelled!", 'Ulti siap! Tekan R.': 'Ulti ready! Press R.',
   'Rage penuh! Damage 2× selama 8 detik.': 'Rage full! 2× damage for 8 seconds.',
   'Para penjaga mengepung Rex! Pecah formasi mereka satu per satu.': 'The guardians surround Rex! Break their formation one by one.',

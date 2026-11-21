@@ -389,7 +389,7 @@ requestAnimationFrame(frame);
 if(dev){
   document.documentElement.dataset.dev='1';
   const actions=[['win','Menang instan'],['end','Ratakan & ke ujung'],['flatten','Ratakan kota'],['heroes','Panggil 3 penjaga'],['robot','Panggil robot'],
-    ['lose','Kalah'],['god','Kebal'],['heal','Darah penuh'],['cooldown','Cooldown nol'],['rage','Rage penuh'],['rain','Hujan'],['strike','Sambar petir'],
+    ['lose','Kalah'],['god','Kebal'],['heal','Darah penuh'],['cooldown','Cooldown nol'],['rage','Rage penuh'],['rain','Hujan'],['strike','Sambar petir'],['pawai','Pawai'],['motor','Konvoi motor'],
     ['infantry','+ Infanteri'],['bazooka','+ Bazooka'],['jeep','+ Jeep'],['helicopter','+ Helikopter'],['tank','+ Tank'],['firetruck','+ Truk pemadam'],['firefighter','+ Pemadam'],['drone','+ Drone']];
   const box=document.createElement('details');box.id='dev';
   box.innerHTML='<summary>DEV</summary><div></div>';

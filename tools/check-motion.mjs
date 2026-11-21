@@ -670,6 +670,31 @@ for (const late of [.1, .3, .6]) {
   assert.ok(!net.enemies.some(e => e.owner === boss && e.hp > 0), 'Jaring stays open after its turret falls');
 }
 
+// Pawai dan konvoi
+{
+  const w = new World(levels[2], 2, { parade: true, convoy: false }); w.spawnTime = Infinity;
+  const marchers = w.civilians.filter(c => c.type === 'pawai');
+  assert.equal(marchers.length, 8, 'the parade brings eight marchers');
+  assert.ok(w.props.some(p => p.type === 'panjat-pinang'), 'the parade raises a panjat pinang pole');
+  const x0 = marchers[0].x; for (let i = 0; i < 30; i++) w.update(1 / 60, empty);
+  assert.ok(marchers[0].x < x0 && marchers[0].calm, 'marchers walk calmly toward Rex');
+  w.rex.x = marchers[0].x - 200; w.update(1 / 60, empty);
+  assert.ok(!marchers[0].calm && !marchers[0].march, 'marchers scatter when Rex arrives');
+  const none = new World(levels[2], 2, { parade: false, convoy: false });
+  assert.ok(!none.civilians.some(c => c.type === 'pawai') && !none.props.some(p => p.type === 'panjat-pinang'));
+  const ride = new World(levels[2], 2, { parade: false, convoy: true }); ride.spawnTime = Infinity;
+  assert.ok(Number.isFinite(ride.convoyAt), 'a convoy is scheduled');
+  ride.rex.x = ride.convoyAt; ride.update(1 / 60, empty);
+  assert.equal(ride.motors.length, 5, 'five motorbikes arrive');
+  const hp = ride.rex.hp; for (let i = 0; i < 420; i++) ride.update(1 / 60, empty);
+  assert.equal(ride.motorsDown, 5, 'every motorbike crashes into Rex');
+  assert.equal(ride.rex.hp, hp, 'crashing motorbikes do not hurt Rex');
+  assert.equal(ride.motors.length, 0, 'wrecks fade away');
+  const manifest = JSON.parse(await readFile(new URL('../web/assets/manifest.json', import.meta.url))).assets;
+  for (const key of ['characters/civilians/pawai/master', 'characters/civilians/pawai/frames/run-a', 'props/panjat-pinang-wreck', 'characters/soldiers/motor', 'characters/soldiers/motor-wreck'])
+    assert.ok(manifest[key + '.png'], key + ' is registered');
+}
+
 // Aksi developer
 {
   const w = makeWorld();

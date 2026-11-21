@@ -4472,6 +4472,161 @@
         0
       ],
       "alpha": true
+    },
+    "characters/civilians/pawai/master.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 107,
+        "y": 6,
+        "width": 178,
+        "height": 410
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/pawai/frames/run-a.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 62,
+        "y": 6,
+        "width": 268,
+        "height": 410
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/pawai/frames/run-b.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 45,
+        "y": 6,
+        "width": 301,
+        "height": 410
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/pawai/frames/look-back.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 61,
+        "y": 6,
+        "width": 269,
+        "height": 410
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/pawai/frames/stumble.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 4,
+        "y": 6,
+        "width": 383,
+        "height": 410
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "props/panjat-pinang.png": {
+      "width": 640,
+      "height": 760,
+      "bounds": {
+        "x": 125,
+        "y": 11,
+        "width": 389,
+        "height": 732
+      },
+      "pivot": [
+        320,
+        739
+      ],
+      "alpha": true
+    },
+    "props/panjat-pinang-damaged.png": {
+      "width": 640,
+      "height": 760,
+      "bounds": {
+        "x": 89,
+        "y": 11,
+        "width": 461,
+        "height": 732
+      },
+      "pivot": [
+        320,
+        739
+      ],
+      "alpha": true
+    },
+    "props/panjat-pinang-wreck.png": {
+      "width": 640,
+      "height": 760,
+      "bounds": {
+        "x": 12,
+        "y": 561,
+        "width": 616,
+        "height": 182
+      },
+      "pivot": [
+        320,
+        739
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/motor.png": {
+      "width": 420,
+      "height": 300,
+      "bounds": {
+        "x": 69,
+        "y": 1,
+        "width": 282,
+        "height": 298
+      },
+      "pivot": [
+        210,
+        295
+      ],
+      "alpha": true
+    },
+    "characters/soldiers/motor-wreck.png": {
+      "width": 420,
+      "height": 300,
+      "bounds": {
+        "x": 2,
+        "y": 121,
+        "width": 416,
+        "height": 178
+      },
+      "pivot": [
+        210,
+        295
+      ],
+      "alpha": true
     }
   },
   "review": [],
