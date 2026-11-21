@@ -3,11 +3,11 @@ import { attackPose, smooth } from './motion.js';
 import { t as tr } from './i18n.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
-const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
+const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'panjat-pinang':370,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
-const people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15,fetchTimeout=20000;
+const motorWidth=185,people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15,fetchTimeout=20000;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
-  ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/tank',vehicles.tank],['characters/soldiers/firetruck',vehicles.firetruck],['characters/soldiers/drone',vehicles.drone],['characters/soldiers/',people.bazooka],
+  ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/tank',vehicles.tank],['characters/soldiers/firetruck',vehicles.firetruck],['characters/soldiers/drone',vehicles.drone],['characters/soldiers/motor',motorWidth],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 // Warna ulti pahlawan
@@ -100,7 +100,7 @@ export class Art {
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
       backdrops.includes(k)||k.startsWith('buildings/ruko-01/damage/')||colors.some(c=>k.startsWith('buildings/ruko-01/colors/')&&k.endsWith('-'+c))
       ||props.some(t=>k==='props/'+t||k==='props/'+t+'-damaged'||k==='props/'+t+'-wreck')
-      ||rexPaths.includes(k)
+      ||rexPaths.includes(k)||k.startsWith('props/panjat-pinang')||k.startsWith('characters/soldiers/motor')
       ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','characters/soldiers/tank','characters/soldiers/firetruck','characters/soldiers/drone','fx/steel-net'].includes(k));
     let cursor=0,done=0;onProgress(0);
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length){await this.load(paths[cursor++]);onProgress(++done/paths.length)}}));
@@ -504,6 +504,7 @@ export class Renderer {
         // Putar badan
         c.save();c.globalAlpha=clamp(civ.life/.35,0,1);c.translate(civ.x,civ.lane+civ.y-42);if(!reduced)c.rotate(civ.angle);
         a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,0,42,people.civilian,civ.dir);c.restore();continue}
+      if(civ.calm&&civ.march){a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x,civ.lane-Math.sin(civ.walk)**2*3,people.civilian,civ.dir);continue}
       if(civ.calm){
         // Warga beraktivitas
         const breathe=reduced?0:Math.sin(t*2.2+civ.phase)*1.2;
@@ -514,6 +515,13 @@ export class Renderer {
       const recoil=civ.hit>0&&!reduced?-civ.dir*Math.sin(clamp(civ.hit/.2,0,1)*Math.PI)*4:0;
       if(civ.alarm>0)exclaim(c,civ.x,civ.lane-112,civ.alarm/.7);
       a.blend(c,base+(civ.fromFrame||frame),base+frame,civ.frameMix??1,civ.x+recoil,civ.lane-(civ.stun>0?0:Math.sin(civ.walk)**2*3),people.civilian,civ.dir);
+    }
+    // Konvoi motor
+    for(const m of g.motors||[]){
+      if(!visible(m.x,200))continue;
+      if(m.down){c.save();c.globalAlpha=clamp(m.life/.4,0,1);c.translate(m.x,m.lane+m.y);if(!reduced)c.rotate(Math.sin(m.angle)*.35);a.sprite(c,'characters/soldiers/motor-wreck',0,0,motorWidth,m.dir);c.restore();continue}
+      shadow(m.x,m.lane,58);
+      a.sprite(c,'characters/soldiers/motor',m.x,m.lane+(reduced?0:Math.sin(t*28+m.phase)*1.5),motorWidth,m.dir);
     }
     // Proyektil
     for(const s of g.shots){const path=s.type==='net'?'net-capsule':s.type;a.sprite(c,'fx/projectiles/frames/'+path,s.x,s.y,s.type==='bullet'?37:72,1,Math.atan2(s.vy,s.vx))}

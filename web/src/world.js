@@ -56,7 +56,7 @@ function range(a,b){return a+Math.random()*(b-a)}
 // Saring daftar
 function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
 // Kotak properti
-const propHitboxes={'lapak-sayur':[208,150],'becak':[140,100],'tumpukan-karung':[188,70],'gerbong':[529,160],'bangku-peron':[135,55],'menara-sinyal':[179,230],'gerbang-tol':[266,210],'truk-kontainer':[332,150],'pembatas-beton':[118,50],'perahu-nelayan':[222,120],'pohon-kelapa':[299,300],'warung-pantai':[252,160],'spbu':[353,200],'warung-makan':[336,160],'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
+const propHitboxes={'lapak-sayur':[208,150],'becak':[140,100],'tumpukan-karung':[188,70],'gerbong':[529,160],'bangku-peron':[135,55],'menara-sinyal':[179,230],'gerbang-tol':[266,210],'truk-kontainer':[332,150],'pembatas-beton':[118,50],'perahu-nelayan':[222,120],'pohon-kelapa':[299,300],'panjat-pinang':[220,400],'warung-pantai':[252,160],'spbu':[353,200],'warung-makan':[336,160],'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
   billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
 // Tingkat kesulitan
@@ -98,6 +98,10 @@ const jaringOpen=7;
 const robot={reach:240,speed:150,windup:.75,punch:50,netEvery:4.5};
 // Hujan deras
 const rainChance=.3,rainSlow=.7;
+// Event 17 Agustus
+const paradeChance=.3,paradeSize=8,marchSpeed=95;
+// Konvoi motor
+const convoyChance=.35,convoySize=5,convoySpeed=560,convoyBody=[130,110];
 // Peluang sambaran ke Rex
 export const thunderChance=.01;
 // Batas tentara
@@ -136,6 +140,10 @@ export class World {
     this.populate();
     // Event jalan
     this.weather=options.event??(options.events&&index>0&&Math.random()<rainChance?'rain':'');
+    // Pawai dan konvoi
+    this.motors=[];this.motorsDown=0;this.paradeX=0;
+    if(options.parade??(options.events&&(level.boss||index>0&&Math.random()<paradeChance)))this.startParade(level.start+1700);
+    this.convoyAt=options.convoy??(options.events&&index>0&&Math.random()<convoyChance)?level.start+range(.25,.55)*(level.length-level.start):Infinity;
     // Petir
     this.thunder=!!options.thunder;this.boltAt=-9;this.boltX=0;this.struckAt=-9;this.thunderUnlocked=false;
     this.nextBolt=range(4,9);this.strikeRexAt=this.weather==='rain'&&Math.random()<(options.thunderChance??thunderChance)?range(15,45):Infinity;
@@ -160,11 +168,34 @@ export class World {
       this.civilians.push({type:prop.type==='food-cart'?'bakso-vendor':people[(pick++)%people.length],x:prop.x+70,dir:-1,speed:range(250,350),phase:Math.random()*5,walk:0,lane:range(8,20),
         hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0,calm:true,chat:false,activity:range(0,9)});
   }
+  // Mulai pawai
+  startParade(x){
+    x=clamp(x,this.rex.x+700,this.level.length-900);
+    // Tiang panjat pinang
+    let pole=x-280,gap=-1;
+    for(let at=x-900;at<=x-200;at+=40){const near=Math.min(Infinity,...this.props.map(p=>Math.abs(p.x-at)));if(near>gap){gap=near;pole=at}}
+    this.props.push({type:'panjat-pinang',x:pole,hp:150});
+    for(let n=0;n<paradeSize;n++)this.civilians.push({type:'pawai',x:x+n*78,dir:-1,speed:range(250,330),phase:Math.random()*5,walk:n*1.3,lane:8+(n%2)*16,
+      hp:civilianHp,max:civilianHp,stun:0,hit:0,vx:0,calm:true,march:true,chat:false,activity:0});
+    this.paradeX=x;
+  }
+  // Konvoi datang
+  spawnConvoy(){
+    const start=Math.max(this.camera+this.view,this.rex.x+900)+220;
+    for(let n=0;n<convoySize;n++)this.motors.push({x:start+n*190,lane:range(6,30),dir:-1,speed:convoySpeed*range(.92,1.08),down:false,phase:range(0,6),y:0,vx:0,vy:0,angle:0,spin:0,life:0});
+    this.say(t('Konvoi motor lewat!'),1.6);this.sound('panic');
+  }
+  // Motor terjatuh
+  crash(m,from){
+    const side=Math.sign(m.x-from)||1;
+    m.down=true;m.vx=side*range(300,520);m.vy=-range(480,680);m.y=-1;m.spin=side*range(5,8);m.life=1.3;this.motorsDown++;
+    this.addScore(60);this.rex.rage=clamp(this.rex.rage+2*this.mods.rage,0,100);this.fx('dust',m.x,m.lane,1);this.sound('crack');
+  }
   // Picu panik
   alarmNear(x,radius){for(const c of this.civilians)if(c.calm&&Math.abs(c.x-x)<radius)this.panic(c)}
   // Warga panik
   panic(c){
-    if(!c.calm)return;c.calm=false;c.chat=false;c.alarm=.7;c.dir=c.x>=this.rex.x?1:-1;
+    if(!c.calm)return;c.calm=false;c.chat=false;c.march=false;c.alarm=.7;c.dir=c.x>=this.rex.x?1:-1;
     c.frame=c.fromFrame='run-a';c.frameMix=1;
   }
   // Pengali kombo
@@ -197,6 +228,8 @@ export class World {
     else if(name==='heal')p.hp=p.max;
     else if(name==='rain'){this.weather=this.weather==='rain'?'':'rain';return this.weather?'Hujan: nyala':'Hujan: mati'}
     else if(name==='strike'){this.weather='rain';this.strikeRexAt=this.time}
+    else if(name==='pawai')this.startParade(p.x+1100);
+    else if(name==='motor')this.spawnConvoy();
     else if(['infantry','bazooka','jeep','helicopter','tank','firetruck','firefighter','drone'].includes(name)){const e=this.spawn(name,near(600));e.dir=-p.dir}
     return '';
   }
@@ -325,6 +358,7 @@ export class World {
     }
     // Warga ikut terlempar
     for(const c of this.civilians)if(!c.down&&overlap(hitbox,box(c.x,c.lane,56,92)))this.hitCivilian(c,damage,p.x);
+    for(const m of this.motors)if(!m.down&&overlap(hitbox,box(m.x,m.lane,...convoyBody)))this.crash(m,p.x);
     if(a.key==='stomp')this.fx('dust',p.x,0,3);
   }
   // Lukai warga
@@ -358,6 +392,7 @@ export class World {
     }
     if(this.cast&&!this.cast.done&&this.cast.hero.x>=left&&this.cast.hero.x<=right)this.cancelCast();
     for(const c of this.civilians)if(!c.down&&c.x>=left&&c.x<=right){this.panic(c);c.stun=Math.max(c.stun||0,1.2);c.vx=0}
+    for(const m of this.motors)if(!m.down&&m.x>=left&&m.x<=right)this.crash(m,p.x);
     this.fx('dust',p.x-150,0,2);this.fx('dust',p.x+150,0,2);this.fx('debris',p.x,-20,4);
   }
   // Gempa ulti
@@ -377,6 +412,7 @@ export class World {
       if(e.hp<=0)this.defeat(e);
     }
     this.shots.length=0;for(const c of this.civilians)if(!c.down&&c.x>=left&&c.x<=right)this.knock(c,p.x);
+    for(const m of this.motors)if(!m.down&&m.x>=left&&m.x<=right)this.crash(m,p.x);
     this.fx('dust',p.x,0,4);
   }
   // Tentara terhuyung
@@ -649,6 +685,8 @@ export class World {
       if(c.calm){
         // Rex mendekat
         if(Math.abs(c.x-p.x)<calmRadius)this.panic(c);
+        // Berbaris pawai
+        else if(c.march){c.x+=c.dir*marchSpeed*dt;c.walk+=marchSpeed*dt/24;spritePose(c,Math.sin(c.walk)>=0?'run-a':'run-b',dt);continue}
         else{
           // Menoleh sesekali
           c.activity+=dt;if(!c.chat&&c.activity>9){c.activity=0;c.dir*=-1}
@@ -660,6 +698,17 @@ export class World {
       const glance=(this.time+c.phase)%5>4.6,stumble=(this.time+c.phase)%8>7.8;
       spritePose(c,stumble?'stumble':glance?'look-back':Math.sin(c.walk)>=0?'run-a':'run-b',dt);
     }
+    // Sambut pawai
+    if(this.paradeX&&Math.abs(p.x-this.paradeX)<1300){this.paradeX=0;this.say(t('Pawai 17 Agustus lewat!'),2.2)}
+    // Konvoi motor
+    if(p.x>=this.convoyAt&&this.phase==='fight'){this.convoyAt=Infinity;this.spawnConvoy()}
+    for(const m of this.motors){
+      if(m.down){m.life-=dt;m.x+=m.vx*dt;m.vx*=Math.pow(.25,dt);m.y=Math.min(0,m.y+m.vy*dt);m.vy+=1500*dt;if(m.y<0)m.angle+=m.spin*dt;continue}
+      m.x+=m.dir*m.speed*(this.weather==='rain'?rainSlow:1)*dt;
+      // Tabrak Rex
+      if(Math.abs(m.x-p.x)<95&&p.lift<60&&this.phase!=='dying')this.crash(m,p.x);
+    }
+    keep(this.motors,m=>m.down?m.life>0:m.x>this.camera-400);
     keep(this.civilians,c=>c.calm||(!c.down||c.life>0)&&c.x>this.camera-170&&c.x<this.camera+this.view+170);
     // Efek
     for(const f of this.effects){f.life-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.kind==='debris'||f.kind==='decor')f.vy+=880*dt}
