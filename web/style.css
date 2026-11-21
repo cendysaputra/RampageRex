@@ -309,6 +309,5 @@ h2{display:inline-block;font-size:clamp(38px,5.5vw,56px);line-height:1;letter-sp
 .mission-card:disabled img,.mission-card.reward:not(.open) img{filter:grayscale(1) brightness(.45)}
 .mission-card:disabled{cursor:default;opacity:.85}
 .mission-card:not(:disabled):hover,.mission-card:not(:disabled):focus-visible{border-color:var(--orange)}
-.mission-card.reward{cursor:default}
 .key-strip .special:not([data-cooling]),.pad .special:not([data-cooling]){color:var(--ink);background:#9fdcff}
 @media (max-width:560px){.mission-cards{grid-template-columns:1fr}}

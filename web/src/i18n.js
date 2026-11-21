@@ -125,7 +125,7 @@ const en = {
   // Misi spesial
   'Misi Spesial': 'Special Missions', 'Jalur lebih panjang, darah Rex 900, dan bos monster di ujung peta.': 'Longer routes, 900 HP for Rex, and a monster boss at the end of the map.',
   'Misi {name}': '{name} Mission', 'Hadiah: skin {skin}': 'Reward: {skin} skin', 'Skin ZombieRex terbuka!': 'ZombieRex skin unlocked!',
-  'Selesaikan ketiga misi untuk membuka ZombieRex': 'Clear all three missions to unlock ZombieRex', 'semua misi': 'all missions',
+  'Selesaikan ketiga misi untuk membuka ZombieRex': 'Clear all three missions to unlock ZombieRex', 'Sedang dipakai': 'Equipped', 'Pakai skin ZombieRex': 'Equip the ZombieRex skin', 'semua misi': 'all missions',
   '{name} · {pct}% hancur · kombo terbaik {combo}': '{name} · {pct}% wrecked · best combo {combo}', 'Skin {skin} terbuka!': '{skin} skin unlocked!',
   'Misi selesai!': 'Mission complete!', 'Main lagi': 'Play again',
   'Kemerdekaan': 'Independence', 'Salju': 'Snow', 'Halloween': 'Halloween',

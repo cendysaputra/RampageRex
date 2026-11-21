@@ -234,7 +234,10 @@ export class World {
     else if(name==='flatten'){for(const b of this.buildings)this.damageModule(b,0,Infinity);for(const prop of this.props)this.damageProp(prop,Infinity)}
     else if(name==='heroes'){for(const type of ['perisai','rajawali','jaring']){const e=this.spawn(type,p.x+flank[type]);e.ultCd=firstUlt[type]}this.triggered=new Set(this.level.bosses.map((_,i)=>i))}
     else if(name==='robot'){if(!this.level.boss)return 'Bos hanya ada di Alun-Alun dan misi spesial';const e=this.spawn(this.level.boss,near(700));e.dir=-p.dir;e.timer=2;e.ultCd=firstUlt[this.level.boss];this.bossSpawned=true}
-    else if(name==='skill'){p.cd.special=0}
+    else if(name==='kill'){p.hp=0;p.fly=0;return this.skill==='bangkit'&&!p.revived?'':'Rex tumbang: skill Bangkit tidak aktif atau sudah terpakai'}
+    else if(name==='skill'){p.cd.special=0;p.revived=false;return 'Skill siap, Bangkit terisi lagi'}
+    else if(name==='bossulti'){const e=this.enemies.find(e=>e.hero&&e.hp>0);if(!e)return 'Belum ada bos atau penjaga';e.ultCd=0;this.lastCast=-99;this.cast=null}
+    else if(name==='tengkorak'){this.summon(near(500),3)}
     else if(name==='end'){this.devAction('flatten');this.triggered=new Set(this.level.bosses.map((_,i)=>i));for(const e of this.enemies)if(e.hero){e.hp=0;this.defeat(e)}this.bossSpawned=true;p.x=Math.min(this.exitX-60,this.level.length-200)}
     else if(name==='god'){this.god=!this.god;this.onGod?.(this.god);return this.god?'Kebal: nyala':'Kebal: mati'}
     else if(name==='cooldown'){for(const k in p.cd)p.cd[k]=0}
