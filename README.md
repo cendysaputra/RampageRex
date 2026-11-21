@@ -56,7 +56,7 @@ Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar. Daft
 
 Menu **Pengaturan** (dari menu utama atau saat jeda) berisi pilihan bahasa **Bahasa Indonesia** atau **English**, mode grafis **Otomatis**, **Tinggi**, atau **Ringan** (untuk HP lama), tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara dan musik, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
 
-Musik chiptune dibuat langsung oleh game: lagu menu, lagu bertarung yang sedikit lebih cepat saat Rage penuh, dan lagu khusus saat Robot Penjaga muncul.
+Musik chiptune dibuat langsung oleh game: lagu menu, lagu bertarung yang sedikit lebih cepat saat Rage penuh, lagu khusus saat Robot Penjaga muncul, lagu mars saat pawai lewat, serta jingle pendek saat menang atau kalah.
 
 <p align="center">
   <img src="docs/screenshots/rex-ulti.webp" alt="Cut-in ulti Amukan Rex" width="49%">
