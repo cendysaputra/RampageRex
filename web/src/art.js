@@ -172,7 +172,9 @@ export class Art {
           picture.getContext('2d').drawImage(source,x,y,width,height,0,0,width,height);
         }
         const path=rexFramePath(atlas,index);
-        this.meta[path+'.png']={width,height,pivot:[px,py],scale:(definition.scale||1)*fit,alpha:true};
+        // Lebar acuan atlas
+        const unit=definition.unit||this.baseFrames[atlas]?.[index]?.[2]||width;
+        this.meta[path+'.png']={width:unit,height,pivot:[px,py],scale:(definition.scale||1)*fit,alpha:true};
         this.crops.set(path,{x:0,y:0,width,height});this.images.get(path)?.close?.();this.images.set(path,picture);
       }
       // Lepas atlas
