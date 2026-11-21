@@ -35,8 +35,8 @@ mobile/
 | 6 | Area aman untuk layar berponi (`env(safe-area-inset-*)`) pada HUD dan tombol sentuh | Belum |
 | 7 | Mode grafik Otomatis dan resolusi adaptif sudah ada. Tes di 1 HP murah (RAM 3–4 GB) dan 1 HP menengah | Belum |
 | 8 | Ukuran unduhan: aset sekarang sekitar 29 MB, aman di bawah batas AAB | Aman |
-| 9 | Ikon, ikon adaptif, feature graphic (lihat `image-prompts.md` bagian 18) | Menunggu Codex |
-| 10 | Musik dari Suno | Menunggu musik |
+| 9 | Ikon, ikon adaptif, feature graphic di `web/assets/ui/app/` | Selesai |
+| 10 | Musik chiptune dibuat lewat kode | Selesai |
 
 ## Google Play
 
@@ -54,7 +54,7 @@ mobile/
     - ikon 512×512
     - feature graphic 1024×500
     - minimal 2 screenshot landscape, ambil dari HP asli
-- **Konten sensitif:** nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) sudah diganti plesetan (Kopwar Merah Bata, Dapur Kenyang). Lihat `image-prompts.md` bagian 21.
+- **Konten sensitif:** nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) sudah diganti plesetan (Kopwar Merah Bata, Dapur Kenyang). Lihat `backup/image-prompts.md` bagian 21.
 
 Cek ulang biaya dan syarat di Play Console saat mendaftar, karena kebijakan Google bisa berubah.
 
