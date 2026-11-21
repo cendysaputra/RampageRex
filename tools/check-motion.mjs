@@ -699,4 +699,17 @@ for (const late of [.1, .3, .6]) {
   assert.equal(dev.rex.hp, 1, 'developer god mode starts on');
 }
 
+// Darah dan penembak
+{
+  const first = new World(levels[0], 0), last = new World(levels[7], 7);
+  assert.ok(last.rex.max > first.rex.max, 'Rex has more health in later districts');
+  assert.ok(new World(levels[0], 0, { difficulty: 'santai' }).gunnerCap < new World(levels[0], 0, { difficulty: 'ngamuk' }).gunnerCap, 'difficulty changes how many soldiers fire');
+  const w = new World(levels[0], 0); w.spawnTime = Infinity; w.god = true;
+  for (let i = 0; i < 12; i++) w.spawn('infantry', w.rex.x + 300 + i * 30);
+  let shots = 0; const shoot = w.shoot.bind(w); w.shoot = (e, t) => { shots++; shoot(e, t); };
+  for (let i = 0; i < 600; i++) w.update(1 / 60, empty);
+  assert.ok(w.gunners.size <= w.gunnerCap, 'only the nearest soldiers fire');
+  assert.ok(shots <= w.gunnerCap * 3 * 4, 'a crowd does not fire all at once');
+}
+
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));

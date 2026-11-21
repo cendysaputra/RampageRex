@@ -84,7 +84,7 @@ Bintang dari permainan yang berbeda tetap terkumpul. Kumpulkan bintang untuk mem
 
 - Chip skill di bawah layar menampilkan sisa detik cooldown. Lompat baru bisa dipakai 6 detik dan Ulti 15 detik setelah distrik dimulai.
 - Serangan yang ditekan sedikit terlalu cepat tetap keluar begitu Rex bebas.
-- Rex punya 400 darah. Mengalahkan tentara memulihkan sedikit darah, mengalahkan pahlawan memulihkan lebih banyak.
+- Rex punya 450 darah di distrik 1, naik bertahap sampai 600 di Alun-Alun. Hanya beberapa tentara terdekat yang menembak bersamaan. Mengalahkan tentara memulihkan sedikit darah, mengalahkan pahlawan memulihkan lebih banyak.
 - Saat **Rage** penuh, damage Rex dua kali lipat selama 8 detik. Rage terisi dari menghancurkan bangunan dan mengalahkan musuh.
 - Pakai **lompat** untuk menghindari tembakan: Rex kebal selama di udara, dan saat mendarat tentara terpaku 4,5 detik, pahlawan 1,6 detik.
 - Musuh makin keras di distrik berikutnya. Jangan diam terlalu lama di depan barisan tembak.
