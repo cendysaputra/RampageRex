@@ -1,0 +1,348 @@
+{
+  "name": "Malam Halloween",
+  "setting": "halloween",
+  "mission": "halloween",
+  "target": 80,
+  "boss": "penyihir",
+  "bosses": [],
+  "length": 22800,
+  "start": 380,
+  "buildings": [
+    {
+      "x": 760,
+      "width": 450,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 1470,
+      "width": 450,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 2180,
+      "width": 500,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 2940,
+      "width": 520,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 3760,
+      "width": 520,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 4490,
+      "width": 520,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 5220,
+      "width": 470,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 5990,
+      "width": 450,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 6700,
+      "width": 470,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 7430,
+      "width": 500,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 8140,
+      "width": 520,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 8900,
+      "width": 500,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 9610,
+      "width": 500,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 10350,
+      "width": 450,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 11060,
+      "width": 430,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 11730,
+      "width": 500,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 12490,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 13260,
+      "width": 430,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 13990,
+      "width": 430,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 14720,
+      "width": 430,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 15450,
+      "width": 470,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 16130,
+      "width": 470,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 16840,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 17520,
+      "width": 500,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 18320,
+      "width": 500,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 19120,
+      "width": 520,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 19900,
+      "width": 450,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 20610,
+      "width": 450,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 21360,
+      "width": 450,
+      "upper": 2,
+      "color": "mustard"
+    }
+  ],
+  "props": [
+    {
+      "x": 650,
+      "type": "labu-raksasa"
+    },
+    {
+      "x": 1430,
+      "type": "street-lamp"
+    },
+    {
+      "x": 2050,
+      "type": "pohon-mati"
+    },
+    {
+      "x": 2570,
+      "type": "electric-pole"
+    },
+    {
+      "x": 3090,
+      "type": "nisan"
+    },
+    {
+      "x": 3790,
+      "type": "street-lamp"
+    },
+    {
+      "x": 4490,
+      "type": "labu-raksasa"
+    },
+    {
+      "x": 5190,
+      "type": "tent-stall"
+    },
+    {
+      "x": 5970,
+      "type": "pohon-mati"
+    },
+    {
+      "x": 6490,
+      "type": "street-lamp"
+    },
+    {
+      "x": 7010,
+      "type": "nisan"
+    },
+    {
+      "x": 7710,
+      "type": "warung-makan"
+    },
+    {
+      "x": 8330,
+      "type": "labu-raksasa"
+    },
+    {
+      "x": 9030,
+      "type": "warung-makan"
+    },
+    {
+      "x": 9650,
+      "type": "pohon-mati"
+    },
+    {
+      "x": 10350,
+      "type": "tent-stall"
+    },
+    {
+      "x": 11130,
+      "type": "nisan"
+    },
+    {
+      "x": 11650,
+      "type": "electric-pole"
+    },
+    {
+      "x": 12170,
+      "type": "labu-raksasa"
+    },
+    {
+      "x": 12790,
+      "type": "tent-stall"
+    },
+    {
+      "x": 13410,
+      "type": "pohon-mati"
+    },
+    {
+      "x": 14190,
+      "type": "street-lamp"
+    },
+    {
+      "x": 14710,
+      "type": "nisan"
+    },
+    {
+      "x": 15330,
+      "type": "tent-stall"
+    },
+    {
+      "x": 16110,
+      "type": "labu-raksasa"
+    },
+    {
+      "x": 16890,
+      "type": "street-lamp"
+    },
+    {
+      "x": 17590,
+      "type": "pohon-mati"
+    },
+    {
+      "x": 18210,
+      "type": "electric-pole"
+    },
+    {
+      "x": 18830,
+      "type": "nisan"
+    },
+    {
+      "x": 19350,
+      "type": "tent-stall"
+    },
+    {
+      "x": 20050,
+      "type": "labu-raksasa"
+    },
+    {
+      "x": 20670,
+      "type": "tent-stall"
+    },
+    {
+      "x": 21290,
+      "type": "pohon-mati"
+    },
+    {
+      "x": 22070,
+      "type": "warung-makan"
+    }
+  ],
+  "spawns": [
+    1518,
+    1824,
+    3254,
+    4006,
+    5231,
+    6296,
+    7726,
+    8478,
+    9704,
+    10769,
+    12199,
+    12950,
+    14176,
+    15241,
+    16671,
+    17423,
+    18649,
+    19714,
+    21144,
+    21895,
+    21400,
+    21900
+  ]
+}

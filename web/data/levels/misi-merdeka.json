@@ -1,0 +1,354 @@
+{
+  "name": "Kampung Merah Putih",
+  "setting": "merdeka",
+  "mission": "merdeka",
+  "target": 80,
+  "boss": "tikus",
+  "bosses": [],
+  "length": 22800,
+  "start": 380,
+  "buildings": [
+    {
+      "x": 760,
+      "width": 520,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 1540,
+      "width": 470,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 2220,
+      "width": 430,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 2950,
+      "width": 470,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 3660,
+      "width": 520,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 4420,
+      "width": 450,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 5080,
+      "width": 430,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 5720,
+      "width": 520,
+      "upper": 2,
+      "color": "mint"
+    },
+    {
+      "x": 6540,
+      "width": 520,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 7360,
+      "width": 470,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 8040,
+      "width": 500,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 8840,
+      "width": 450,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 9530,
+      "width": 520,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 10310,
+      "width": 430,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 10980,
+      "width": 470,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 11710,
+      "width": 450,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 12420,
+      "width": 470,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 13150,
+      "width": 430,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 13880,
+      "width": 430,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 14570,
+      "width": 430,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 15240,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 15980,
+      "width": 450,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 16640,
+      "width": 450,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 17350,
+      "width": 470,
+      "upper": 0,
+      "color": "mint"
+    },
+    {
+      "x": 18120,
+      "width": 430,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 18850,
+      "width": 500,
+      "upper": 0,
+      "color": "blue"
+    },
+    {
+      "x": 19590,
+      "width": 450,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 20300,
+      "width": 430,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 21030,
+      "width": 450,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 21690,
+      "width": 500,
+      "upper": 1,
+      "color": "mint"
+    }
+  ],
+  "props": [
+    {
+      "x": 650,
+      "type": "gapura-merdeka"
+    },
+    {
+      "x": 1350,
+      "type": "electric-pole"
+    },
+    {
+      "x": 2050,
+      "type": "tenda-hadiah"
+    },
+    {
+      "x": 2570,
+      "type": "tree"
+    },
+    {
+      "x": 3350,
+      "type": "panggung-lomba"
+    },
+    {
+      "x": 3870,
+      "type": "food-cart"
+    },
+    {
+      "x": 4490,
+      "type": "gapura-merdeka"
+    },
+    {
+      "x": 5110,
+      "type": "warung-makan"
+    },
+    {
+      "x": 5810,
+      "type": "tenda-hadiah"
+    },
+    {
+      "x": 6510,
+      "type": "electric-pole"
+    },
+    {
+      "x": 7130,
+      "type": "panggung-lomba"
+    },
+    {
+      "x": 7830,
+      "type": "tent-stall"
+    },
+    {
+      "x": 8530,
+      "type": "gapura-merdeka"
+    },
+    {
+      "x": 9310,
+      "type": "warung-makan"
+    },
+    {
+      "x": 9830,
+      "type": "tenda-hadiah"
+    },
+    {
+      "x": 10350,
+      "type": "warung-makan"
+    },
+    {
+      "x": 10870,
+      "type": "panggung-lomba"
+    },
+    {
+      "x": 11490,
+      "type": "warung-makan"
+    },
+    {
+      "x": 12110,
+      "type": "gapura-merdeka"
+    },
+    {
+      "x": 12890,
+      "type": "tent-stall"
+    },
+    {
+      "x": 13670,
+      "type": "tenda-hadiah"
+    },
+    {
+      "x": 14290,
+      "type": "warung-makan"
+    },
+    {
+      "x": 15070,
+      "type": "panggung-lomba"
+    },
+    {
+      "x": 15850,
+      "type": "street-lamp"
+    },
+    {
+      "x": 16550,
+      "type": "gapura-merdeka"
+    },
+    {
+      "x": 17250,
+      "type": "electric-pole"
+    },
+    {
+      "x": 17770,
+      "type": "tenda-hadiah"
+    },
+    {
+      "x": 18550,
+      "type": "food-cart"
+    },
+    {
+      "x": 19250,
+      "type": "panggung-lomba"
+    },
+    {
+      "x": 19870,
+      "type": "street-lamp"
+    },
+    {
+      "x": 20570,
+      "type": "gapura-merdeka"
+    },
+    {
+      "x": 21090,
+      "type": "warung-makan"
+    },
+    {
+      "x": 21610,
+      "type": "tenda-hadiah"
+    },
+    {
+      "x": 22130,
+      "type": "street-lamp"
+    }
+  ],
+  "spawns": [
+    1518,
+    1824,
+    3254,
+    4006,
+    5231,
+    6296,
+    7726,
+    8478,
+    9704,
+    10769,
+    12199,
+    12950,
+    14176,
+    15241,
+    16671,
+    17423,
+    18649,
+    19714,
+    21144,
+    21895,
+    21400,
+    21900
+  ]
+}

@@ -1,0 +1,346 @@
+{
+  "name": "Kota Bersalju",
+  "setting": "salju",
+  "mission": "salju",
+  "target": 80,
+  "boss": "boneka-salju",
+  "bosses": [],
+  "length": 22800,
+  "start": 380,
+  "buildings": [
+    {
+      "x": 760,
+      "width": 470,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 1440,
+      "width": 500,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 2240,
+      "width": 430,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 2880,
+      "width": 450,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 3590,
+      "width": 470,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 4270,
+      "width": 520,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 5000,
+      "width": 470,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 5680,
+      "width": 470,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 6450,
+      "width": 470,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 7180,
+      "width": 450,
+      "upper": 0,
+      "color": "mustard"
+    },
+    {
+      "x": 7890,
+      "width": 450,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 8580,
+      "width": 450,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 9240,
+      "width": 500,
+      "upper": 2,
+      "color": "mustard"
+    },
+    {
+      "x": 9980,
+      "width": 520,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 10760,
+      "width": 500,
+      "upper": 1,
+      "color": "mustard"
+    },
+    {
+      "x": 11470,
+      "width": 520,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 12230,
+      "width": 450,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 12980,
+      "width": 520,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 13740,
+      "width": 500,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 14500,
+      "width": 430,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 15230,
+      "width": 430,
+      "upper": 2,
+      "color": "blue"
+    },
+    {
+      "x": 15960,
+      "width": 450,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 16670,
+      "width": 430,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 17400,
+      "width": 470,
+      "upper": 1,
+      "color": "mint"
+    },
+    {
+      "x": 18130,
+      "width": 470,
+      "upper": 2,
+      "color": "pink"
+    },
+    {
+      "x": 18840,
+      "width": 500,
+      "upper": 0,
+      "color": "pink"
+    },
+    {
+      "x": 19580,
+      "width": 450,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 20330,
+      "width": 500,
+      "upper": 1,
+      "color": "blue"
+    },
+    {
+      "x": 21090,
+      "width": 500,
+      "upper": 1,
+      "color": "pink"
+    },
+    {
+      "x": 21800,
+      "width": 430,
+      "upper": 0,
+      "color": "pink"
+    }
+  ],
+  "props": [
+    {
+      "x": 650,
+      "type": "boneka-salju"
+    },
+    {
+      "x": 1430,
+      "type": "warung-makan"
+    },
+    {
+      "x": 2130,
+      "type": "gerobak-es"
+    },
+    {
+      "x": 2830,
+      "type": "warung-makan"
+    },
+    {
+      "x": 3450,
+      "type": "cemara-salju"
+    },
+    {
+      "x": 4230,
+      "type": "electric-pole"
+    },
+    {
+      "x": 4850,
+      "type": "boneka-salju"
+    },
+    {
+      "x": 5470,
+      "type": "angkot"
+    },
+    {
+      "x": 6090,
+      "type": "gerobak-es"
+    },
+    {
+      "x": 6710,
+      "type": "warung-makan"
+    },
+    {
+      "x": 7230,
+      "type": "cemara-salju"
+    },
+    {
+      "x": 8010,
+      "type": "electric-pole"
+    },
+    {
+      "x": 8710,
+      "type": "boneka-salju"
+    },
+    {
+      "x": 9330,
+      "type": "warung-makan"
+    },
+    {
+      "x": 10110,
+      "type": "gerobak-es"
+    },
+    {
+      "x": 10630,
+      "type": "electric-pole"
+    },
+    {
+      "x": 11250,
+      "type": "cemara-salju"
+    },
+    {
+      "x": 12030,
+      "type": "warung-makan"
+    },
+    {
+      "x": 12650,
+      "type": "boneka-salju"
+    },
+    {
+      "x": 13430,
+      "type": "warung-makan"
+    },
+    {
+      "x": 14210,
+      "type": "gerobak-es"
+    },
+    {
+      "x": 14910,
+      "type": "electric-pole"
+    },
+    {
+      "x": 15610,
+      "type": "cemara-salju"
+    },
+    {
+      "x": 16390,
+      "type": "electric-pole"
+    },
+    {
+      "x": 17010,
+      "type": "boneka-salju"
+    },
+    {
+      "x": 17790,
+      "type": "street-lamp"
+    },
+    {
+      "x": 18570,
+      "type": "gerobak-es"
+    },
+    {
+      "x": 19090,
+      "type": "warung-makan"
+    },
+    {
+      "x": 19870,
+      "type": "cemara-salju"
+    },
+    {
+      "x": 20390,
+      "type": "electric-pole"
+    },
+    {
+      "x": 21170,
+      "type": "boneka-salju"
+    },
+    {
+      "x": 21690,
+      "type": "angkot"
+    }
+  ],
+  "spawns": [
+    1518,
+    1824,
+    3254,
+    4006,
+    5231,
+    6296,
+    7726,
+    8478,
+    9704,
+    10769,
+    12199,
+    12950,
+    14176,
+    15241,
+    16671,
+    17423,
+    18649,
+    19714,
+    21144,
+    21895,
+    21400,
+    21900
+  ]
+}

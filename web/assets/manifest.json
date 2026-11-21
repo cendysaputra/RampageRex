@@ -2228,6 +2228,154 @@
           ]
         ]
       }
+    },
+    "extra": {
+      "sayap": {
+        "fly": {
+          "path": "characters/rex/skins/sayap/fly",
+          "frames": [
+            [
+              103,
+              78,
+              436,
+              205,
+              260,
+              203
+            ],
+            [
+              737,
+              30,
+              424,
+              253,
+              253,
+              251
+            ],
+            [
+              123,
+              364,
+              402,
+              232,
+              240,
+              230
+            ],
+            [
+              691,
+              388,
+              500,
+              208,
+              299,
+              206
+            ],
+            [
+              106,
+              695,
+              430,
+              215,
+              257,
+              212
+            ],
+            [
+              715,
+              730,
+              460,
+              180,
+              275,
+              177
+            ],
+            [
+              119,
+              980,
+              408,
+              243,
+              244,
+              240
+            ],
+            [
+              730,
+              993,
+              435,
+              230,
+              260,
+              227
+            ]
+          ],
+          "scale": 1.33,
+          "unit": 627
+        }
+      },
+      "tulang": {
+        "revive": {
+          "path": "characters/rex/skins/tulang/revive",
+          "frames": [
+            [
+              83,
+              37,
+              469,
+              246,
+              280,
+              244
+            ],
+            [
+              698,
+              38,
+              489,
+              245,
+              292,
+              243
+            ],
+            [
+              81,
+              343,
+              472,
+              253,
+              282,
+              251
+            ],
+            [
+              712,
+              420,
+              465,
+              176,
+              278,
+              174
+            ],
+            [
+              90,
+              730,
+              457,
+              180,
+              273,
+              177
+            ],
+            [
+              703,
+              682,
+              481,
+              228,
+              287,
+              225
+            ],
+            [
+              82,
+              990,
+              471,
+              233,
+              281,
+              230
+            ],
+            [
+              699,
+              982,
+              487,
+              241,
+              291,
+              238
+            ]
+          ],
+          "scale": 1.19,
+          "unit": 627
+        }
+      }
     }
   },
   "sourceBrief": "SPESMISS.md",
@@ -6611,6 +6759,1123 @@
         0
       ],
       "alpha": true
+    },
+    "backgrounds/merdeka/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/merdeka/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/merdeka/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/merdeka/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#535056"
+    },
+    "buildings/overlays/merdeka/ground.png": {
+      "width": 984,
+      "height": 457,
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true
+    },
+    "buildings/overlays/merdeka/upper.png": {
+      "width": 984,
+      "height": 361,
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true
+    },
+    "buildings/overlays/merdeka/roof.png": {
+      "width": 984,
+      "height": 293,
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true
+    },
+    "backgrounds/salju/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/salju/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/salju/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/salju/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#304557"
+    },
+    "buildings/overlays/salju/ground.png": {
+      "width": 984,
+      "height": 457,
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true
+    },
+    "buildings/overlays/salju/upper.png": {
+      "width": 984,
+      "height": 361,
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true
+    },
+    "buildings/overlays/salju/roof.png": {
+      "width": 984,
+      "height": 293,
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true
+    },
+    "backgrounds/halloween/sky.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        800,
+        900
+      ],
+      "alpha": false,
+      "repeatX": true
+    },
+    "backgrounds/halloween/far-city.png": {
+      "width": 1600,
+      "height": 295,
+      "pivot": [
+        800,
+        295
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/halloween/mid-city.png": {
+      "width": 1600,
+      "height": 239,
+      "pivot": [
+        800,
+        239
+      ],
+      "alpha": true,
+      "repeatX": true
+    },
+    "backgrounds/halloween/street.png": {
+      "width": 1600,
+      "height": 214,
+      "pivot": [
+        800,
+        214
+      ],
+      "alpha": true,
+      "repeatX": true,
+      "ground": "#111722"
+    },
+    "buildings/overlays/halloween/ground.png": {
+      "width": 984,
+      "height": 457,
+      "pivot": [
+        492,
+        445
+      ],
+      "alpha": true
+    },
+    "buildings/overlays/halloween/upper.png": {
+      "width": 984,
+      "height": 361,
+      "pivot": [
+        492,
+        349
+      ],
+      "alpha": true
+    },
+    "buildings/overlays/halloween/roof.png": {
+      "width": 984,
+      "height": 293,
+      "pivot": [
+        492,
+        281
+      ],
+      "alpha": true
+    },
+    "props/gapura-merdeka.png": {
+      "width": 600,
+      "height": 700,
+      "bounds": {
+        "x": 22,
+        "y": 325,
+        "width": 556,
+        "height": 353
+      },
+      "pivot": [
+        300,
+        674
+      ],
+      "alpha": true
+    },
+    "props/gapura-merdeka-damaged.png": {
+      "width": 600,
+      "height": 700,
+      "bounds": {
+        "x": 36,
+        "y": 307,
+        "width": 529,
+        "height": 371
+      },
+      "pivot": [
+        300,
+        674
+      ],
+      "alpha": true
+    },
+    "props/gapura-merdeka-wreck.png": {
+      "width": 600,
+      "height": 700,
+      "bounds": {
+        "x": 22,
+        "y": 527,
+        "width": 556,
+        "height": 151
+      },
+      "pivot": [
+        300,
+        674
+      ],
+      "alpha": true
+    },
+    "props/panggung-lomba.png": {
+      "width": 640,
+      "height": 480,
+      "bounds": {
+        "x": 24,
+        "y": 22,
+        "width": 593,
+        "height": 436
+      },
+      "pivot": [
+        320,
+        454
+      ],
+      "alpha": true
+    },
+    "props/panggung-lomba-damaged.png": {
+      "width": 640,
+      "height": 480,
+      "bounds": {
+        "x": 57,
+        "y": 75,
+        "width": 526,
+        "height": 383
+      },
+      "pivot": [
+        320,
+        454
+      ],
+      "alpha": true
+    },
+    "props/panggung-lomba-wreck.png": {
+      "width": 640,
+      "height": 480,
+      "bounds": {
+        "x": 22,
+        "y": 278,
+        "width": 596,
+        "height": 180
+      },
+      "pivot": [
+        320,
+        454
+      ],
+      "alpha": true
+    },
+    "props/tenda-hadiah.png": {
+      "width": 520,
+      "height": 420,
+      "bounds": {
+        "x": 43,
+        "y": 22,
+        "width": 435,
+        "height": 376
+      },
+      "pivot": [
+        260,
+        394
+      ],
+      "alpha": true
+    },
+    "props/tenda-hadiah-damaged.png": {
+      "width": 520,
+      "height": 420,
+      "bounds": {
+        "x": 55,
+        "y": 22,
+        "width": 411,
+        "height": 376
+      },
+      "pivot": [
+        260,
+        394
+      ],
+      "alpha": true
+    },
+    "props/tenda-hadiah-wreck.png": {
+      "width": 520,
+      "height": 420,
+      "bounds": {
+        "x": 23,
+        "y": 217,
+        "width": 475,
+        "height": 181
+      },
+      "pivot": [
+        260,
+        394
+      ],
+      "alpha": true
+    },
+    "props/boneka-salju.png": {
+      "width": 360,
+      "height": 460,
+      "bounds": {
+        "x": 22,
+        "y": 58,
+        "width": 316,
+        "height": 380
+      },
+      "pivot": [
+        180,
+        434
+      ],
+      "alpha": true
+    },
+    "props/boneka-salju-damaged.png": {
+      "width": 360,
+      "height": 460,
+      "bounds": {
+        "x": 49,
+        "y": 160,
+        "width": 262,
+        "height": 278
+      },
+      "pivot": [
+        180,
+        434
+      ],
+      "alpha": true
+    },
+    "props/boneka-salju-wreck.png": {
+      "width": 360,
+      "height": 460,
+      "bounds": {
+        "x": 22,
+        "y": 315,
+        "width": 316,
+        "height": 123
+      },
+      "pivot": [
+        180,
+        434
+      ],
+      "alpha": true
+    },
+    "props/cemara-salju.png": {
+      "width": 420,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 63,
+        "width": 376,
+        "height": 555
+      },
+      "pivot": [
+        210,
+        614
+      ],
+      "alpha": true
+    },
+    "props/cemara-salju-damaged.png": {
+      "width": 420,
+      "height": 640,
+      "bounds": {
+        "x": 33,
+        "y": 209,
+        "width": 354,
+        "height": 409
+      },
+      "pivot": [
+        210,
+        614
+      ],
+      "alpha": true
+    },
+    "props/cemara-salju-wreck.png": {
+      "width": 420,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 461,
+        "width": 376,
+        "height": 157
+      },
+      "pivot": [
+        210,
+        614
+      ],
+      "alpha": true
+    },
+    "props/gerobak-es.png": {
+      "width": 480,
+      "height": 400,
+      "bounds": {
+        "x": 35,
+        "y": 22,
+        "width": 410,
+        "height": 356
+      },
+      "pivot": [
+        240,
+        374
+      ],
+      "alpha": true
+    },
+    "props/gerobak-es-damaged.png": {
+      "width": 480,
+      "height": 400,
+      "bounds": {
+        "x": 45,
+        "y": 82,
+        "width": 390,
+        "height": 296
+      },
+      "pivot": [
+        240,
+        374
+      ],
+      "alpha": true
+    },
+    "props/gerobak-es-wreck.png": {
+      "width": 480,
+      "height": 400,
+      "bounds": {
+        "x": 22,
+        "y": 230,
+        "width": 436,
+        "height": 148
+      },
+      "pivot": [
+        240,
+        374
+      ],
+      "alpha": true
+    },
+    "props/labu-raksasa.png": {
+      "width": 460,
+      "height": 360,
+      "bounds": {
+        "x": 105,
+        "y": 22,
+        "width": 250,
+        "height": 316
+      },
+      "pivot": [
+        230,
+        334
+      ],
+      "alpha": true
+    },
+    "props/labu-raksasa-damaged.png": {
+      "width": 460,
+      "height": 360,
+      "bounds": {
+        "x": 84,
+        "y": 22,
+        "width": 293,
+        "height": 316
+      },
+      "pivot": [
+        230,
+        334
+      ],
+      "alpha": true
+    },
+    "props/labu-raksasa-wreck.png": {
+      "width": 460,
+      "height": 360,
+      "bounds": {
+        "x": 30,
+        "y": 189,
+        "width": 401,
+        "height": 149
+      },
+      "pivot": [
+        230,
+        334
+      ],
+      "alpha": true
+    },
+    "props/nisan.png": {
+      "width": 420,
+      "height": 320,
+      "bounds": {
+        "x": 22,
+        "y": 117,
+        "width": 376,
+        "height": 181
+      },
+      "pivot": [
+        210,
+        294
+      ],
+      "alpha": true
+    },
+    "props/nisan-damaged.png": {
+      "width": 420,
+      "height": 320,
+      "bounds": {
+        "x": 25,
+        "y": 91,
+        "width": 371,
+        "height": 207
+      },
+      "pivot": [
+        210,
+        294
+      ],
+      "alpha": true
+    },
+    "props/nisan-wreck.png": {
+      "width": 420,
+      "height": 320,
+      "bounds": {
+        "x": 22,
+        "y": 170,
+        "width": 376,
+        "height": 128
+      },
+      "pivot": [
+        210,
+        294
+      ],
+      "alpha": true
+    },
+    "props/pohon-mati.png": {
+      "width": 480,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 209,
+        "width": 436,
+        "height": 409
+      },
+      "pivot": [
+        240,
+        614
+      ],
+      "alpha": true
+    },
+    "props/pohon-mati-damaged.png": {
+      "width": 480,
+      "height": 640,
+      "bounds": {
+        "x": 55,
+        "y": 288,
+        "width": 370,
+        "height": 330
+      },
+      "pivot": [
+        240,
+        614
+      ],
+      "alpha": true
+    },
+    "props/pohon-mati-wreck.png": {
+      "width": 480,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 493,
+        "width": 436,
+        "height": 125
+      },
+      "pivot": [
+        240,
+        614
+      ],
+      "alpha": true
+    },
+    "characters/civilians/balap-karung/master.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 116,
+        "y": 60,
+        "width": 161,
+        "height": 344
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/balap-karung/frames/run-a.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 61,
+        "y": 23,
+        "width": 270,
+        "height": 381
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/balap-karung/frames/run-b.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 96,
+        "y": 107,
+        "width": 200,
+        "height": 297
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/balap-karung/frames/look-back.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 90,
+        "y": 42,
+        "width": 213,
+        "height": 362
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/civilians/balap-karung/frames/stumble.png": {
+      "width": 392,
+      "height": 425,
+      "bounds": {
+        "x": 45,
+        "y": 131,
+        "width": 303,
+        "height": 273
+      },
+      "pivot": [
+        196,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/tengkorak/frames/walk-a.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 46,
+        "y": 113,
+        "width": 265,
+        "height": 291
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/tengkorak/frames/walk-b.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 46,
+        "y": 113,
+        "width": 264,
+        "height": 291
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/tengkorak/frames/attack.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 22,
+        "y": 65,
+        "width": 312,
+        "height": 339
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/tengkorak/frames/knockback.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 30,
+        "y": 75,
+        "width": 297,
+        "height": 329
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/soldiers/tengkorak/frames/rise.png": {
+      "width": 356,
+      "height": 425,
+      "bounds": {
+        "x": 23,
+        "y": 160,
+        "width": 310,
+        "height": 244
+      },
+      "pivot": [
+        178,
+        413
+      ],
+      "alpha": true,
+      "logicalHeight": 199
+    },
+    "characters/bosses/tikus/atlas.png": {
+      "width": 1280,
+      "height": 2048,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/tikus/cutin.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/tikus/portrait.png": {
+      "width": 400,
+      "height": 400,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/tikus/master.png": {
+      "width": 1000,
+      "height": 1500,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/boneka-salju/atlas.png": {
+      "width": 1280,
+      "height": 2048,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/boneka-salju/cutin.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/boneka-salju/portrait.png": {
+      "width": 400,
+      "height": 400,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/boneka-salju/master.png": {
+      "width": 1000,
+      "height": 1500,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/penyihir/atlas.png": {
+      "width": 1280,
+      "height": 2048,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/penyihir/cutin.png": {
+      "width": 1600,
+      "height": 900,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/penyihir/portrait.png": {
+      "width": 400,
+      "height": 400,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "characters/bosses/penyihir/master.png": {
+      "width": 1000,
+      "height": 1500,
+      "pivot": [
+        0,
+        0
+      ],
+      "alpha": true
+    },
+    "fx/koin/pile.png": {
+      "width": 256,
+      "height": 128,
+      "bounds": {
+        "x": 69,
+        "y": 22,
+        "width": 118,
+        "height": 84
+      },
+      "pivot": [
+        128,
+        64
+      ],
+      "alpha": true
+    },
+    "fx/koin/sack.png": {
+      "width": 256,
+      "height": 256,
+      "bounds": {
+        "x": 27,
+        "y": 22,
+        "width": 202,
+        "height": 212
+      },
+      "pivot": [
+        128,
+        128
+      ],
+      "alpha": true
+    },
+    "fx/koin/frames/spin-b.png": {
+      "width": 128,
+      "height": 128,
+      "bounds": {
+        "x": 32,
+        "y": 22,
+        "width": 63,
+        "height": 84
+      },
+      "pivot": [
+        64,
+        64
+      ],
+      "alpha": true
+    },
+    "fx/koin/frames/spin-d.png": {
+      "width": 128,
+      "height": 128,
+      "bounds": {
+        "x": 32,
+        "y": 22,
+        "width": 63,
+        "height": 84
+      },
+      "pivot": [
+        64,
+        64
+      ],
+      "alpha": true
+    },
+    "fx/koin/frames/spin-a.png": {
+      "width": 128,
+      "height": 128,
+      "bounds": {
+        "x": 23,
+        "y": 22,
+        "width": 82,
+        "height": 84
+      },
+      "pivot": [
+        64,
+        64
+      ],
+      "alpha": true
+    },
+    "fx/koin/frames/spin-c.png": {
+      "width": 128,
+      "height": 128,
+      "bounds": {
+        "x": 50,
+        "y": 22,
+        "width": 27,
+        "height": 84
+      },
+      "pivot": [
+        64,
+        64
+      ],
+      "alpha": true
+    },
+    "fx/es/freeze-ball.png": {
+      "width": 192,
+      "height": 192,
+      "bounds": {
+        "x": 24,
+        "y": 22,
+        "width": 143,
+        "height": 148
+      },
+      "pivot": [
+        96,
+        96
+      ],
+      "alpha": true
+    },
+    "fx/es/ice-block.png": {
+      "width": 900,
+      "height": 700,
+      "bounds": {
+        "x": 22,
+        "y": 67,
+        "width": 856,
+        "height": 565
+      },
+      "pivot": [
+        450,
+        350
+      ],
+      "alpha": true
+    },
+    "fx/es/snowball.png": {
+      "width": 128,
+      "height": 128,
+      "bounds": {
+        "x": 22,
+        "y": 22,
+        "width": 84,
+        "height": 84
+      },
+      "pivot": [
+        64,
+        64
+      ],
+      "alpha": true
+    },
+    "fx/es/frames/spike-d.png": {
+      "width": 256,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 404,
+        "width": 212,
+        "height": 214
+      },
+      "pivot": [
+        128,
+        614
+      ],
+      "alpha": true
+    },
+    "fx/es/frames/spike-b.png": {
+      "width": 256,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 467,
+        "width": 212,
+        "height": 151
+      },
+      "pivot": [
+        128,
+        614
+      ],
+      "alpha": true
+    },
+    "fx/es/frames/spike-c.png": {
+      "width": 256,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 368,
+        "width": 212,
+        "height": 250
+      },
+      "pivot": [
+        128,
+        614
+      ],
+      "alpha": true
+    },
+    "fx/es/frames/spike-a.png": {
+      "width": 256,
+      "height": 640,
+      "bounds": {
+        "x": 22,
+        "y": 543,
+        "width": 212,
+        "height": 75
+      },
+      "pivot": [
+        128,
+        614
+      ],
+      "alpha": true
+    },
+    "fx/sihir/orb.png": {
+      "width": 192,
+      "height": 192,
+      "bounds": {
+        "x": 22,
+        "y": 28,
+        "width": 148,
+        "height": 136
+      },
+      "pivot": [
+        96,
+        96
+      ],
+      "alpha": true
+    },
+    "fx/sihir/bat.png": {
+      "width": 192,
+      "height": 128,
+      "bounds": {
+        "x": 22,
+        "y": 24,
+        "width": 148,
+        "height": 80
+      },
+      "pivot": [
+        96,
+        64
+      ],
+      "alpha": true
+    },
+    "fx/sihir/circle.png": {
+      "width": 640,
+      "height": 200,
+      "bounds": {
+        "x": 185,
+        "y": 22,
+        "width": 269,
+        "height": 156
+      },
+      "pivot": [
+        320,
+        100
+      ],
+      "alpha": true
     }
   },
   "review": [],
@@ -6698,6 +7963,251 @@
       "net": 5,
       "hit": 6,
       "down": 7
+    }
+  },
+  "bosses": {
+    "tikus": {
+      "path": "characters/bosses/tikus/atlas",
+      "poses": {
+        "idle": 0,
+        "walk": [
+          1,
+          2
+        ],
+        "windup": 3,
+        "punch": 4,
+        "throw": 5,
+        "hit": 6,
+        "down": 7
+      },
+      "frames": [
+        [
+          0,
+          0,
+          640,
+          512,
+          315,
+          461
+        ],
+        [
+          640,
+          0,
+          640,
+          512,
+          311,
+          461
+        ],
+        [
+          0,
+          512,
+          640,
+          512,
+          311,
+          461
+        ],
+        [
+          640,
+          512,
+          640,
+          512,
+          314,
+          461
+        ],
+        [
+          0,
+          1024,
+          640,
+          512,
+          381,
+          461
+        ],
+        [
+          640,
+          1024,
+          640,
+          512,
+          423,
+          461
+        ],
+        [
+          0,
+          1536,
+          640,
+          512,
+          254,
+          461
+        ],
+        [
+          640,
+          1536,
+          640,
+          512,
+          427,
+          461
+        ]
+      ]
+    },
+    "boneka-salju": {
+      "path": "characters/bosses/boneka-salju/atlas",
+      "poses": {
+        "idle": 0,
+        "walk": [
+          1,
+          2
+        ],
+        "windup": 3,
+        "throw": 4,
+        "punch": 5,
+        "hit": 6,
+        "down": 7
+      },
+      "frames": [
+        [
+          0,
+          0,
+          640,
+          512,
+          339,
+          461
+        ],
+        [
+          640,
+          0,
+          640,
+          512,
+          345,
+          461
+        ],
+        [
+          0,
+          512,
+          640,
+          512,
+          369,
+          461
+        ],
+        [
+          640,
+          512,
+          640,
+          512,
+          341,
+          461
+        ],
+        [
+          0,
+          1024,
+          640,
+          512,
+          343,
+          461
+        ],
+        [
+          640,
+          1024,
+          640,
+          512,
+          367,
+          461
+        ],
+        [
+          0,
+          1536,
+          640,
+          512,
+          346,
+          461
+        ],
+        [
+          640,
+          1536,
+          640,
+          512,
+          322,
+          461
+        ]
+      ]
+    },
+    "penyihir": {
+      "path": "characters/bosses/penyihir/atlas",
+      "poses": {
+        "idle": 0,
+        "walk": [
+          1,
+          2
+        ],
+        "windup": 3,
+        "summon": 4,
+        "throw": 5,
+        "hit": 6,
+        "down": 7
+      },
+      "frames": [
+        [
+          0,
+          0,
+          640,
+          512,
+          289,
+          461
+        ],
+        [
+          640,
+          0,
+          640,
+          512,
+          386,
+          461
+        ],
+        [
+          0,
+          512,
+          640,
+          512,
+          388,
+          461
+        ],
+        [
+          640,
+          512,
+          640,
+          512,
+          367,
+          461
+        ],
+        [
+          0,
+          1024,
+          640,
+          512,
+          265,
+          461
+        ],
+        [
+          640,
+          1024,
+          640,
+          512,
+          405,
+          461
+        ],
+        [
+          0,
+          1536,
+          640,
+          512,
+          228,
+          461
+        ],
+        [
+          640,
+          1536,
+          640,
+          512,
+          188,
+          461
+        ]
+      ]
     }
   }
 }
