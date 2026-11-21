@@ -1,0 +1,11 @@
+{
+  "appId": "com.cendysaputra.rampagerex",
+  "appName": "Rampage Rex",
+  "webDir": "../web",
+  "android": {
+    "backgroundColor": "#0b1719",
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  }
+}
