@@ -157,8 +157,12 @@ async function chooseMission(){
     const info=missionInfo[key],open=dev||missionOpen(key,progress,stats),row=progress.special[key];
     card(key,t('Misi {name}',{name:t(info.name)})+(row.cleared?' ✓':''),!open?t(info.need):row.cleared?t('skor terbaik {n}',{n:num(row.best)}):t('Hadiah: skin {skin}',{skin:t(skins[info.skin].label)}),open,()=>{daily=null;start(MISSION_START+i)});
   }
-  card('zombie','ZombieRex',allMissions(progress)?t('Skin ZombieRex terbuka!'):t('Selesaikan ketiga misi untuk membuka ZombieRex'),true,null);
-  list.lastChild.classList.add('reward');list.lastChild.classList.toggle('open',dev||allMissions(progress));
+  // Kartu ZombieRex
+  const zombie=dev||allMissions(progress),wearing=settings.skin==='zombie';
+  card('zombie','ZombieRex',!zombie?t('Selesaikan ketiga misi untuk membuka ZombieRex'):wearing?t('Sedang dipakai'):t('Pakai skin ZombieRex'),zombie,()=>{
+    settings.skin='zombie';saveSettings(settings);const note=list.lastChild.querySelector('small');note.textContent=t('Sedang dipakai');
+  });
+  list.lastChild.classList.add('reward');list.lastChild.classList.toggle('open',zombie);
   list.querySelector('button:not(:disabled)')?.focus();
 }
 // Tampilkan tutorial
@@ -447,8 +451,8 @@ requestAnimationFrame(frame);
 // Panel developer
 if(dev){
   document.documentElement.dataset.dev='1';
-  const actions=[['win','Menang instan'],['end','Ratakan & ke ujung'],['flatten','Ratakan kota'],['heroes','Panggil 3 penjaga'],['robot','Panggil robot'],
-    ['lose','Kalah'],['god','Kebal'],['heal','Darah penuh'],['cooldown','Cooldown nol'],['rage','Rage penuh'],['rain','Hujan'],['strike','Sambar petir'],['pawai','Pawai'],['motor','Konvoi motor'],
+  const actions=[['win','Menang instan'],['end','Ratakan & ke ujung'],['flatten','Ratakan kota'],['heroes','Panggil 3 penjaga'],['robot','Panggil bos'],['bossulti','Ulti bos sekarang'],
+    ['lose','Kalah'],['kill','Bunuh Rex tanpa matikan kebal'],['skill','Skill siap + isi Bangkit'],['tengkorak','+ Tengkorak'],['god','Kebal'],['heal','Darah penuh'],['cooldown','Cooldown nol'],['rage','Rage penuh'],['rain','Hujan'],['strike','Sambar petir'],['pawai','Pawai'],['motor','Konvoi motor'],
     ['infantry','+ Infanteri'],['bazooka','+ Bazooka'],['jeep','+ Jeep'],['helicopter','+ Helikopter'],['tank','+ Tank'],['firetruck','+ Truk pemadam'],['firefighter','+ Pemadam'],['drone','+ Drone']];
   const box=document.createElement('details');box.id='dev';
   box.innerHTML='<summary>DEV</summary><div></div>';
