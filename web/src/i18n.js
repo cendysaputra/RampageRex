@@ -20,7 +20,7 @@ const en = {
   'Pelabuhan': 'Harbour', 'Jembatan Tol': 'Toll Bridge', 'Pantai': 'Beach', 'Alun-Alun': 'Town Square', 'Tanpa Akhir': 'Endless',
   'Distrik {n}': 'District {n}', 'Mode': 'Mode', 'Mode Tanpa Akhir': 'Endless mode',
   'Target destruksi {n}%': 'Destruction target {n}%', 'Bertahan dan hancurkan sebanyak mungkin': 'Survive and wreck as much as you can',
-  'Memuat distrik…': 'Loading district…', 'Memuat distrik… {n}%': 'Loading district… {n}%', 'Siap mengamuk!': 'Ready to rampage!',
+  'Memuat distrik…': 'Loading district…', 'Memuat distrik… {n}%': 'Loading district… {n}%', 'Koneksi lambat, masih memuat… {n}%': 'Slow connection, still loading… {n}%', 'Siap mengamuk!': 'Ready to rampage!',
   // HUD
   'Jeda': 'Pause', 'Kiri': 'Left', 'Kanan': 'Right', 'Jalan': 'Walk', 'Gigit': 'Bite', 'Ekor': 'Tail', 'Injak': 'Stomp',
   'Raung': 'Roar', 'Lompat': 'Jump', 'Ulti': 'Ulti', 'Spasi': 'Space', 'W / Klik kiri': 'W / Left click', 'Q / Klik kanan': 'Q / Right click', 'W / klik kiri': 'W / left click', 'Q / klik kanan': 'Q / right click',
@@ -102,7 +102,7 @@ const en = {
   'Hujan deras! Tentara dan warga melambat.': 'Heavy rain! Soldiers and civilians slow down.',
   '{name} · Hancurkan {n}% kota': '{name} · Wreck {n}% of the city', 'SPBU meledak!': 'Petrol station exploded!',
   'Rex makan! +{n} darah': 'Rex eats! +{n} health', 'Rex sudah kenyang.': 'Rex is full.', '{skill} siap dalam {n} dtk.': '{skill} ready in {n}s.',
-  'Perisai memblokir gigitan.': 'Perisai blocks the bite.', 'Hancurkan turret Jaring dulu.': "Destroy Jaring's turret first.",
+  'Perisai memblokir gigitan.': 'Perisai blocks the bite.', 'Hancurkan turret Jaring dulu.': "Destroy Jaring's turret first.", 'Turret hancur! Injak Jaring sekarang.': 'Turret down! Stomp Jaring now.',
   '{name} tumbang!': '{name} is down!', 'Ulti {name} gagal!': "{name}'s ulti cancelled!", 'Ulti siap! Tekan R.': 'Ulti ready! Press R.',
   'Rage penuh! Damage 2× selama 8 detik.': 'Rage full! 2× damage for 8 seconds.',
   'Para penjaga mengepung Rex! Pecah formasi mereka satu per satu.': 'The guardians surround Rex! Break their formation one by one.',
