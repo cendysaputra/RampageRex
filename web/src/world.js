@@ -78,7 +78,7 @@ export const heroUltis={
 // Aturan bos misi
 const bossRules={tikus:{reach:260,speed:190,windup:.55,damage:40,shot:'sack',shotEvery:3.8},'boneka-salju':{reach:280,speed:150,windup:.7,damage:50,shot:'snow',shotEvery:2.6},penyihir:{shotEvery:2.8,summonEvery:9}};
 // Skill khusus
-const flyTime=4,flyHeight=230,spikeCount=9,spikeGap=115,reviveTime=2.4,reviveHp=50,boneCap=12;
+const flyTime=4,flyHeight=230,spikeCount=9,spikeGap=115,reviveTime=2.4,reviveHp=400,boneCap=12;
 // Darah warga
 const civilianHp=110;
 // Lama terpaku
@@ -623,7 +623,7 @@ export class World {
     // Lepas dari es
     if(p.frozen>0){const pressed=['bite','tail','stomp','roar','left','right','jump'].some(k=>input.has(k));if(pressed&&!p.mashed)p.frozen=Math.max(0,p.frozen-.2);p.mashed=pressed;p.stun=Math.max(p.stun,p.frozen)}
     // Bangkit lagi
-    if(p.reviving>0){p.reviving-=dt;p.stun=Math.max(p.stun,.1);p.vx=0;if(p.reviving<=0){p.hp=reviveHp;this.say(t('Rex bangkit lagi!'),2);this.sound('roar');this.shake=14}}
+    if(p.reviving>0){p.reviving-=dt;p.stun=Math.max(p.stun,.1);p.vx=0;if(p.reviving<=0){p.hp=Math.min(reviveHp,p.max);this.say(t('Rex bangkit lagi!'),2);this.sound('roar');this.shake=14}}
     for(const k in p.cd){const before=p.cd[k];p.cd[k]=Math.max(0,before-dt);if(k==='ulti'&&before>0&&!p.cd[k]){this.say(t('Ulti siap! Tekan R.'),2);this.sound('alarm')}}
     if(p.rage>=100&&p.fury<=0){p.fury=8;p.stun=0;p.rage=0;this.say(t('Rage penuh! Damage 2× selama 8 detik.'),2.4);this.sound('roar')}
     const exiting=this.phase==='exit',dying=this.phase==='dying';
