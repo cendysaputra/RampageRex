@@ -1,6 +1,7 @@
 import {World,heroNames,cooldowns,difficulties} from './world.js';
 import {Art,Renderer} from './art.js';
 import {Sound} from './audio.js';
+import {Music} from './music.js';
 import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
 import {loadProgress,saveProgress,recordDistrict,resetProgress,totalStars} from './progress.js';
@@ -18,6 +19,9 @@ const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'b
   KeyJ:'bite',KeyK:'tail',KeyL:'roar'};
 const mouseButtons=['bite',null,'tail'];
 const controls=new Map(),taps=new Set(),input=new Set(),shown=new Map(),snd=new Sound(),panel=el('panel');
+const music=new Music(snd);
+// Buka audio sentuhan pertama
+for(const type of ['pointerdown','keydown'])document.addEventListener(type,()=>{if(snd.enabled)snd.unlock()},{capture:true,passive:true});
 let slowTimer=0,world=null,art=null,renderer=null,screen='menu',prior=0,previousScore=0,levelIndex=0,boot;
 // Baca simpanan
 function getSaved(key,def){try{return localStorage.getItem(key)??def}catch{return def}}
@@ -46,7 +50,7 @@ function thunderOn(){return settings.skin==='thunder'&&(dev||hasThunder())}
 // Terapkan bahasa
 function applyLang(){setLang(settings.lang);translatePage();soundLabel();recordLabel();trophyLabel()}
 // Terapkan pengaturan
-function applySettings(){snd.volume=settings.sfx/100;document.documentElement.dataset.pad=settings.pad}
+function applySettings(){snd.volume=settings.sfx/100;music.volume=settings.music/100;document.documentElement.dataset.pad=settings.pad}
 applySettings();setLang(settings.lang);translatePage();
 // Teks misi harian
 function dailyText(mission,levels){return t(missionTemplate(mission),{name:t(levels[mission.district].name),n:num(mission.n)})}
@@ -174,6 +178,11 @@ function openSettings(paused=false){
   range.oninput=()=>{settings.sfx=+range.value;value.textContent=range.value+'%';applySettings();saveSettings(settings)};
   range.onchange=()=>{snd.unlock();snd.play('bite')};
   sound.append(range,value);form.append(sound);
+  // Volume musik
+  const tune=document.createElement('label'),tuneRange=document.createElement('input'),tuneValue=document.createElement('output');
+  tune.className='slider';tune.textContent=t('Musik');tuneRange.type='range';tuneRange.min=0;tuneRange.max=100;tuneRange.step=5;tuneRange.value=settings.music;tuneValue.textContent=settings.music+'%';
+  tuneRange.oninput=()=>{settings.music=+tuneRange.value;tuneValue.textContent=tuneRange.value+'%';applySettings();saveSettings(settings);snd.unlock()};
+  tune.append(tuneRange,tuneValue);form.append(tune);
   const touch=matchMedia('(pointer:coarse)').matches;
   if(touch&&'vibrate' in navigator)group('Getaran',{on:'Nyala',off:'Mati'},settings.vibrate?'on':'off',key=>{settings.vibrate=key==='on';saveSettings(settings);if(settings.vibrate)buzz(settings,'stomp')});
   if(touch||matchMedia('(max-width:720px)').matches)group('Ukuran tombol sentuh',padSizes,settings.pad,key=>{settings.pad=key;applySettings();saveSettings(settings)});
@@ -265,7 +274,7 @@ function upgradeList(){
   return '<p class="owned">'+t('Upgrade aktif')+': '+Object.entries(count).map(([k,n])=>t(upgrades[k].name)+(n>1?' ×'+n:'')).join(', ')+'</p>';
 }
 function finish(){
-  screen='result';
+  screen='result';music.jingle(world.status==='won'||levelIndex===ENDLESS&&world.score>progress.endless&&!dev?'win':'lose');
   // Akhir tanpa akhir
   if(levelIndex===ENDLESS){
     const best=world.score>progress.endless&&!dev;if(best){progress.endless=world.score;saveProgress(progress)}
@@ -332,6 +341,11 @@ function updateHud(){
 const maxSteps=4;
 // Loop utama
 function frame(now){
+  // Pilih musik
+  const fight=world&&['playing','paused','controls','settings-paused'].includes(screen);
+  music.duck=fight&&screen!=='playing'?.4:1;music.tempo=fight&&world.rex.fury>0?1.08:1;
+  const parade=fight&&world.civilians.some(c=>c.march&&c.x>world.camera-200&&c.x<world.camera+world.view+200);
+  music.want(!el('menu').hidden?'menu':fight?(world.enemies.some(e=>e.type==='robot'&&e.hp>0)?'boss':parade?'pawai':'battle'):null);
   if(screen==='playing'){
     // Langkah simulasi
     const elapsed=prior?Math.min(.1,(now-prior)/1000):0;prior=now;
@@ -402,7 +416,7 @@ if(dev){
   const badge=document.createElement('span');badge.className='dev-badge';badge.textContent='MODE DEVELOPER · kebal · progres tidak disimpan';el('menu').append(badge);
 }
 // Debug lokal
-if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get world(){return world},get art(){return art},get renderer(){return renderer}};
+if(location.hostname==='localhost'||location.hostname==='127.0.0.1')window.rexDebug={get music(){return music},get world(){return world},get art(){return art},get renderer(){return renderer}};
 // Mode offline
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'))
   addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));

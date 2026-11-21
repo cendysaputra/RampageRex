@@ -55,7 +55,7 @@ const en = {
   'Santai: musuh lebih sedikit dan tidak terlalu sakit.': 'Relaxed: fewer enemies that hit softer.',
   'Skin Rex': 'Rex skin', 'Merah': 'Red', 'Batik': 'Batik', 'Hutan': 'Forest', 'Mecha': 'Mecha',
   'Bintang terkumpul: {n} dari {total}.': 'Stars collected: {n} of {total}.',
-  'Efek suara': 'Sound effects', 'Getaran': 'Vibration', 'Nyala': 'On', 'Mati': 'Off',
+  'Efek suara': 'Sound effects', 'Musik': 'Music', 'Getaran': 'Vibration', 'Nyala': 'On', 'Mati': 'Off',
   'Ukuran tombol sentuh': 'Touch button size', 'Kecil': 'Small', 'Sedang': 'Medium', 'Besar': 'Large',
   'Ulangi tutorial di distrik 1': 'Replay the district 1 tutorial', 'Tutorial aktif di distrik 1': 'Tutorial on in district 1',
   'Hapus progres': 'Erase progress', 'Yakin? Tekan lagi untuk menghapus': 'Sure? Tap again to erase', 'Progres dihapus': 'Progress erased',

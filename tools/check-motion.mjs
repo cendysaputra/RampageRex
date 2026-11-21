@@ -323,8 +323,8 @@ for (const late of [.1, .3, .6]) {
 {
   const store = new Map(), storage = { getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   assert.deepEqual(loadSettings(storage), defaults);
-  saveSettings({ sfx: 140, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
-  assert.deepEqual(loadSettings(storage), { sfx: 100, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah', graphics: 'auto', lang: defaults.lang }, 'invalid values fall back');
+  saveSettings({ sfx: 140, music: -5, vibrate: false, pad: 'xl', difficulty: 'ngamuk' }, storage);
+  assert.deepEqual(loadSettings(storage), { sfx: 100, music: 0, vibrate: false, pad: 'm', difficulty: 'ngamuk', skin: 'merah', graphics: 'auto', lang: defaults.lang }, 'invalid values fall back');
   saveSettings({ skin: 'mecha' }, storage);
   assert.equal(loadSettings(storage).skin, 'mecha');
   const easy = new World(levels[0], 0, { difficulty: 'santai' }), normal = new World(levels[0], 0), hard = new World(levels[0], 0, { difficulty: 'ngamuk' });
@@ -745,3 +745,15 @@ for (const late of [.1, .3, .6]) {
 }
 
 console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', landing: 'pass', distances }, null, 2));
+
+// Musik chiptune
+{
+  const { noteFreq, parseBar, songs } = await import('../web/src/music.js');
+  assert.ok(Math.abs(noteFreq('A4') - 440) < 1e-9 && Math.abs(noteFreq('C5') - 523.25) < .01, 'note names map to pitches');
+  assert.deepEqual(parseBar('A4 - . C5'), [{ step: 0, note: 'A4', len: 2 }, { step: 3, note: 'C5', len: 1 }], 'sustains extend notes');
+  for (const [name, song] of Object.entries(songs)) {
+    assert.equal(song.lead.length, song.chords.length, name + ' has a chord per bar');
+    for (const bar of song.lead) { assert.equal(bar.trim().split(/\s+/).length, 16, name + ' bars have 16 steps'); for (const n of parseBar(bar)) assert.ok(noteFreq(n.note) > 0, n.note) }
+    for (const [root, ...chord] of song.chords) { assert.ok(noteFreq(root) > 0); for (const c of chord) assert.ok(noteFreq(c + 4) > 0, c) }
+  }
+}
