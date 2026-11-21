@@ -4,7 +4,8 @@ import {Sound} from './audio.js';
 import {Music} from './music.js';
 import {playOpening} from './opening.js';
 import {playCredit} from './credit.js';
-import {loadProgress,saveProgress,recordDistrict,resetProgress,totalStars} from './progress.js';
+import {loadProgress,saveProgress,recordDistrict,recordMission,resetProgress,totalStars} from './progress.js';
+import {MISSIONS,missionInfo,specialOpen,missionOpen,allMissions,skinSkill,skillCooldown} from './special.js';
 import {loadSettings,saveSettings,buzz,padSizes,skins,graphics,useLite,weakDevice} from './settings.js';
 import {Tutorial} from './tutorial.js';
 import {missions,earned,starText,missionText} from './missions.js';
@@ -15,7 +16,7 @@ import {todayMission,missionTemplate,passed,loadDaily,completeDaily} from './dai
 import {achievements,loadStats,saveStats,addRun,unlock,progressOf,resetStats} from './achievements.js';
 const nodes={},el=id=>nodes[id]??=document.getElementById(id);
 // Peta tombol
-const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
+const keys={KeyF:'special',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'bite',KeyQ:'tail',KeyS:'stomp',KeyE:'roar',KeyR:'ulti',Space:'jump',
   KeyJ:'bite',KeyK:'tail',KeyL:'roar'};
 const mouseButtons=['bite',null,'tail'];
 const controls=new Map(),taps=new Set(),input=new Set(),shown=new Map(),snd=new Sound(),panel=el('panel');
@@ -43,7 +44,17 @@ let progress=loadProgress(),settings=loadSettings(),guide=null,guideUntil=0,pick
 // Skin langka
 function hasThunder(){return getSaved('rex.thunder','')==='1'}
 // Boleh dipakai
-function skinOpen(s){return dev||(s.rare?hasThunder():totalStars(progress)>=s.stars)}
+function skinOpen(s){return dev||(s.mission?(s.mission==='all'?allMissions(progress):progress.special[s.mission].cleared):s.rare?hasThunder():totalStars(progress)>=s.stars)}
+// Skill dari skin
+function activeSkill(){return skinSkill[activeSkin()]||''}
+// Indeks misi
+const MISSION_START=9,missionKey=i=>i>=MISSION_START?MISSIONS[i-MISSION_START]:'';
+// Tombol skill
+function skillLabel(){
+  const skill=world?.skill||'',shown=skill==='terbang'||skill==='duri',name=t(skill==='terbang'?'Terbang':'Duri Es');
+  cooldowns.special=skillCooldown[skill]||18;
+  for(const node of document.querySelectorAll('[data-skill="special"]')){node.hidden=!shown;const label=node.querySelector('i')||node;if(shown)label.textContent=name}
+}
 function activeSkin(){const s=skins[settings.skin];return s&&skinOpen(s)&&art?.hasSkin(s.folder)?s.folder:''}
 // Efek petir aktif
 function thunderOn(){return settings.skin==='thunder'&&(dev||hasThunder())}
@@ -71,12 +82,12 @@ function recordTrophies(){
   return fresh.length?' · '+t('Pencapaian baru: {names}',{names:fresh.map(a=>t(a.name)).join(', ')}):'';
 }
 // Tombol distrik
-function districtLabel(){el('districts').hidden=!dev&&progress.unlocked<2}
+function districtLabel(){el('districts').hidden=!dev&&progress.unlocked<2;el('special').hidden=!dev&&!specialOpen(progress)}
 soundLabel();recordLabel();districtLabel();trophyLabel();
 // Ambil JSON
 async function json(path){const r=await fetch(path);if(!r.ok)throw Error(path);return r.json()}
 // Data level
-function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4,5,6,7,8].map(n=>json('./data/levels/level-0'+n+'.json')))]).then(([manifest,levels])=>[manifest,[...levels,makeEndless(levels)]]);return boot}
+function levelData(){boot??=Promise.all([json('./assets/manifest.json'),Promise.all([1,2,3,4,5,6,7,8].map(n=>json('./data/levels/level-0'+n+'.json'))),Promise.all(MISSIONS.map(k=>json('./data/levels/misi-'+k+'.json')))]).then(([manifest,levels,special])=>[manifest,[...levels,makeEndless(levels),...special]]);return boot}
 // Indeks tanpa akhir
 const ENDLESS=8;
 // Reset input
@@ -121,7 +132,7 @@ async function chooseDistrict(){
     note.textContent=dailyText(mission,levels)+(dailyRecord.streak?' · '+t('{n} hari beruntun',{n:dailyRecord.streak}):'');
     b.append(name,note);b.onclick=()=>{daily=mission;start(mission.district)};list.append(b);
   }
-  for(const [i,level] of levels.entries()){
+  for(const [i,level] of levels.slice(0,ENDLESS+1).entries()){
     const endless=i===ENDLESS,open=dev||(endless?progress.cleared[0]:i<progress.unlocked),b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
     b.type='button';b.className='district';b.disabled=!open;
     name.textContent=(endless?'∞':i+1)+' · '+t(level.name);
@@ -129,6 +140,25 @@ async function chooseDistrict(){
       :!open?t('Terkunci'):starText(progress.stars[i])+' · '+(progress.cleared[i]?t('skor terbaik {n}',{n:num(progress.best[i])}):t('belum selesai'));
     b.append(name,note);b.onclick=()=>{daily=null;start(i)};list.append(b);
   }
+  list.querySelector('button:not(:disabled)')?.focus();
+}
+// Pilih misi spesial
+async function chooseMission(){
+  if(screen!=='menu')return;screen='select';
+  try{await levelData()}catch{boot=null;menu();el('load-status').textContent=t('Data distrik gagal dimuat.');return}
+  modal(t('Misi Spesial'),'<p>'+t('Jalur lebih panjang, darah Rex 900, dan bos monster di ujung peta.')+'</p><div class="mission-cards"></div>',[[t('Kembali'),menu]]);
+  const list=el('panel-copy').querySelector('.mission-cards');
+  const card=(key,title,note,open,onclick)=>{
+    const b=document.createElement('button'),img=document.createElement('img'),name=document.createElement('b'),small=document.createElement('small');
+    b.type='button';b.className='mission-card';b.disabled=!open;img.src='./assets/ui/missions/'+key+'.webp';img.alt='';img.width=320;img.height=180;
+    name.textContent=title;small.textContent=note;b.append(img,name,small);if(onclick)b.onclick=onclick;list.append(b);
+  };
+  for(const [i,key] of MISSIONS.entries()){
+    const info=missionInfo[key],open=dev||missionOpen(key,progress,stats),row=progress.special[key];
+    card(key,t('Misi {name}',{name:t(info.name)})+(row.cleared?' ✓':''),!open?t(info.need):row.cleared?t('skor terbaik {n}',{n:num(row.best)}):t('Hadiah: skin {skin}',{skin:t(skins[info.skin].label)}),open,()=>{daily=null;start(MISSION_START+i)});
+  }
+  card('zombie','ZombieRex',allMissions(progress)?t('Skin ZombieRex terbuka!'):t('Selesaikan ketiga misi untuk membuka ZombieRex'),true,null);
+  list.lastChild.classList.add('reward');list.lastChild.classList.toggle('open',dev||allMissions(progress));
   list.querySelector('button:not(:disabled)')?.focus();
 }
 // Tampilkan tutorial
@@ -169,8 +199,8 @@ function openSettings(paused=false){
     (weakDevice()?'Perangkat ini disarankan memakai Ringan.':'Ringan: resolusi lebih rendah dan efek lebih sedikit untuk HP lama.'));
   // Skin Rex
   const stars=totalStars(progress);
-  group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,skinOpen(s)?s.label:s.rare?'??? · '+t('langka'):t(s.label)+' · '+s.stars+'★'])),settings.skin,
-    key=>{settings.skin=key;saveSettings(settings);if(art&&world){art.swapSkin(activeSkin());world.thunder=thunderOn()||world.thunderUnlocked}},t('Bintang terkumpul: {n} dari {total}.',{n:stars,total:missions.length*3}));
+  group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,skinOpen(s)?s.label:s.mission?t(s.label)+' · '+(s.mission==='all'?t('semua misi'):t('Misi {name}',{name:t(missionInfo[s.mission].name)})):s.rare?'??? · '+t('langka'):t(s.label)+' · '+s.stars+'★'])),settings.skin,
+    key=>{settings.skin=key;saveSettings(settings);if(art&&world){art.swapSkin(activeSkin());world.thunder=thunderOn()||world.thunderUnlocked;world.skill=activeSkill();skillLabel()}},t('Bintang terkumpul: {n} dari {total}.',{n:stars,total:missions.length*3}));
   for(const [i,s] of Object.values(skins).entries())form.lastChild.querySelector('.choices').children[i].disabled=!skinOpen(s);
   // Volume efek
   const sound=document.createElement('label'),range=document.createElement('input'),value=document.createElement('output');
@@ -205,10 +235,10 @@ function openSettings(paused=false){
 // Kartu distrik
 function stageCard(index,manifest,level){
   const card=el('stage');card.hidden=false;card.classList.remove('leaving');
-  const endless=index===ENDLESS;
-  text('stage-number',endless?t('Mode'):t('Distrik {n}',{n:index+1}));text('stage-name',level?t(level.name):endless?t('Tanpa Akhir'):'');
+  const endless=index===ENDLESS,mission=missionKey(index);
+  text('stage-number',endless?t('Mode'):mission?t('Misi Spesial'):t('Distrik {n}',{n:index+1}));text('stage-name',level?t(level.name):endless?t('Tanpa Akhir'):'');
   text('stage-goal',!level?'':endless?t('Bertahan dan hancurkan sebanyak mungkin'):t('Target destruksi {n}%',{n:level.target}));
-  text('stage-missions',daily&&level?'★ '+t('Misi harian')+': '+t(missionTemplate(daily),{name:t(level.name),n:num(daily.n)}):level&&!endless?missions[index].map((m,i)=>(progress.stars[index][i]?'★ ':'☆ ')+missionText(m)).join('  ·  '):'');
+  text('stage-missions',daily&&level?'★ '+t('Misi harian')+': '+t(missionTemplate(daily),{name:t(level.name),n:num(daily.n)}):level&&!endless&&!mission?missions[index].map((m,i)=>(progress.stars[index][i]?'★ ':'☆ ')+missionText(m)).join('  ·  '):'');
   if(manifest&&level){
     const layer=name=>{const own='backgrounds/'+level.setting+'/'+name;return './assets/'+(manifest.assets[own+'.png']?own:'backgrounds/'+name)+'.webp'};
     card.style.setProperty('--far','url('+layer('far-city')+')');card.style.setProperty('--sky','url('+layer('sky')+')');
@@ -221,7 +251,7 @@ async function start(index=0,carried=0,result='',kept=[]){
   if(screen==='loading')return;
   close();clearInput();screen='loading';el('menu').hidden=true;el('hud').hidden=true;
   el('start').disabled=el('districts').disabled=el('settings').disabled=true;el('load-status').textContent='';text('stage-status',t('Memuat distrik…'));snd.unlock();
-  picked=index===ENDLESS?[]:kept;
+  picked=index>=ENDLESS?[]:kept;
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());art.setLite(useLite(settings));if(renderer)renderer.stale=true;
@@ -229,8 +259,8 @@ async function start(index=0,carried=0,result='',kept=[]){
     let loaded=0,movedAt=performance.now();slowTimer=setInterval(()=>{if(performance.now()-movedAt>5000)text('stage-status',t('Koneksi lambat, masih memuat… {n}%',{n:loaded}))},1000);
     await art.preload(levels[index],ratio=>{loaded=Math.round(ratio*100);movedAt=performance.now();el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status',t('Memuat distrik… {n}%',{n:loaded}))});
     clearInterval(slowTimer);
-    renderer??=new Renderer(el('world'),art);renderer.adaptive=settings.graphics==='auto';levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn(),god:dev&&getSaved('rex.devgod','1')==='1'});
-    world.onGod=on=>save('rex.devgod',on?'1':'');
+    renderer??=new Renderer(el('world'),art);renderer.adaptive=settings.graphics==='auto';levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn(),skill:activeSkill(),god:dev&&getSaved('rex.devgod','1')==='1'});
+    world.onGod=on=>save('rex.devgod',on?'1':'');skillLabel();
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
     renderer.render(world);updateHud();text('stage-status',t('Siap mengamuk!'));
     await new Promise(r=>setTimeout(r,Math.max(0,(result?2600:1400)-(performance.now()-shownAt))));
@@ -246,6 +276,7 @@ function resume(){close();clearInput();screen='playing';el('pause').focus({preve
 // Jeda
 function pause(){if(screen!=='playing')return;screen='paused';modal(t('Jeda'),
   (levelIndex===ENDLESS?'<p>'+t('Mode Tanpa Akhir · skor {score} · rekor {best} · kombo terbaik {combo}',{score:num(world.score),best:num(progress.endless),combo:world.maxCombo})+'</p>'
+    :missionKey(levelIndex)?'<p>'+t('{name} · {pct}% hancur · kombo terbaik {combo}',{name:t(world.level.name),pct:Math.floor(world.percent),combo:world.maxCombo})+'</p>'
     :'<p>'+t('Distrik {n}, {name} · {pct}% hancur · kombo terbaik {combo}',{n:levelIndex+1,name:t(world.level.name),pct:Math.floor(world.percent),combo:world.maxCombo})+'</p>'+missionList(progress.stars[levelIndex])+upgradeList()),
   [[t('Lanjut main'),resume],[t('Kontrol'),showControls],[t('Pengaturan'),()=>openSettings(true)],[t('Menu utama'),menu]])}
 // Daftar misi
@@ -283,6 +314,17 @@ function finish(){
       [[t('Coba lagi'),()=>start(ENDLESS)],[t('Menu utama'),menu]]);
     return;
   }
+  // Akhir misi spesial
+  const special=missionKey(levelIndex);
+  if(special){
+    const won=world.status==='won',first=won&&!progress.special[special].cleared,before=allMissions(progress);
+    if(!dev){recordMission(progress,special,world.score,won);saveProgress(progress)}
+    const trophy=recordTrophies(),info=missionInfo[special];
+    const reward=first&&!dev?'<p class="trophy-new">'+t('Skin {skin} terbuka!',{skin:t(skins[info.skin].label)})+(!before&&allMissions(progress)?' · '+t('Skin ZombieRex terbuka!'):'')+'</p>':'';
+    modal(t(won?'Misi selesai!':'Rex tumbang'),'<p>'+t('{name} · destruksi {pct}% · Skor {score}',{name:t(world.level.name),pct:Math.floor(world.percent),score:num(world.score)})+'</p>'+reward+(trophy?'<p class="trophy-new">'+trophy.slice(3)+'</p>':''),
+      [[t(won?'Main lagi':'Coba lagi'),()=>start(levelIndex)],[t('Menu utama'),menu]]);
+    return;
+  }
   const win=world.status==='won',score=previousScore+world.score;
   // Simpan progres
   const stars=earned(world,levelIndex);if(!dev){recordDistrict(progress,levelIndex,world.score,win,stars);saveProgress(progress)}districtLabel();
@@ -315,7 +357,8 @@ function updateHud(){
   const p=world.rex;text('hp-text',Math.ceil(p.hp)+' / '+p.max);fill('hp',p.hp/p.max);
   fill('rage',p.fury>0?p.fury/8:p.rage/100);text('rage-text',p.fury>0?t('{n} dtk',{n:Math.ceil(p.fury)}):Math.floor(p.rage));
   const endless=levelIndex===ENDLESS;
-  text('district',endless?t('Mode Tanpa Akhir'):t('Distrik {n}',{n:levelIndex+1})+' · '+t(world.level.name));
+  const special=missionKey(levelIndex);
+  text('district',endless?t('Mode Tanpa Akhir'):special?t('Misi Spesial')+' · '+t(world.level.name):t('Distrik {n}',{n:levelIndex+1})+' · '+t(world.level.name));
   text('destruction',endless?num(world.score):Math.floor(world.percent+.0001)+'% / '+world.level.target+'%');
   fill('destroyed',Math.min(1,world.percent/100));el('destroyed').parentElement.hidden=endless;
   const goal=world.level.target+'%';if(shown.get('goal')!==goal){shown.set('goal',goal);el('goal').style.left=goal}
@@ -327,7 +370,7 @@ function updateHud(){
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+t(heroNames[e.type])}
   text('objective',world.phase==='clear'||world.phase==='exit'?t('Jalan ke ujung distrik →'):names?t('Kalahkan {names}',{names}):t(world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan'));
   if(next!==bossKey){bossKey=next;el('bosses').replaceChildren(...world.enemies.filter(e=>e.hero).map(e=>{
-    const card=document.createElement('div');card.innerHTML='<img src="./assets/characters/heroes/'+e.type+'/'+(e.type==='robot'?'master':'portrait')+'.webp" alt="" width="40" height="40"><strong>'+t(heroNames[e.type])+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
+    const card=document.createElement('div');card.innerHTML='<img src="./assets/'+(art.bosses[e.type]&&e.type!=='robot'?art.bossDir(e.type)+'/portrait':'characters/heroes/'+e.type+'/'+(e.type==='robot'?'master':'portrait'))+'.webp" alt="" width="40" height="40"><strong>'+t(heroNames[e.type])+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
   }))}
   text('notice',world.time<world.messageUntil?world.message:'');
   // Indikator cooldown
@@ -347,7 +390,8 @@ function frame(now){
   const fight=world&&['playing','paused','controls','settings-paused'].includes(screen);
   music.duck=fight&&screen!=='playing'?.4:1;music.tempo=fight&&world.rex.fury>0?1.08:1;
   const parade=fight&&world.civilians.some(c=>c.march&&c.x>world.camera-200&&c.x<world.camera+world.view+200);
-  music.want(!el('menu').hidden?'menu':fight?(world.enemies.some(e=>e.type==='robot'&&e.hp>0)?'boss':parade?'pawai':'battle'):null);
+  const special=fight&&missionKey(levelIndex);
+  music.want(!el('menu').hidden?'menu':fight?(world.enemies.some(e=>e.type===world.level.boss&&e.hp>0)?'boss':parade?'pawai':special?missionInfo[special].song:'battle'):null);
   if(screen==='playing'){
     // Langkah simulasi
     const elapsed=prior?Math.min(.1,(now-prior)/1000):0;prior=now;
@@ -398,7 +442,7 @@ el('start').onclick=async()=>{
   await playOpening(el('opening'),snd);
   await start();
 };
-el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('trophies').onclick=showTrophies;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
+el('tutorial-skip').onclick=skipGuide;el('districts').onclick=chooseDistrict;el('special').onclick=chooseMission;el('trophies').onclick=showTrophies;el('settings').onclick=()=>{if(screen==='menu')openSettings()};el('pause').onclick=pause;document.querySelector('.audio').onclick=toggleSound;
 requestAnimationFrame(frame);
 // Panel developer
 if(dev){

@@ -10,7 +10,11 @@ export const skins = {
   batik: { label: 'Batik', stars: 4, folder: 'batik' },
   hutan: { label: 'Hutan', stars: 8, folder: 'hutan' },
   mecha: { label: 'Mecha', stars: 12, folder: 'mecha' },
-  thunder: { label: 'ThunderRex', stars: 0, folder: 'thunder', rare: true }
+  thunder: { label: 'ThunderRex', stars: 0, folder: 'thunder', rare: true },
+  sayap: { label: 'Sayap Merah Putih', stars: 0, folder: 'sayap', mission: 'merdeka' },
+  es: { label: 'Rex Es', stars: 0, folder: 'es', mission: 'salju' },
+  tulang: { label: 'Rex Tulang', stars: 0, folder: 'tulang', mission: 'halloween' },
+  zombie: { label: 'ZombieRex', stars: 0, folder: 'zombie', mission: 'all' }
 };
 // Mode grafis
 export const graphics = { auto: 'Otomatis', tinggi: 'Tinggi', ringan: 'Ringan' };

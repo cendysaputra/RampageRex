@@ -121,7 +121,22 @@ const en = {
   'Di dasar kawah itu bukan batu. Sebutir telur.': 'At the bottom of the crater was no rock. It was an egg.',
   'Lalu ia menetas.': 'Then it hatched.', 'Hutan menjadi rumahnya. Ia belajar berburu.': 'The forest became its home. It learned to hunt.',
   'Ia tumbuh besar. Hutan tidak lagi cukup.': 'It grew big. The forest was no longer enough.',
-  'Dan di kejauhan, ia melihat kota.': 'And in the distance, it saw the city.'
+  'Dan di kejauhan, ia melihat kota.': 'And in the distance, it saw the city.',
+  // Misi spesial
+  'Misi Spesial': 'Special Missions', 'Jalur lebih panjang, darah Rex 900, dan bos monster di ujung peta.': 'Longer routes, 900 HP for Rex, and a monster boss at the end of the map.',
+  'Misi {name}': '{name} Mission', 'Hadiah: skin {skin}': 'Reward: {skin} skin', 'Skin ZombieRex terbuka!': 'ZombieRex skin unlocked!',
+  'Selesaikan ketiga misi untuk membuka ZombieRex': 'Clear all three missions to unlock ZombieRex', 'semua misi': 'all missions',
+  '{name} · {pct}% hancur · kombo terbaik {combo}': '{name} · {pct}% wrecked · best combo {combo}', 'Skin {skin} terbuka!': '{skin} skin unlocked!',
+  'Misi selesai!': 'Mission complete!', 'Main lagi': 'Play again',
+  'Kemerdekaan': 'Independence', 'Salju': 'Snow', 'Halloween': 'Halloween',
+  'Kampung Merah Putih': 'Red and White Kampung', 'Kota Bersalju': 'Snowy City', 'Malam Halloween': 'Halloween Night',
+  'Selesaikan kedelapan distrik': 'Clear all eight districts', 'Selesaikan Misi Kemerdekaan dan kumpulkan 15 bintang': 'Clear the Independence Mission and collect 15 stars',
+  'Selesaikan Misi Salju dan runtuhkan 200 bangunan': 'Clear the Snow Mission and topple 200 buildings',
+  'Tikus Raksasa': 'Giant Rat', 'Boneka Salju Raksasa': 'Giant Snowman', 'Penyihir': 'Witch',
+  'HUJAN KOIN EMAS!': 'GOLD COIN RAIN!', 'MERIAM PEMBEKU!': 'FREEZE CANNON!', 'PASUKAN TULANG!': 'BONE ARMY!', '{name} muncul!': '{name} appears!',
+  'Sayap Merah Putih': 'Red-White Wings', 'Rex Es': 'Ice Rex', 'Rex Tulang': 'Bone Rex', 'ZombieRex': 'ZombieRex',
+  'Terbang': 'Fly', 'Duri Es': 'Ice Spikes', 'Rex terbang!': 'Rex takes flight!', 'Duri es!': 'Ice spikes!', 'Rex bangkit lagi!': 'Rex rises again!',
+  'Rex membeku! Tekan tombol berulang untuk lepas.': 'Rex is frozen! Mash buttons to break free.', 'Tulang Rex rontok…': "Rex's bones fall apart…",
 };
 
 // Pasang bahasa
