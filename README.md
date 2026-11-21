@@ -54,7 +54,9 @@ Progres tersimpan otomatis. Setiap distrik yang selesai membuka distrik berikutn
 
 Di HP atau tablet, pakai tombol arah dan tombol aksi di bagian bawah layar. Daftar kontrol lengkap bisa dibuka kapan saja dari tombol **Kontrol** di layar jeda.
 
-Menu **Pengaturan** (dari menu utama atau saat jeda) berisi pilihan bahasa **Bahasa Indonesia** atau **English**, mode grafis **Otomatis**, **Tinggi**, atau **Ringan** (untuk HP lama), tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
+Menu **Pengaturan** (dari menu utama atau saat jeda) berisi pilihan bahasa **Bahasa Indonesia** atau **English**, mode grafis **Otomatis**, **Tinggi**, atau **Ringan** (untuk HP lama), tingkat kesulitan **Santai**, **Normal**, atau **Ngamuk**, volume efek suara dan musik, getaran dan ukuran tombol sentuh di HP, serta tombol untuk menghapus progres.
+
+Musik chiptune dibuat langsung oleh game: lagu menu, lagu bertarung yang sedikit lebih cepat saat Rage penuh, dan lagu khusus saat Robot Penjaga muncul.
 
 <p align="center">
   <img src="docs/screenshots/rex-ulti.webp" alt="Cut-in ulti Amukan Rex" width="49%">
