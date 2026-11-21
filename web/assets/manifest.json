@@ -2739,21 +2739,6 @@
       ],
       "alpha": true
     },
-    "ui/hud/frames/rage.png": {
-      "width": 145,
-      "height": 140,
-      "bounds": {
-        "x": 12,
-        "y": 12,
-        "width": 121,
-        "height": 116
-      },
-      "pivot": [
-        72,
-        70
-      ],
-      "alpha": true
-    },
     "backgrounds/sky.png": {
       "width": 1600,
       "height": 900,
@@ -2839,9 +2824,9 @@
       "height": 295,
       "bounds": {
         "x": 0,
-        "y": 13,
+        "y": 8,
         "width": 1600,
-        "height": 282
+        "height": 287
       },
       "pivot": [
         800,
