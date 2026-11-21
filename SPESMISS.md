@@ -2,7 +2,7 @@
 
 Brief fitur dan seluruh prompt gambar untuk **Misi Spesial**: Kemerdekaan, Salju, dan Halloween. Semua gambar baru untuk Rampage Rex dikerjakan dari dokumen ini. Prompt lama yang sudah selesai disimpan di `backup/image-prompts.md`.
 
-**Status:** menunggu gambar dari Codex. Kode misi dikerjakan setelah gambarnya masuk.
+**Status:** gambar sudah masuk dan terpasang di game. Brief ini tetap jadi acuan kalau ada gambar yang perlu diganti.
 
 ---
 
