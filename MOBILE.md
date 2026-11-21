@@ -27,16 +27,27 @@ mobile/
 
 | No | Pekerjaan | Status |
 | --- | --- | --- |
-| 1 | Kunci layar landscape dan mode layar penuh imersif (status bar dan tombol navigasi disembunyikan) | Belum |
-| 2 | Tombol **Kembali** Android: saat main, buka jeda. Di menu, tanya dulu sebelum keluar | Belum |
+| 1 | Kunci layar landscape dan mode layar penuh imersif (status bar dan tombol navigasi disembunyikan) | Selesai |
+| 2 | Tombol **Kembali** Android: saat main, buka jeda. Di menu, tanya dulu sebelum keluar | Selesai |
 | 3 | Jeda otomatis dan suara berhenti saat aplikasi ke latar belakang. Sudah ada lewat `blur` dan `visibilitychange`, tinggal dites di HP | Dites |
 | 4 | Getaran lewat plugin Haptics Capacitor, karena `navigator.vibrate` tidak selalu jalan di WebView | Belum |
 | 5 | **Simpanan** dipindah ke plugin Preferences, dengan migrasi dari `localStorage`. Android bisa membersihkan data WebView saat memori penuh | Belum |
-| 6 | Area aman untuk layar berponi (`env(safe-area-inset-*)`) pada HUD dan tombol sentuh | Belum |
+| 6 | Area aman untuk layar berponi (`env(safe-area-inset-*)`) pada HUD dan tombol sentuh | Selesai |
 | 7 | Mode grafik Otomatis dan resolusi adaptif sudah ada. Tes di 1 HP murah (RAM 3–4 GB) dan 1 HP menengah | Belum |
 | 8 | Ukuran unduhan: aset sekarang sekitar 29 MB, aman di bawah batas AAB | Aman |
 | 9 | Ikon, ikon adaptif, feature graphic di `web/assets/ui/app/` | Selesai |
 | 10 | Musik chiptune dibuat lewat kode | Selesai |
+
+## APK demo
+
+Untuk uji coba di HP sendiri, tanpa Play Store dan tanpa tanda versi di dalam game.
+
+1. Setiap perubahan di `web/` atau `mobile/` yang di-push ke GitHub otomatis dibuild oleh workflow **Android demo** (`.github/workflows/android-demo.yml`). Workflow juga bisa dijalankan manual dari tab **Actions**.
+2. Buka hasil build terbaru di tab **Actions**, lalu unduh artefak **RampageRex-demo** (file zip berisi `RampageRex-demo.apk`).
+3. Pindahkan APK ke HP Android (minimal Android 7), lalu buka. Izinkan **Instal aplikasi tidak dikenal** untuk aplikasi pembuka file bila diminta.
+4. Kalau versi lama sudah terpasang, APK baru langsung menimpanya dan progres tetap tersimpan.
+
+APK demo ditandatangani dengan kunci debug, jadi hanya untuk uji coba, bukan untuk diunggah ke Play.
 
 ## Google Play
 
