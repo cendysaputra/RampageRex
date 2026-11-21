@@ -47,14 +47,14 @@ mobile/
   - Target API mengikuti syarat terbaru Play. Capacitor versi terbaru biasanya sudah sesuai.
 - **Isian toko:**
   - **Data safety:** game tidak mengumpulkan data dan tidak online, jadi isian ini singkat.
-  - **Kebijakan privasi:** tetap siapkan satu halaman URL sederhana yang menyatakan game tidak mengumpulkan data.
+  - **Kebijakan privasi:** sudah ada di `PRIVACY.md`. Play butuh URL publik, sedangkan situs Vercel dikunci. Pakai tautan file di GitHub (`https://github.com/cendysaputra/RampageRex/blob/main/PRIVACY.md`) selama repo publik.
   - **Rating konten (IARC):** kekerasan kartun; bangunan, tentara, dan warga bisa dikalahkan. Jawab apa adanya.
   - **Kategori:** Game → Action atau Arcade.
   - **Aset:**
     - ikon 512×512
     - feature graphic 1024×500
     - minimal 2 screenshot landscape, ambil dari HP asli
-- **Konten sensitif:** game memakai nama program pemerintah yang nyata (Kopdes Merah Putih, SPPG). Jangan pakai logo resmi. Pertimbangkan nama plesetan sebelum masuk Play.
+- **Konten sensitif:** nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) sudah diganti plesetan (Kopwar Merah Bata, Dapur Kenyang). Lihat `image-prompts.md` bagian 21.
 
 Cek ulang biaya dan syarat di Play Console saat mendaftar, karena kebijakan Google bisa berubah.
 

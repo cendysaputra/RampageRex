@@ -851,6 +851,49 @@ Ukuran lain (judul tegak dan kecil) cukup diturunkan dari gambar di atas. Kalau 
 
 ---
 
+## 21. Plesetan program pemerintah
+
+Gambar Kopdes dan truk SPPG sekarang memuat nama asli program pemerintah, serta logo Badan Gizi Nasional dengan lambang resmi. Untuk rilis di toko, keduanya diganti plesetan supaya aman dari masalah merek dan lambang negara. Warna dan bentuk tetap sama, jadi pemain tetap mengenali bangunan dan truknya.
+
+| Asli | Plesetan | Arti |
+| --- | --- | --- |
+| Kopdes Merah Putih | **KOPWAR Merah Bata** | Koperasi Warga, warna merah bata sama dengan atap sekarang |
+| Satuan Pelayanan Pemenuhan Gizi (SPPG) | **DAPUR KENYANG** | Truk antar makan siang warga |
+| Logo Badan Gizi Nasional | Ikon mangkuk nasi mengepul dengan sendok | Tanpa lambang, garuda, atau perisai apa pun |
+| Pekerja Kopdes | Pekerja Kopwar | Gambar pekerja tidak perlu diubah karena tidak ada tulisan |
+
+Cadangan kalau mau ganti nama: Kopdus Merah Marun (Koperasi Dusun) dan Mobil Gizi Warga.
+
+**Aturan untuk semua gambar di bagian ini:** ukuran kanvas, posisi, sudut pandang, garis, dan pencahayaan harus sama persis dengan sumbernya. Yang diganti hanya tulisan dan logo, jadi data `manifest.json` tetap berlaku. Simpan dengan menimpa file sumber.
+
+### Papan nama Kopwar
+
+**Sumber dan simpan ke (timpa):** `web/assets/buildings/ruko-01/colors/ground-kopdes.webp`
+
+```
+Edit the attached shop front image. Keep everything identical: canvas size, building, maroon rolling doors, awning, open doorway with goods, lighting and line style. Only replace the sign text: the big word "KOPDES" becomes "KOPWAR" and the small line "MERAH PUTIH" becomes "MERAH BATA", same maroon hand-painted lettering, same size and position. Replace the small house icon on the wall with a simple maroon icon of two hands holding a sack of rice. No flag, no national emblem, no other text.
+```
+
+`roof-kopdes.webp` tidak perlu diubah.
+
+### Truk Dapur Kenyang
+
+**Sumber dan simpan ke (timpa):** tiga file di `web/assets/props/`, kerjakan satu per satu dengan prompt yang sama:
+
+- `mobil-sppg.webp`
+- `mobil-sppg-damaged.webp`
+- `mobil-sppg-wreck.webp`
+
+```
+Edit the attached box truck image. Keep everything identical: canvas size, truck shape, damage state, wheels, camera angle, lighting, outline and transparent background. Only replace the branding: the side text "SATUAN PELAYANAN PEMENUHAN GIZI" becomes "DAPUR KENYANG" in the same bold navy lettering, with a smaller line below it "Antar Makan Siang Warga". Replace the blue flower and cloud ornament with a friendly navy icon of a steaming rice bowl with a spoon. On the door, remove the round emblem and the words "BADAN GIZI NASIONAL" and put a small plain navy rice bowl icon instead. No national emblem, no garuda, no shield, no official logos, no other text. Keep the same blue stripes.
+```
+
+Untuk versi rusak dan hancur, tulisan dan ikon boleh ikut penyok, tergores, atau sebagian hilang mengikuti kerusakan di gambar sumber.
+
+**Setelah Codex selesai:** teks README dan screenshot diperbarui ke nama baru. Nama file tidak diubah, jadi kode game tidak perlu disentuh.
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).
