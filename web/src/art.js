@@ -27,7 +27,11 @@ function bitmapWidth(path,source,scale=1,density=samples){
 }
 // Area potong
 function cropRect(meta,path){
-  if(path.startsWith('backgrounds/')||!meta.alpha||!meta.bounds)return {x:0,y:0,width:meta.width,height:meta.height};
+  // Properti dan fasad harus memakai kanvas utuh: bounds manifest hanya perkiraan
+  // dan bisa memotong siluet ketika aset berganti kondisi rusak.
+  // part() tetap menghitung ukuran dari lebar kanvas sehingga rasio tidak berubah.
+  if(path.startsWith('backgrounds/')||path.startsWith('buildings/')||path.startsWith('props/')||!meta.alpha||!meta.bounds)
+    return {x:0,y:0,width:meta.width,height:meta.height};
   const b=meta.bounds,x=Math.max(0,b.x-2),y=Math.max(0,b.y-2);
   return {x,y,width:Math.min(meta.width,b.x+b.width+2)-x,height:Math.min(meta.height,b.y+b.height+2)-y};
 }
