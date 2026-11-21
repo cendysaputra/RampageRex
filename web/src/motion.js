@@ -20,6 +20,6 @@ export function spritePose(entity, frame, dt) {
     entity.fromFrame = entity.frame || frame;
     entity.frame = frame;
     entity.frameAge = 0;
-  } else entity.frameAge += dt;
+  } else entity.frameAge = (entity.frameAge || 0) + dt;
   entity.frameMix = smooth(entity.frameAge / .065);
 }
