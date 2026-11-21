@@ -341,6 +341,8 @@ function updateHud(){
 const maxSteps=4;
 // Loop utama
 function frame(now){
+  // Loop tetap jalan
+  requestAnimationFrame(frame);
   // Pilih musik
   const fight=world&&['playing','paused','controls','settings-paused'].includes(screen);
   music.duck=fight&&screen!=='playing'?.4:1;music.tempo=fight&&world.rex.fury>0?1.08:1;
@@ -360,7 +362,6 @@ function frame(now){
     for(const name of world.events.splice(0)){snd.play(name);buzz(settings,name)}
     renderer.render(world);updateHud();if(world.status!=='playing')finish();
   }
-  requestAnimationFrame(frame);
 }
 // Catat input
 function press(id,action){controls.set(id,action);if(action!=='left'&&action!=='right')taps.add(action)}
