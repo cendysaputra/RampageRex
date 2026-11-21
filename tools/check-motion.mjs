@@ -660,7 +660,14 @@ for (const late of [.1, .3, .6]) {
     w.rex.cd.bite = 0; w.startAttack('bite'); for (let i = 0; i < 20; i++) w.update(1 / 60, empty); return { dmg: 1e6 - e.hp, bolts: w.effects.filter(f => f.kind === 'bolt').length }; };
   const plain = hit(false), zap = hit(true);
   assert.equal(zap.dmg, plain.dmg, 'ThunderRex keeps the same damage');
-  assert.ok(zap.bolts > 0 && plain.bolts === 0, 'ThunderRex skills throw lightning');
+  assert.ok(zap.bolts === 0 && plain.bolts === 0, 'ThunderRex bites without lightning');
+  const tail = new World(levels[0], 0, { thunder: true }); tail.spawnTime = Infinity; tail.rex.cd.tail = 0; tail.startAttack('tail');
+  for (let i = 0; i < 30; i++) tail.update(1 / 60, empty);
+  assert.ok(tail.effects.some(f => f.kind === 'bolt'), 'ThunderRex skills throw lightning');
+  // Turret Jaring hancur
+  const net = new World(levels[0], 0, {}); net.spawnTime = Infinity; const boss = net.spawn('jaring', net.rex.x + 200), turret = net.spawn('turret', net.rex.x + 150);
+  turret.owner = boss; boss.timer = -1; turret.hp = 0; net.defeat(turret); net.update(1 / 60, empty);
+  assert.ok(!net.enemies.some(e => e.owner === boss && e.hp > 0), 'Jaring stays open after its turret falls');
 }
 
 // Aksi developer

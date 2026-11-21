@@ -924,6 +924,66 @@ Untuk peron Stasiun, tambahkan ke prompt: `The platform canopy must run across t
 
 ---
 
+## 23. Revisi setelah review
+
+### 23.1 Skin Mecha: samakan semua atlas dengan animasi jalan
+
+Atlas `walk.webp` Mecha sudah bagus. Atlas lain punya desain berbeda: kepala berhelm visor, pelat dada lain, dan ventilasi leher hilang. Saat Rex berhenti jalan, bentuknya berubah mendadak.
+
+**Sumber (edit source):** setiap atlas di bawah, ditambah `web/assets/characters/rex/skins/mecha/walk.webp` sebagai acuan desain.
+**Simpan ke (timpa):** `web/assets/characters/rex/skins/mecha/` dengan nama yang sama.
+
+| File | Ukuran |
+| --- | --- |
+| `tail-stomp.webp` | 1254×1254 |
+| `bite-roar.webp` | 1254×1254 |
+| `jump.webp` | sama dengan file sekarang |
+| `knockdown.webp` | sama dengan file sekarang |
+| `ulti.webp` | sama dengan file sekarang |
+| `ulti-cutin.webp` | sama dengan file sekarang |
+
+```
+Edit the first attached sprite atlas of a robot dinosaur so its design matches the second attached reference atlas (walk.webp) exactly. Keep EVERYTHING about the first atlas identical: canvas size, number of cells, every pose, every silhouette, the position and size of each sprite inside its cell, the foot baseline, outline weight and the genuine transparent background. Change ONLY the surface design so it is the same robot as in the reference: same rounded head shape with glowing yellow eye and the same jaw, same gunmetal teal armour plates and bolt seams, same orange glowing vents on the chest, same cream segmented belly, same orange metal dorsal fins. No visor helmet. Same colours in every frame. No background, no text, no checkerboard.
+```
+
+### 23.2 Pantai: pohon kelapa terpotong
+
+Lapisan tengah Pantai berisi gunung dan laut sendiri, lalu daun kelapa menyentuh tepi atas gambar sehingga terpotong garis lurus di layar.
+
+**Sumber (edit source):** `web/assets/backgrounds/beach/mid-city.webp`
+**Simpan ke (timpa):** `web/assets/backgrounds/beach/mid-city.webp`, ukuran tetap 1600×239.
+
+```
+Redraw the attached transparent background strip of an Indonesian beach village at the same canvas size, art style, colours and lighting. Keep the huts, boats, fences and sand anchored to the bottom edge. Make the coconut palms shorter so every frond is complete, with at least 12 px of empty transparent space above the tallest frond: nothing may touch the top edge. Remove the distant mountains and the sea from this strip, leaving only transparent sky behind the village, because the layer behind already shows them. The strip must tile seamlessly left to right with no object cut at the edges and no fades. Transparent background, no text.
+```
+
+### 23.3 Sambungan latar: ulangi tanpa efek pudar
+
+Hasil bagian 22 menyambung dengan cara memudarkan dua gambar di titik sambungan. Akibatnya muncul bayangan ganda: gedung tembus pandang di Stasiun, derek kabur di Pelabuhan, dan jalan layang ganda di Tol. File dan ukurannya sama dengan bagian 22.
+
+```
+Edit the attached transparent background strip so it tiles seamlessly left to right. Keep the exact canvas size, art style, colours and line weight, with the content anchored to the bottom edge. Do NOT cross-fade, blur, smear or ghost anything at the seam: every object must be drawn once, fully opaque and sharp. To make the seam clean, keep the leftmost 80 px and the rightmost 80 px free of tall objects: only the low continuous ground line, a low wall or a fence there, drawn identically so the right edge continues exactly into the left edge. Tall buildings, cranes, towers and ships must sit fully inside the strip. Transparent background, no text.
+```
+
+### 23.4 Ikon: sudut putih dan judul terpotong
+
+| File | Masalah | Perbaikan |
+| --- | --- | --- |
+| `web/assets/ui/app/icon-512.png` | Sudut dibulatkan dengan latar putih | Persegi penuh tanpa sudut bulat. Play Store membulatkan sendiri |
+| `web/assets/ui/app/icon-maskable-512.png` | Gambar persegi ditempel di atas lingkaran oranye, tepinya kelihatan | Latar teal tua penuh, kepala Rex di 60% tengah, tanpa kotak tempelan |
+| `web/assets/ui/app/feature-graphic.png` | Huruf R pada "RAMPAGE" terpotong tepi kiri | Judul utuh dengan jarak minimal 40 px dari tepi |
+| `desktop/build/icon.png` | Sudut bulat dengan latar putih | Persegi penuh tanpa sudut bulat |
+
+Rex di ikon sekarang bergaya T-rex realistis. Samakan dengan Rex di game: kartun merah dengan duri oranye, perut krem, dan bekas cakar di pipi. Acuan: `web/assets/characters/rex/master.webp`.
+
+```
+App icon for the game Rampage Rex, a full square with NO rounded corners and NO white margin: the head of the attached cartoon dinosaur Rex (red skin, orange dorsal spikes, cream belly, red cheek scars, thick dark outline) roaring, three-quarter view, warm orange sunset circle behind him, dark teal background filling the whole square edge to edge. Flat, high contrast, readable at 48x48. No text, no letters, no border.
+```
+
+Untuk versi maskable, tambahkan: `Keep the whole head inside the central 60% of the square; the rest is plain background.`
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).

@@ -94,6 +94,7 @@ const newTroops=[['firefighter',1/7,15],['drone',2/7,35],['firetruck',3/7,45],['
 // Semprotan pemadam
 const sprayRange=480,rageDrain=14,furyDrain=1.5;
 // Aturan robot
+const jaringOpen=7;
 const robot={reach:240,speed:150,windup:.75,punch:50,netEvery:4.5};
 // Hujan deras
 const rainChance=.3,rainSlow=.7;
@@ -277,7 +278,7 @@ export class World {
   }
   // Hantam target
   strike(a){
-    const p=this.rex;this.sound(a.key);if(this.thunder)this.zap(a.key);this.shake=Math.max(this.shake,a.key==='bite'?4:9);
+    const p=this.rex;this.sound(a.key);if(this.thunder&&a.key!=='bite')this.zap(a.key);this.shake=Math.max(this.shake,a.key==='bite'?4:9);
     if(a.key==='ulti'){this.quake(a.damage*(p.fury>0?2:1)*this.mods.damage.ulti);return}
     if(a.key==='jump'){this.slam();return}
     if(a.key==='roar'){
@@ -394,6 +395,8 @@ export class World {
   defeat(e){
     const p=this.rex,big=heavy.has(e.type);this.kills[e.type]=(this.kills[e.type]||0)+1;
     this.addScore(e.type==='robot'?5000:e.hero?1200:100);if(e.type==='robot'){for(let i=0;i<5;i++)this.fx('explosion',e.x+range(-120,120),-range(60,320));this.shake=26}p.rage=Math.min(100,p.rage+(e.hero?20:6)*this.mods.rage);
+    // Jaring terbuka
+    if(e.type==='turret'&&e.owner?.hp>0){e.owner.timer=Math.max(e.owner.timer,jaringOpen);this.say(t('Turret hancur! Injak Jaring sekarang.'),1.6)}
     if(e.type!=='turret')p.hp=Math.min(p.max,p.hp+(e.hero?HEAL.hero:big?HEAL.vehicle:HEAL.soldier)*this.mods.heal);
     this.fx('explosion',e.x,e.y-45);if(e.hero)this.say(t('{name} tumbang!',{name:t(heroNames[e.type])}),2.5);
   }
