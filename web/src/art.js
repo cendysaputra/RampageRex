@@ -42,6 +42,7 @@ export class Art {
     this.meta={...manifest.assets};this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
     this.rexAnimations=manifest.rexAnimations;this.robot=manifest.robot;this.cutin='fx/ulti-cutin';this.skin='';
     this.basePaths=Object.fromEntries(Object.entries(this.rexAnimations.atlases).map(([k,d])=>[k,d.path]));
+    this.baseFrames=Object.fromEntries(Object.entries(this.rexAnimations.atlases).map(([k,d])=>[k,d.frames]));
     this.crops=new Map(Object.entries(this.meta).map(([path,m])=>[path.slice(0,-4),cropRect(m,path)]));
   }
   // Muat gambar
@@ -132,7 +133,11 @@ export class Art {
       const atlas=this.rexAnimations.atlases[key];this.loading.delete(atlas.path);
       atlas.path=skin?'characters/rex/skins/'+skin+'/'+base.split('/').pop():base;
     }
-    this.skin=skin;this.cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin';this.rexFramesReady=null;
+    this.skin=skin;this.cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin';this.skinFrames(skin);this.rexFramesReady=null;
+  }
+  // Frame per skin
+  skinFrames(skin){
+    for(const [key,atlas] of Object.entries(this.rexAnimations.atlases))atlas.frames=this.rexAnimations.skinFrames?.[skin]?.[key]||this.baseFrames[key];
   }
   // Ganti skin langsung
   swapSkin(skin=''){
@@ -146,7 +151,7 @@ export class Art {
       // Baru tukar
       const oldCutin=this.cutin;
       for(const [key,path] of Object.entries(paths))this.rexAnimations.atlases[key].path=path;
-      this.skin=skin;this.cutin=cutin;
+      this.skin=skin;this.cutin=cutin;this.skinFrames(skin);
       if(oldCutin!==cutin){this.images.get(oldCutin)?.close?.();this.images.delete(oldCutin);this.loading.delete(oldCutin)}
       this.rexFramesReady=this.prepareRexFrames();await this.rexFramesReady;
       for(const path of Object.values(paths))this.loading.delete(path);
@@ -157,7 +162,7 @@ export class Art {
   async prepareRexFrames(){
     for(const [atlas,definition] of Object.entries(this.rexAnimations.atlases)){
       const source=this.images.get(definition.path);if(!source)continue;
-      for(const [index,[x,y,width,height,px,py]] of definition.frames.entries()){
+      for(const [index,[x,y,width,height,px,py,fit=1]] of definition.frames.entries()){
         let picture;
         if(typeof createImageBitmap==='function'){
           try{picture=await createImageBitmap(source,x,y,width,height)}catch{}
@@ -167,7 +172,7 @@ export class Art {
           picture.getContext('2d').drawImage(source,x,y,width,height,0,0,width,height);
         }
         const path=rexFramePath(atlas,index);
-        this.meta[path+'.png']={width,height,pivot:[px,py],scale:definition.scale||1,alpha:true};
+        this.meta[path+'.png']={width,height,pivot:[px,py],scale:(definition.scale||1)*fit,alpha:true};
         this.crops.set(path,{x:0,y:0,width,height});this.images.get(path)?.close?.();this.images.set(path,picture);
       }
       // Lepas atlas
