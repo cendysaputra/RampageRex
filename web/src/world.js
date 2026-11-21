@@ -668,7 +668,7 @@ export class World {
       }
       // Jalan licin
       if(this.weather==='rain'&&!e.hero)e.x=previousX+(e.x-previousX)*rainSlow;
-      if(e.hero)e.x=clamp(e.x,60,this.level.length-60);
+      e.x=e.hero?clamp(e.x,60,this.level.length-60):clamp(e.x,-150,this.level.length+150);
       this.animateEnemy(e,dt,previousX);
     }
     keep(this.enemies,e=>e.hp>0&&(e.hero||e.owner||Math.abs(e.x-p.x)<this.view+100));
