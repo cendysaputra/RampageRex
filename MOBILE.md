@@ -54,7 +54,7 @@ mobile/
     - ikon 512×512
     - feature graphic 1024×500
     - minimal 2 screenshot landscape, ambil dari HP asli
-- **Konten sensitif:** nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) diganti plesetan sebelum rilis. Lihat `image-prompts.md` bagian 21.
+- **Konten sensitif:** nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) sudah diganti plesetan (Kopwar Merah Bata, Dapur Kenyang). Lihat `image-prompts.md` bagian 21.
 
 Cek ulang biaya dan syarat di Play Console saat mendaftar, karena kebijakan Google bisa berubah.
 

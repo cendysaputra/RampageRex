@@ -100,4 +100,4 @@ Untuk Steam, hasil build diunggah dengan SteamPipe (`steamcmd`). Depot Windows d
 - Laptop atau PC Windows untuk tes. Kalau mau rilis macOS, perlu akses Mac atau cukup lewat GitHub Actions.
 - Akun itch.io (gratis).
 - Nanti: akun Steamworks, Apple Developer, dan sertifikat Windows bila diperlukan.
-- Konten sensitif: nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) diganti plesetan sebelum rilis. Lihat `image-prompts.md` bagian 21.
+- Konten sensitif: nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) sudah diganti plesetan (Kopwar Merah Bata, Dapur Kenyang). Lihat `image-prompts.md` bagian 21.

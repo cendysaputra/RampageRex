@@ -172,13 +172,13 @@ Distrik selanjutnya menurunkan pasukan baru:
   <img src="web/assets/characters/civilians/schoolkid/master.webp" alt="Anak sekolah" height="96">
   <img src="web/assets/characters/civilians/elder/master.webp" alt="Kakek" height="96">
   <img src="web/assets/characters/civilians/bakso-vendor/master.webp" alt="Pedagang bakso" height="96">
-  <img src="web/assets/characters/civilians/kopdes-worker/master.webp" alt="Pekerja Kopdes" height="96">
+  <img src="web/assets/characters/civilians/kopdes-worker/master.webp" alt="Pekerja Kopwar" height="96">
 </p>
 
 Sebelum Rex datang, warga beraktivitas di jalan: mengobrol, menunggu di depan toko, atau berjualan di dekat gerobak. Begitu Rex mendekat atau bangunan di dekat mereka diserang, mereka panik dan berlarian. Warga tidak menyerang, tapi bisa dikalahkan: serangan pertama membuat mereka terhuyung, serangan kedua melempar mereka keluar layar.
 
 <p align="center">
-  <img src="docs/screenshots/street-life.webp" alt="Warga beraktivitas di depan Kopdes Merah Putih di Pusat Kota" width="70%">
+  <img src="docs/screenshots/street-life.webp" alt="Warga beraktivitas di depan Kopwar Merah Bata di Pusat Kota" width="70%">
 </p>
 
 ## Delapan distrik
@@ -194,7 +194,7 @@ Sebelum Rex datang, warga beraktivitas di jalan: mengobrol, menunggu di depan to
 | 7 | **Pantai** | Laut, perahu nelayan, dan pohon kelapa saat senja |
 | 8 | **Alun-Alun** | Pusat kota di malam hari, tempat pertarungan terakhir |
 
-Setiap distrik punya bangunan Kopdes Merah Putih yang mengeluarkan para pekerjanya saat diserang, dengan truk SPPG terparkir di depannya. Truk, angkot, gerobak, tiang listrik, dan properti jalan lain juga bisa diremukkan untuk tambahan skor. Ada dua bangunan spesial di setiap distrik: **SPBU** meledak saat hancur dan merusak bangunan, tentara, dan warga di sekitarnya (Rex aman), sedangkan **warung makan** memulihkan 60 darah Rex. Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal, dan tentara makin banyak menjelang Alun-Alun.
+Setiap distrik punya bangunan Kopwar Merah Bata yang mengeluarkan para pekerjanya saat diserang, dengan truk Dapur Kenyang terparkir di depannya. Truk, angkot, gerobak, tiang listrik, dan properti jalan lain juga bisa diremukkan untuk tambahan skor. Ada dua bangunan spesial di setiap distrik: **SPBU** meledak saat hancur dan merusak bangunan, tentara, dan warga di sekitarnya (Rex aman), sedangkan **warung makan** memulihkan 60 darah Rex. Para penjaga datang saat destruksi mencapai 25% di distrik 1, lalu makin lambat di distrik berikutnya. Darah mereka juga makin tebal, dan tentara makin banyak menjelang Alun-Alun.
 
 <p align="center">
   <img src="docs/screenshots/knockout.webp" alt="Rex tumbang dengan bintang di atas kepala" width="49%">
