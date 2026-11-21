@@ -274,7 +274,7 @@ function upgradeList(){
   return '<p class="owned">'+t('Upgrade aktif')+': '+Object.entries(count).map(([k,n])=>t(upgrades[k].name)+(n>1?' ×'+n:'')).join(', ')+'</p>';
 }
 function finish(){
-  screen='result';
+  screen='result';music.jingle(world.status==='won'||levelIndex===ENDLESS&&world.score>progress.endless&&!dev?'win':'lose');
   // Akhir tanpa akhir
   if(levelIndex===ENDLESS){
     const best=world.score>progress.endless&&!dev;if(best){progress.endless=world.score;saveProgress(progress)}
@@ -344,7 +344,8 @@ function frame(now){
   // Pilih musik
   const fight=world&&['playing','paused','controls','settings-paused'].includes(screen);
   music.duck=fight&&screen!=='playing'?.4:1;music.tempo=fight&&world.rex.fury>0?1.08:1;
-  music.want(!el('menu').hidden?'menu':fight?(world.enemies.some(e=>e.type==='robot'&&e.hp>0)?'boss':'battle'):null);
+  const parade=fight&&world.civilians.some(c=>c.march&&c.x>world.camera-200&&c.x<world.camera+world.view+200);
+  music.want(!el('menu').hidden?'menu':fight?(world.enemies.some(e=>e.type==='robot'&&e.hp>0)?'boss':parade?'pawai':'battle'):null);
   if(screen==='playing'){
     // Langkah simulasi
     const elapsed=prior?Math.min(.1,(now-prior)/1000):0;prior=now;

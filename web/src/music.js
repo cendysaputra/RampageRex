@@ -60,6 +60,22 @@ export const songs={
     ],
     kick:[0,3,8,10],snare:[4,12],hat:[0,2,4,6,8,10,12,14],fill:[12,13,14,15]
   },
+  // Lagu pawai
+  pawai:{
+    bpm:150,
+    chords:[['C3','C','E','G'],['G2','G','B','D'],['A2','A','C','E'],['F2','F','A','C'],['C3','C','E','G'],['G2','G','B','D'],['F2','F','A','C'],['G2','G','B','D']],
+    lead:[
+      'C5 . E5 . G5 . E5 . C5 . G4 . C5 - . .',
+      'D5 . B4 . G4 . B4 . D5 . G5 . D5 - . .',
+      'E5 - C5 . A4 - C5 . E5 . A5 . E5 - . .',
+      'F5 . E5 . D5 . C5 . A4 - - - . . . .',
+      'G5 . G5 . E5 . C5 . G5 . A5 . G5 - . .',
+      'F5 . D5 . B4 . D5 . G5 - - - . . . .',
+      'A5 . G5 . F5 . A5 . C6 . A5 . F5 - . .',
+      'G5 - - - D5 . E5 . F5 . D5 . B4 - . .'
+    ],
+    kick:[0,4,8,12],snare:[4,12],hat:[2,6,10,14],fill:[12,13,14,15]
+  },
   // Lagu bos
   boss:{
     bpm:128,
@@ -76,6 +92,12 @@ export const songs={
     ],
     kick:[0,2,8,10],snare:[4,12],hat:[0,2,4,6,8,10,12,14],fill:[8,10,12,13,14,15]
   }
+};
+
+// Jingle pendek
+const jingles={
+  win:[[0,'C5',.12],[.12,'E5',.12],[.24,'G5',.12],[.36,'C6',.5],[.36,'E5',.5,'triangle'],[.9,'G5',.12],[1.02,'C6',.9],[1.02,'C4',.9,'triangle']],
+  lose:[[0,'G4',.3],[.3,'F#4',.3],[.6,'F4',.3],[.9,'E4',1.1],[.9,'E2',1.1,'triangle']]
 };
 
 // Pemutar musik
@@ -151,6 +173,16 @@ export class Music {
     const ctx=this.sound.ctx,src=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();
     src.buffer=this.noise;f.type=type;f.frequency.value=freq;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
     src.connect(f).connect(g).connect(this.bus);src.start(t,Math.random()*.5);src.stop(t+dur+.01);src.onended=()=>{src.disconnect();f.disconnect();g.disconnect()};
+  }
+  // Jingle hasil
+  jingle(kind){
+    const ctx=this.sound.ctx;if(!ctx||ctx.state!=='running'||!this.sound.enabled||this.volume<=0)return;
+    const bus=ctx.createGain(),t=ctx.currentTime+.05;bus.gain.value=this.volume*.8;bus.connect(ctx.destination);
+    const keep=this.bus;this.bus=bus;
+    const notes=jingles[kind]||[];
+    for(const [at,note,len,type] of notes)this.voice(type||'square',noteFreq(note),t+at,len,.06,len>.3);
+    if(kind==='win'){this.kick(t);this.kick(t+.36);this.snare(t+.54)}else this.kick(t+.9);
+    this.bus=keep;setTimeout(()=>bus.disconnect(),3000);
   }
   // Render rekaman
   async render(name,loops=1){
