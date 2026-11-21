@@ -51,8 +51,8 @@ Saat build, isi `web/` disalin ke dalam paket aplikasi. File `middleware.js`, `v
 | 4 | **Dukungan gamepad** (Xbox/PlayStation/Steam Deck): gerak, gigit, injak, ekor, lompat, ulti, jeda | Belum |
 | 5 | Klik kanan tidak memunculkan menu bawaan Electron | Belum |
 | 6 | Kunci DevTools dan `rexDebug` di build rilis | Belum |
-| 7 | Musik dari Suno masuk ke `web/assets/music/` | Menunggu musik |
-| 8 | Ikon resmi 1024×1024 (lihat `image-prompts.md` bagian 20) | Menunggu Codex |
+| 7 | Musik chiptune dibuat lewat kode (`web/src/music.js`) | Selesai |
+| 8 | Ikon resmi 1024×1024 di `desktop/build/icon.png` | Selesai |
 
 Poin 4 tidak wajib, tapi pemain Steam Deck dan pemakai gamepad cukup banyak. Label "Full Controller Support" di Steam juga membantu penjualan.
 
@@ -88,7 +88,7 @@ Untuk Steam, hasil build diunggah dengan SteamPipe (`steamcmd`). Depot Windows d
 
 ## Urutan kerja
 
-1. Ikon dan musik selesai.
+1. Ikon dan musik sudah selesai.
 2. Penyesuaian game no. 1–6.
 3. Folder `desktop/` dan build lokal Windows, dites di laptop Windows.
 4. GitHub Actions untuk build Windows dan macOS.
@@ -100,4 +100,4 @@ Untuk Steam, hasil build diunggah dengan SteamPipe (`steamcmd`). Depot Windows d
 - Laptop atau PC Windows untuk tes. Kalau mau rilis macOS, perlu akses Mac atau cukup lewat GitHub Actions.
 - Akun itch.io (gratis).
 - Nanti: akun Steamworks, Apple Developer, dan sertifikat Windows bila diperlukan.
-- Konten sensitif: nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) sudah diganti plesetan (Kopwar Merah Bata, Dapur Kenyang). Lihat `image-prompts.md` bagian 21.
+- Konten sensitif: nama dan logo program pemerintah (Kopdes Merah Putih, SPPG, Badan Gizi Nasional) sudah diganti plesetan (Kopwar Merah Bata, Dapur Kenyang). Lihat `backup/image-prompts.md` bagian 21.
