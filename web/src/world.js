@@ -31,7 +31,10 @@ export function jumpLift(age){
 // Durasi tumbang
 export const dieTime=2.8;
 // Darah Rex
-const rexHp=400;
+const rexHp=450,rexGrow=150;
+// Penembak serentak
+const gunnerBase=4,gunnerGrow=1,gunnerMode={santai:-1,normal:0,ngamuk:2};
+const ranged=new Set(['infantry','bazooka','helicopter','tank','drone']);
 // Damage ke Rex
 const DAMAGE={water:2,bullet:4,rocket:26,laser:16,net:9,ram:20,charge:42,dive:38};
 // Pulih darah
@@ -125,6 +128,9 @@ export class World {
     // Posisi kampanye
     this.tier=clamp(index/lastDistrict,0,1);
     this.basePower=this.power=(1+this.tier*.36)*mode.power;this.squadBonus=mode.squad;
+    // Darah per distrik
+    this.rex.max=this.rex.hp=Math.round(rexHp+this.tier*rexGrow)+this.mods.hp;
+    this.gunnerCap=gunnerBase+Math.round(this.tier*gunnerGrow)+(gunnerMode[options.difficulty]||0);this.gunners=new Set();
     this.cast=null;this.castAt=-9;this.lastCast=-9;this.rain=null;this.heroWave=null;
     this.populate();
     // Event jalan
@@ -579,6 +585,8 @@ export class World {
       if(this.time>=rain.until)this.rain=null;
     }
     // Musuh
+    // Pilih penembak
+    this.gunners=new Set(this.enemies.filter(e=>e.hp>0&&ranged.has(e.type)&&!e.flee).sort((a,b)=>Math.abs(a.x-p.x)-Math.abs(b.x-p.x)).slice(0,this.gunnerCap));
     for(const e of this.enemies){
       if(e.hp<=0)continue;const previousX=e.x;e.shot-=dt;e.hit=Math.max(0,e.hit-dt);e.flipped=Math.max(0,(e.flipped||0)-dt);
       if(this.phase==='dying'){e.vx*=Math.pow(.05,dt);this.animateEnemy(e,dt,previousX);continue}
@@ -616,7 +624,7 @@ export class World {
         else{e.dir=dir;e.x+=dir*clamp(dist-e.hold,-130,185)*dt}
         if(e.type==='firetruck'){this.animateEnemy(e,dt,previousX);continue}
         if(e.type==='helicopter')e.y=-420+Math.sin(this.time*1.5+e.phase)*135;
-        if(dist<940&&e.shot<=0){const rocket=e.type==='bazooka'||e.type==='helicopter'||e.type==='tank';
+        if(dist<940&&e.shot<=0&&this.gunners.has(e)){const rocket=e.type==='bazooka'||e.type==='helicopter'||e.type==='tank';
           this.shoot(e,rocket?'rocket':'bullet');e.shot=e.type==='tank'?3.6:rocket?4.2:e.type==='infantry'&&++e.burst%3?.19:e.type==='drone'?2.2:3}
       }
       // Jalan licin
