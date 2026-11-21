@@ -894,6 +894,36 @@ Untuk versi rusak dan hancur, tulisan dan ikon boleh ikut penyok, tergores, atau
 
 ---
 
+## 22. Perbaikan sambungan latar distrik
+
+Lapisan latar diulang terus ke samping selama Rex berjalan. Lima lapisan di bawah tidak nyambung di titik ulangnya, jadi bangunan terlihat terpotong. Contohnya atap peron Stasiun putus, jalan layang Tol berhenti mendadak, dan kapal di Pelabuhan terbelah.
+
+**Aturan untuk semua lapisan di bagian ini:**
+
+- Ukuran file sama persis dengan sumbernya.
+- Isi menempel ke tepi bawah. Sisakan sekitar 10 px kosong (transparan) di atas supaya puncak bangunan tidak terpotong.
+- Gaya, warna, dan cahaya sama dengan sumber.
+- Tepi kiri dan kanan harus menyambung mulus saat gambar ditempel berdampingan. Jangan ada bangunan, kapal, atau jalan layang yang terpotong di tepi kiri atau kanan.
+- Simpan dengan menimpa file sumber.
+
+| File (sumber dan simpan ke, timpa) | Ukuran | Masalah |
+| --- | --- | --- |
+| `web/assets/backgrounds/station/mid-city.webp` | 1600×239 | Atap peron putus dan kolom terpotong di sambungan |
+| `web/assets/backgrounds/station/far-city.webp` | 1600×295 | Gedung stasiun lama terpotong setengah di tepi |
+| `web/assets/backgrounds/toll/far-city.webp` | 1600×295 | Jalan layang berhenti dan memudar di tepi kanan |
+| `web/assets/backgrounds/market/far-city.webp` | 1600×295 | Atap rumah saling tumpuk dan memudar di sambungan |
+| `web/assets/backgrounds/port/mid-city.webp` | 1600×239 | Haluan kapal terbelah di tepi kiri, pohon memudar di tepi kanan |
+
+```
+Edit the attached transparent background strip so it tiles seamlessly left to right. Keep the exact canvas size, art style, colours, lighting, line weight and the content anchored to the bottom edge, with about 10 px of empty transparent space at the top so nothing touches the top edge. Rearrange or extend the scene so that no building, roof, platform canopy, ship, bridge or tree is cut by the left or right edge: the left edge must continue exactly where the right edge ends, with the same ground line and horizon height on both sides. No fades or soft blends at the edges. Transparent background, no text.
+```
+
+Untuk jalan layang Tol, tambahkan ke prompt: `The elevated highway must run across the full width and continue off both edges at the same height.`
+
+Untuk peron Stasiun, tambahkan ke prompt: `The platform canopy must run across the full width with evenly spaced columns, so the roof continues across the seam.`
+
+---
+
 ## Checklist kualitas setiap aset
 
 - [ ] Background benar-benar transparan (cek alpha, bukan latar putih atau kotak-kotak palsu).
