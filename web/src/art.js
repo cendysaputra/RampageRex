@@ -3,7 +3,7 @@ import { attackPose, smooth } from './motion.js';
 import { t as tr } from './i18n.js';
 import { rexFramePath, rexPose } from './rex-animation.js';
 
-const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'panjat-pinang':370,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
+const propWidths={'gapura-merdeka':572,'panggung-lomba':343,'tenda-hadiah':338,'boneka-salju':193,'cemara-salju':245,'gerobak-es':227,'labu-raksasa':253,'nisan':314,'pohon-mati':358,'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'panjat-pinang':370,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
 const motorWidth=185,people={civilian:85,tengkorak:86,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15,fetchTimeout=20000;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],

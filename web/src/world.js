@@ -57,7 +57,7 @@ function range(a,b){return a+Math.random()*(b-a)}
 // Saring daftar
 function keep(list,test){let n=0;for(const v of list)if(test(v))list[n++]=v;list.length=n}
 // Kotak properti
-const propHitboxes={'lapak-sayur':[208,150],'becak':[140,100],'tumpukan-karung':[188,70],'gerbong':[529,160],'bangku-peron':[135,55],'menara-sinyal':[179,230],'gerbang-tol':[266,210],'truk-kontainer':[332,150],'pembatas-beton':[118,50],'perahu-nelayan':[222,120],'pohon-kelapa':[299,300],'panjat-pinang':[220,400],'warung-pantai':[252,160],'spbu':[353,200],'warung-makan':[336,160],'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
+const propHitboxes={'gapura-merdeka':[419,330],'panggung-lomba':[251,230],'tenda-hadiah':[223,240],'boneka-salju':[133,200],'cemara-salju':[172,320],'gerobak-es':[152,165],'labu-raksasa':[107,170],'nisan':[221,130],'pohon-mati':[256,300],'lapak-sayur':[208,150],'becak':[140,100],'tumpukan-karung':[188,70],'gerbong':[529,160],'bangku-peron':[135,55],'menara-sinyal':[179,230],'gerbang-tol':[266,210],'truk-kontainer':[332,150],'pembatas-beton':[118,50],'perahu-nelayan':[222,120],'pohon-kelapa':[299,300],'panjat-pinang':[220,400],'warung-pantai':[252,160],'spbu':[353,200],'warung-makan':[336,160],'mobil-sppg':[270,150],'street-lamp':[52,300],angkot:[228,113],'electric-pole':[55,377],'food-cart':[140,108],
   billboard:[174,181],tree:[145,132],'tent-stall':[211,133]};
 const groundRise={ground:433,upper:337,roof:269};
 // Tingkat kesulitan
@@ -123,7 +123,7 @@ export class World {
     this.lite=!!options.lite;this.god=!!options.god;this.upgrades=options.upgrades||[];this.mods=modifiers(this.upgrades);
     this.level=level;this.index=index;this.time=0;this.score=0;this.combo=0;this.comboTime=0;this.maxCombo=0;this.cancelled=0;this.civiliansDown=0;this.kills={};this.flips=0;this.usedUlti=false;this.lost=0;this.total=0;
     this.rex={x:level.start,dir:1,hp:rexHp+this.mods.hp,max:rexHp+this.mods.hp,rage:30,fury:0,stun:0,slow:0,hit:0,attack:null,walk:0,moving:false,vx:0,stride:0,queued:null,queuedUntil:0,bigNet:0,
-      cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15,special:0},lift:0,fly:0,frozen:0,reviving:0,revived:false};
+      cd:{bite:0,tail:0,stomp:0,roar:0,jump:6,ulti:15,special:0},lift:0,fly:0,frozen:0,coins:0,reviving:0,revived:false};
     this.buildings=level.buildings.map(b=>{
       let y=-65;
       const modules=['ground',...Array(b.upper).fill('upper'),'roof'].map(type=>{
@@ -360,7 +360,7 @@ export class World {
       if(e.hp<=0||!overlap(hitbox,box(e.x,e.y-e.lift,bw,bh)))continue;
       if(e.type==='helicopter'&&(a.key!=='bite'||e.y< -395))continue;
       if(e.type==='rajawali'&&e.mode!=='ground'&&e.mode!=='dive')continue;
-      if(e.type==='penyihir'&&e.y<-120)continue;
+      if(e.type==='penyihir'&&e.y<-120&&!(p.fly>0))continue;
       if(e.type==='perisai'&&a.key==='bite'&&e.mode!=='recover'&&Math.sign(p.x-e.x)===e.dir){this.say(t('Perisai memblokir gigitan.'),1);continue}
       if(e.type==='jaring'&&this.enemies.some(t=>t.owner===e&&t.hp>0)){this.say(t('Hancurkan turret Jaring dulu.'),1.1);continue}
       const counter=(e.type==='perisai'&&a.key==='tail'&&e.mode==='recover')||(e.type==='jaring'&&a.key==='stomp')||(e.type==='rajawali'&&e.mode==='ground'&&a.key==='bite');

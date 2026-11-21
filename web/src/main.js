@@ -132,7 +132,7 @@ async function chooseDistrict(){
     note.textContent=dailyText(mission,levels)+(dailyRecord.streak?' · '+t('{n} hari beruntun',{n:dailyRecord.streak}):'');
     b.append(name,note);b.onclick=()=>{daily=mission;start(mission.district)};list.append(b);
   }
-  for(const [i,level] of levels.entries()){
+  for(const [i,level] of levels.slice(0,ENDLESS+1).entries()){
     const endless=i===ENDLESS,open=dev||(endless?progress.cleared[0]:i<progress.unlocked),b=document.createElement('button'),name=document.createElement('b'),note=document.createElement('small');
     b.type='button';b.className='district';b.disabled=!open;
     name.textContent=(endless?'∞':i+1)+' · '+t(level.name);
