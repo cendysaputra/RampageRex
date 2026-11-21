@@ -213,7 +213,7 @@ Setelah kedelapan distrik selesai, tombol **Misi Spesial** muncul di menu utama.
 | --- | --- | --- | --- |
 | **Kemerdekaan** | Kedelapan distrik selesai | **Tikus Raksasa**, ulti Hujan Koin Emas yang memperlambat Rex | Skin **Sayap Merah Putih**, skill **Terbang** 4 detik: lebih cepat, gigitan mencapai lantai atas, kebal serangan jarak dekat |
 | **Salju** | Misi Kemerdekaan dan 15 bintang | **Boneka Salju Raksasa**, ulti Meriam Pembeku yang membekukan Rex (tekan tombol berulang untuk lepas) | Skin **Rex Es**, skill **Duri Es**: barisan duri setinggi Rex menusuk semua musuh di depannya |
-| **Halloween** | Misi Salju dan pencapaian Tukang Gusur | **Penyihir** yang memanggil tengkorak dari dalam tanah | Skin **Rex Tulang**, skill **Bangkit Lagi**: sekali per misi atau distrik, tulang Rex rontok lalu tersusun lagi dengan 50 darah |
+| **Halloween** | Misi Salju dan pencapaian Tukang Gusur | **Penyihir** yang memanggil tengkorak dari dalam tanah | Skin **Rex Tulang**, skill **Bangkit Lagi**: sekali per misi atau distrik, tulang Rex rontok lalu tersusun lagi dengan 400 darah |
 
 Misi Kemerdekaan dimeriahkan pawai 17 Agustus, panjat pinang, lomba balap karung, dan konvoi motor. Di Misi Salju, salju turun dan tentara sesekali tergelincir. Di Misi Halloween, tengkorak ikut bangkit bersama pasukan tentara. Setelah ketiga misi selesai, skin **ZombieRex** terbuka.
 

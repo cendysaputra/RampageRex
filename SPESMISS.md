@@ -127,7 +127,7 @@ Usulan awal, bisa diubah:
   - **Ulti Pasukan Tulang:** pemanggilan besar, 8 tengkorak sekaligus di sekitar Rex.
   - Penyihir hanya bisa digigit saat turun memanggil. Raung membuatnya jatuh sebentar.
 - **Hadiah, skin Rex Tulang:** tengkorak dinosaurus tanpa kulit, tulang krem, mata menyala hijau.
-  - **Skill Bangkit Lagi** (pasif, sekali per distrik atau misi): saat darah habis, tulang Rex rontok dan menumpuk, lalu tersusun kembali menjadi Rex dan bangkit dengan 50 darah.
+  - **Skill Bangkit Lagi** (pasif, sekali per distrik atau misi): saat darah habis, tulang Rex rontok dan menumpuk, lalu tersusun kembali menjadi Rex dan bangkit dengan 400 darah.
 
 ### 2.7 ZombieRex
 

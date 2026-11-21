@@ -787,7 +787,7 @@ console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', la
   const bone = make(2, { skill: 'bangkit' }); bone.rex.hp = 0; bone.update(1 / 60, empty);
   assert.ok(bone.rex.reviving > 0 && bone.phase === 'fight', 'Rex Tulang collapses instead of dying');
   for (let i = 0; i < 160; i++) bone.update(1 / 60, empty);
-  assert.equal(bone.rex.hp, 50, 'Rex Tulang rises again with 50 HP');
+  assert.equal(bone.rex.hp, 400, 'Rex Tulang rises again with 400 HP');
   bone.rex.hp = 0; bone.update(1 / 60, empty); assert.equal(bone.phase, 'dying', 'the revival works once');
   // Bos
   const rat = make(0); const r = rat.spawn('tikus', rat.rex.x + 600); r.timer = 0;
