@@ -34,24 +34,65 @@ export const songs={
     ],
     // Pola drum
     kick:[0,8,11],snare:[4,12],hat:[0,2,4,6,8,10,12,14],fill:[12,13,14,15]
+  },
+  // Lagu bertarung
+  battle:{
+    bpm:160,
+    chords:[['D2','D','F','A'],['D2','D','F','A'],['Bb1','Bb','D','F'],['C2','C','E','G'],['D2','D','F','A'],['D2','D','F','A'],['Bb1','Bb','D','F'],['A1','A','C#','E'],
+      ['G1','G','Bb','D'],['G1','G','Bb','D'],['D2','D','F','A'],['D2','D','F','A'],['Bb1','Bb','D','F'],['C2','C','E','G'],['A1','A','C#','E'],['A1','A','C#','E']],
+    lead:[
+      'D5 . D5 . F5 . D5 . A5 - G5 . F5 . E5 .',
+      'D5 . D5 . F5 . A5 . D6 - - - C6 . A5 .',
+      'Bb5 . A5 . F5 . D5 . Bb4 - - - D5 . F5 .',
+      'E5 . G5 . C6 . G5 . E5 - - - . . . .',
+      'D5 . D5 . F5 . D5 . A5 - G5 . F5 . E5 .',
+      'D5 . D5 . F5 . A5 . D6 - - - F6 . E6 .',
+      'D6 . Bb5 . F5 . Bb5 . D6 - C6 . Bb5 . A5 .',
+      'C#6 - - - A5 . E5 . C#5 - - - . . . .',
+      'G5 - - - Bb5 - - - D6 - - - Bb5 . G5 .',
+      'A5 . Bb5 . A5 . G5 . F5 - - - G5 . A5 .',
+      'D6 - - - A5 - - - F5 - - - A5 . D6 .',
+      'C6 . A5 . F5 . D5 . E5 . F5 . A5 - - -',
+      'Bb5 . Bb5 . A5 . F5 . D5 . F5 . Bb5 . D6 .',
+      'C6 . C6 . G5 . E5 . C5 . E5 . G5 . C6 .',
+      'C#6 . E6 . C#6 . A5 . E5 . A5 . C#6 . E6 .',
+      'A5 - - - . . . . E5 . E5 . A4 . . .'
+    ],
+    kick:[0,3,8,10],snare:[4,12],hat:[0,2,4,6,8,10,12,14],fill:[12,13,14,15]
+  },
+  // Lagu bos
+  boss:{
+    bpm:128,
+    chords:[['E2','E','G','B'],['E2','E','G','B'],['F2','F','A','C'],['E2','E','G','B'],['E2','E','G','B'],['E2','E','G','B'],['C2','C','E','G'],['B1','B','D#','F#']],
+    lead:[
+      'E5 - - - . . E5 . G5 - - - F#5 - - -',
+      'E5 - - - . . B4 . E5 . F5 . E5 - - -',
+      'F5 - - - . . F5 . Ab5 - - - G5 - - -',
+      'E5 - - - - - - - . . . . B4 . E5 .',
+      'B5 . B5 . A5 . G5 . F#5 . G5 . A5 . B5 .',
+      'C6 - - - B5 - - - G5 - - - E5 - - -',
+      'C6 . B5 . A5 . G5 . E5 . G5 . C6 . E6 .',
+      'D#6 - - - B5 - - - F#5 - - - D#5 - - -'
+    ],
+    kick:[0,2,8,10],snare:[4,12],hat:[0,2,4,6,8,10,12,14],fill:[8,10,12,13,14,15]
   }
 };
 
 // Pemutar musik
 export class Music {
-  constructor(sound){this.sound=sound;this.volume=.6;this.song=null;this.timer=0;this.step=0;this.next=0}
+  constructor(sound){this.sound=sound;this.volume=.6;this.duck=1;this.tempo=1;this.song=null;this.timer=0;this.step=0;this.next=0}
   // Lagu yang diminta
   want(name){
     const ctx=this.sound.ctx,on=name&&this.sound.enabled&&this.volume>0&&ctx?.state==='running'&&!document.hidden;
     if(on&&this.song!==songs[name])this.start(songs[name]);
     else if(!on&&this.song)this.stop();
-    if(this.bus&&this.level!==this.volume){this.level=this.volume;this.bus.gain.setTargetAtTime(this.volume*.8,ctx.currentTime,.05)}
+    const level=this.volume*this.duck;if(this.bus&&this.level!==level){this.level=level;this.bus.gain.setTargetAtTime(level*.8,ctx.currentTime,.05)}
   }
   // Mulai lagu
   start(song){
     const ctx=this.sound.ctx;this.stop();
     this.song=song;this.step=0;this.next=ctx.currentTime+.08;
-    this.bus=ctx.createGain();this.bus.gain.value=this.volume*.8;this.level=this.volume;
+    this.level=this.volume*this.duck;this.bus=ctx.createGain();this.bus.gain.value=this.level*.8;
     const tone=ctx.createBiquadFilter();tone.type='lowpass';tone.frequency.value=5200;this.bus.connect(tone).connect(ctx.destination);this.tone=tone;
     this.noise??=this.makeNoise(ctx);
     this.timer=setInterval(()=>this.tick(),25);this.tick();
@@ -65,7 +106,7 @@ export class Music {
   // Jadwalkan nada
   tick(){
     const ctx=this.sound.ctx,song=this.song;if(!song||!ctx)return;
-    const step=60/song.bpm/4;
+    const step=60/(song.bpm*this.tempo)/4;
     // Kejar ketinggalan
     if(this.next<ctx.currentTime-.05)this.next=ctx.currentTime+.05;
     while(this.next<ctx.currentTime+.15){this.play(song,this.step,this.next,step);this.step=(this.step+1)%(song.lead.length*16);this.next+=step}

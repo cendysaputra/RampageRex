@@ -341,8 +341,10 @@ function updateHud(){
 const maxSteps=4;
 // Loop utama
 function frame(now){
-  // Musik menu
-  music.want(el('menu').hidden?null:'menu');
+  // Pilih musik
+  const fight=world&&['playing','paused','controls','settings-paused'].includes(screen);
+  music.duck=fight&&screen!=='playing'?.4:1;music.tempo=fight&&world.rex.fury>0?1.08:1;
+  music.want(!el('menu').hidden?'menu':fight?(world.enemies.some(e=>e.type==='robot'&&e.hp>0)?'boss':'battle'):null);
   if(screen==='playing'){
     // Langkah simulasi
     const elapsed=prior?Math.min(.1,(now-prior)/1000):0;prior=now;
