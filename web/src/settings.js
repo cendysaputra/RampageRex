@@ -22,15 +22,16 @@ export function weakDevice(nav = globalThis.navigator) {
 export function useLite(settings, nav) {
   return settings.graphics === 'ringan' || (settings.graphics === 'auto' && weakDevice(nav));
 }
-export const defaults = { sfx: 80, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah', graphics: 'auto', lang: deviceLang() };
+export const defaults = { sfx: 80, music: 60, vibrate: true, pad: 'm', difficulty: 'normal', skin: 'merah', graphics: 'auto', lang: deviceLang() };
 
 // Baca pengaturan
 export function loadSettings(storage = globalThis.localStorage) {
   let data = {};
   try { data = JSON.parse(storage.getItem(KEY)) || {}; } catch {}
-  const sfx = Number(data.sfx);
+  const sfx = Number(data.sfx), music = Number(data.music);
   return {
     sfx: Number.isFinite(sfx) ? Math.max(0, Math.min(100, Math.round(sfx))) : defaults.sfx,
+    music: Number.isFinite(music) ? Math.max(0, Math.min(100, Math.round(music))) : defaults.music,
     vibrate: typeof data.vibrate === 'boolean' ? data.vibrate : defaults.vibrate,
     pad: data.pad in padSizes ? data.pad : defaults.pad,
     difficulty: data.difficulty in difficulties ? data.difficulty : defaults.difficulty,
