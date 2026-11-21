@@ -5,17 +5,23 @@ import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'panjat-pinang':370,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
-const motorWidth=185,people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15,fetchTimeout=20000;
+const motorWidth=185,people={civilian:85,tengkorak:86,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15,fetchTimeout=20000;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/tank',vehicles.tank],['characters/soldiers/firetruck',vehicles.firetruck],['characters/soldiers/drone',vehicles.drone],['characters/soldiers/motor',motorWidth],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
   ...Object.entries(propWidths).map(([name,width])=>['props/'+name,width])];
 // Warna ulti pahlawan
-const castColors={robot:['#f2b33d','#24365c','#8ff4ff'],perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
+const castColors={tikus:['#f2c14e','#6b4a1f','#ffe27a'],'boneka-salju':['#9fdcff','#1d4a7a','#e9fbff'],penyihir:['#8a5fd0','#2a1446','#7cf29a'],robot:['#f2b33d','#24365c','#8ff4ff'],perisai:['#4f7bd0','#1b2a55','#f2b33d'],rajawali:['#f0574d','#8e1f3a','#8ff4ff'],jaring:['#8a5fd0','#2d2058','#7be3a4']};
 // Tingkat resolusi
 const caps=[2,1.5,1.25,1];
 // Lebar robot
-const robotWidth=544;
+const robotWidth=544,bossWidths={tikus:800,'boneka-salju':650,penyihir:680},bossTops={tikus:460,'boneka-salju':460,penyihir:420};
+// Gambar efek misi
+const shotSprites={sack:['fx/koin/sack',78],snow:['fx/es/snowball',46],orb:['fx/sihir/orb',74],freeze:['fx/es/freeze-ball',76]};
+// Hiasan per misi
+const overlayRule={merdeka:()=>true,halloween:()=>true,salju:(type,color)=>type==='roof'||color==='blue'};
+// Frame skill
+const spikeFrames=['a','b','c','c','c','c','d'];
 const backdropLayers=['sky','far-city','mid-city','street'];
 const heroWidths={head:57,torso:67,'near-upper-arm':35,'near-forearm':41,'far-upper-arm':32,'far-forearm':34,
   'near-thigh':31,'far-thigh':31,'near-shin':38,'far-shin':38,cape:61,shield:57,jetpack:66,'tool-belt':59,'net-launcher':87};
@@ -40,7 +46,7 @@ function cropRect(meta,path){
 export class Art {
   constructor(manifest){
     this.meta={...manifest.assets};this.extension=manifest.imageFormat||'png';this.images=new Map();this.loading=new Map();
-    this.rexAnimations=manifest.rexAnimations;this.robot=manifest.robot;this.cutin='fx/ulti-cutin';this.skin='';
+    this.rexAnimations=manifest.rexAnimations;this.robot=manifest.robot;this.bosses={robot:manifest.robot,...manifest.bosses};this.bossReady={};this.cutin='fx/ulti-cutin';this.skin='';
     this.basePaths=Object.fromEntries(Object.entries(this.rexAnimations.atlases).map(([k,d])=>[k,d.path]));
     this.baseFrames=Object.fromEntries(Object.entries(this.rexAnimations.atlases).map(([k,d])=>[k,d.frames]));
     this.crops=new Map(Object.entries(this.meta).map(([path,m])=>[path.slice(0,-4),cropRect(m,path)]));
@@ -88,10 +94,13 @@ export class Art {
   async preload(level,onProgress=()=>{}){
     const heroes=level.bosses.flatMap(b=>['characters/heroes/'+b.type+'/parts/','characters/heroes/'+b.type+'/portrait']);
     // Aset bos
-    if(level.boss)heroes.push('characters/heroes/'+level.boss+'/atlas','characters/heroes/'+level.boss+'/cutin');
+    if(level.boss){const dir=this.bossDir(level.boss);heroes.push(dir+'/atlas',dir+'/cutin',dir+'/portrait')}
+    // Aset misi
+    if(level.mission)heroes.push('buildings/overlays/'+level.setting+'/','fx/koin/','fx/es/','fx/sihir/');
     const backdrops=backdropLayers.map(name=>this.backdrop(level.setting,name));
     // Atlas Rex
-    const rexPaths=[...Object.values(this.rexAnimations.atlases).map(d=>d.path),this.cutin];
+    const rexPaths=[...Object.values(this.rexAnimations.atlases).map(d=>d.path),...this.extraPaths(this.skin),this.cutin];
+    if(!this.rexFramesReady)for(const path of rexPaths)if(!this.images.has(path))this.loading.delete(path);
     // Aset terpakai
     const colors=[...new Set(level.buildings.map(b=>b.color))],props=[...new Set((level.props||[]).map(p=>p.type))];
     // Lepas latar
@@ -106,17 +115,23 @@ export class Art {
     let cursor=0,done=0;onProgress(0);
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length){await this.load(paths[cursor++]);onProgress(++done/paths.length)}}));
     await(this.rexFramesReady??=this.prepareRexFrames());
-    if(level.boss)await(this.robotReady??=this.prepareRobot());
+    if(level.boss)await(this.bossReady[level.boss]??=this.prepareBoss(level.boss));
   }
-  // Potong robot
-  async prepareRobot(){
-    const def=this.robot;if(!def)return;
+  // Folder bos
+  bossDir(type){return type==='robot'?'characters/heroes/robot':'characters/bosses/'+type}
+  // Frame bos
+  bossFrame(type,index){return this.bossDir(type)+'/frame-'+index}
+  // Atlas tambahan skin
+  extraPaths(skin){return Object.values(this.rexAnimations.extra?.[skin]||{}).map(d=>d.path)}
+  // Potong bos
+  async prepareBoss(type){
+    const def=this.bosses[type];if(!def)return;
     const source=this.images.get(def.path);if(!source)return;
     for(const [index,[x,y,width,height,px,py]] of def.frames.entries()){
       let picture;
       if(typeof createImageBitmap==='function'){try{picture=await createImageBitmap(source,x,y,width,height)}catch{}}
       if(!picture){picture=document.createElement('canvas');picture.width=width;picture.height=height;picture.getContext('2d').drawImage(source,x,y,width,height,0,0,width,height)}
-      const path='characters/heroes/robot/frame-'+index;
+      const path=this.bossFrame(type,index);
       this.meta[path+'.png']={width,height,pivot:[px,py],alpha:true};this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
     }
     this.images.delete(def.path);source.close?.();
@@ -144,7 +159,7 @@ export class Art {
     this.swapping=(this.swapping||Promise.resolve()).catch(()=>{}).then(async()=>{
       if(skin===this.skin)return;
       const paths=Object.fromEntries(Object.entries(this.basePaths).map(([key,base])=>[key,skin?'characters/rex/skins/'+skin+'/'+base.split('/').pop():base]));
-      const cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin',wanted=[...Object.values(paths),cutin];
+      const cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin',wanted=[...Object.values(paths),...this.extraPaths(skin),cutin];
       // Muat dulu
       for(const path of wanted)if(!this.images.has(path))this.loading.delete(path);
       await Promise.all(wanted.map(path=>this.load(path)));
@@ -154,13 +169,13 @@ export class Art {
       this.skin=skin;this.cutin=cutin;this.skinFrames(skin);
       if(oldCutin!==cutin){this.images.get(oldCutin)?.close?.();this.images.delete(oldCutin);this.loading.delete(oldCutin)}
       this.rexFramesReady=this.prepareRexFrames();await this.rexFramesReady;
-      for(const path of Object.values(paths))this.loading.delete(path);
+      for(const path of [...Object.values(paths),...this.extraPaths(skin)])this.loading.delete(path);
     });
     return this.swapping;
   }
   // Potong atlas
   async prepareRexFrames(){
-    for(const [atlas,definition] of Object.entries(this.rexAnimations.atlases)){
+    for(const [atlas,definition] of [...Object.entries(this.rexAnimations.atlases),...Object.entries(this.rexAnimations.extra?.[this.skin]||{})]){
       const source=this.images.get(definition.path);if(!source)continue;
       for(const [index,[x,y,width,height,px,py,fit=1]] of definition.frames.entries()){
         let picture;
@@ -233,8 +248,10 @@ export class Art {
 
 // Gambar Rex
 function rexRig(c,a,p,t,reduced,down=-1,thunder=false){
-  const pose=rexPose(p,a.rexAnimations,down),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
+  const pose=skillPose(p,a,t)||rexPose(p,a.rexAnimations,down),roar=p.attack?.key==='roar'?attackPose(p.attack):0;
   c.save();c.translate(p.x,reduced||p.attack||down>=0?0:-Math.sin(t*2)*1.5);c.scale(p.dir,1);
+  // Terbang
+  if(p.fly>0)c.translate(0,-p.lift);
   // Gaya lompat
   if(p.attack?.key==='jump'){
     const age=p.attack.age,crouch=age<.18?Math.sin(age/.18*Math.PI):0,land=age>.95?Math.max(0,1-(age-.95)/.2):0;
@@ -250,6 +267,7 @@ function rexRig(c,a,p,t,reduced,down=-1,thunder=false){
   }
   a.blend(c,pose.from,pose.to,pose.mix,0,0,a.rexAnimations.width);
   if(p.bigNet>0)a.sprite(c,'fx/steel-net',10,-8,520,1,Math.sin(t*3)*.03);
+  else if(p.coins>0)for(let i=0;i<3;i++)a.sprite(c,'fx/koin/pile',60+i*110,-4,140);
   else if(p.slow>0)a.sprite(c,'fx/steel-net',2,-20,235);
   if(roar>.2){
     c.strokeStyle='#ffe69f';c.lineWidth=4;c.globalAlpha=roar*.8;
@@ -320,14 +338,29 @@ function exclaim(c,x,y,k){
   c.save();c.globalAlpha=clamp(k*2,0,1);c.font='42px Bangers,Impact,sans-serif';c.textAlign='center';c.textBaseline='bottom';
   c.lineJoin='round';c.lineWidth=7;c.strokeStyle='#102321';c.strokeText('!',x,y-(1-k)*12);c.fillStyle='#ffd45c';c.fillText('!',x,y-(1-k)*12);c.restore();
 }
-// Gambar robot
-function robotRig(c,a,e,t,reduced){
-  const poses=a.robot.poses,mode=e.mode;
-  const index=e.hit>0?poses.hit:mode==='windup'?poses.windup:mode==='punch'?poses.punch:mode==='net'?poses.net
-    :e.stride>.15?poses.walk[Math.sin(e.walk)>=0?0:1]:poses.idle;
+// Pose skill Rex
+function skillPose(p,a,t){
+  const frame=(key,i)=>{const path=rexFramePath(key,i);return a.images.has(path)?path:null};
+  if(p.reviving>0){
+    const k=clamp(1-p.reviving/2.4,0,.999),position=k*8,i=Math.floor(position),from=frame('revive',i),to=frame('revive',Math.min(7,i+1));
+    return from&&to?{from,to,mix:smooth((position-i-.6)/.4)}:null;
+  }
+  if(p.fly>0){
+    const age=4-p.fly,i=age<.45?Math.floor(age/.15):p.fly<.45?5+Math.min(2,Math.floor((.45-p.fly)/.15)):3+(Math.floor(t*6)%2);
+    const path=frame('fly',clamp(i,0,7));return path?{from:path,to:path,mix:0}:null;
+  }
+  return null;
+}
+// Gambar bos
+function bossRig(c,a,e,t,reduced){
+  const poses=a.bosses[e.type].poses,mode=e.mode;
+  const index=e.hit>0?poses.hit:mode==='grounded'?poses.down:mode==='summon'?(e.timer>.7?poses.windup:poses.summon):mode==='windup'?poses.windup:mode==='punch'?poses.punch:mode==='net'?poses.net
+    :e.flash>0&&poses.throw!==undefined?poses.throw:e.type==='penyihir'||e.stride>.15?poses.walk[Math.sin(e.walk||t*5)>=0?0:1]:poses.idle;
   const shake=mode==='windup'&&!reduced?Math.sin(t*60)*2:0;
+  // Lingkaran sihir
+  if(mode==='summon')a.sprite(c,'fx/sihir/circle',e.x,-10,320);
   // Menghadap kiri asli
-  a.sprite(c,'characters/heroes/robot/frame-'+index,e.x+shake,0,robotWidth,-e.dir);
+  a.sprite(c,a.bossFrame(e.type,index),e.x+shake,e.y||0,bossWidths[e.type]||robotWidth,-e.dir);
 }
 // Gambar pahlawan
 function heroRig(c,a,e){
@@ -452,6 +485,7 @@ export class Renderer {
         const state=moduleState(m),path='buildings/ruko-01/'+(state==='intact'?'colors/'+m.type+'-'+b.color:'damage/'+m.type+'-'+state);
         let y=m.y;if(!m.hp){const support=b.modules.slice(0,i).filter(v=>!v.hp).reduce((n,v)=>n+v.h,0);y+=support*(1-(m.fall/.6)**2)-i*5}
         a.part(c,path,b.x,y,b.width*984/960);
+        if(state!=='broken'&&state!=='rubble'&&overlayRule[g.level.setting]?.(m.type,b.color))a.part(c,'buildings/overlays/'+g.level.setting+'/'+m.type,b.x,y,b.width*984/960);
       }
     }
     for(const prop of g.props){
@@ -472,9 +506,9 @@ export class Renderer {
           c.beginPath();c.ellipse(e.x,e.y-70,70+k*40,95+k*40,0,0,Math.PI*2);c.fill();
           c.globalAlpha=.9;c.strokeStyle=light;c.lineWidth=5;c.beginPath();c.ellipse(e.x,e.y-70,90+k*60,115+k*60,0,0,Math.PI*2);c.stroke();c.restore();
         }
-        if(e.type==='robot')robotRig(c,a,e,t,reduced);else heroRig(c,a,e);
+        if(a.bosses[e.type])bossRig(c,a,e,t,reduced);else heroRig(c,a,e);
         // Darah pahlawan
-        const top=e.type==='robot'?-400:e.y-140,ratio=clamp(e.hp/e.max,0,1);
+        const top=a.bosses[e.type]?(e.y||0)-(bossTops[e.type]||400):e.y-140,ratio=clamp(e.hp/e.max,0,1);
         c.fillStyle='#102321';c.fillRect(e.x-48,top-4,96,18);
         c.fillStyle='#e8536d';c.fillRect(e.x-44,top,88*ratio,10);
       }
@@ -511,6 +545,11 @@ export class Renderer {
     shadow(g.rex.x-15,2,212*(1-g.rex.lift/700));c.save();
     if(g.rex.hit>0&&!reduced)c.translate(-g.rex.dir*Math.sin(clamp(g.rex.hit/.18,0,1)*Math.PI)*5,0);
     rexRig(c,a,g.rex,t,reduced,g.phase==='dying'?t-g.dieAt:-1,g.thunder);c.restore();
+    // Rex membeku
+    if(g.rex.frozen>0){c.save();c.globalAlpha=clamp(g.rex.frozen/.25,0,1);c.fillStyle='rgba(170,225,255,.35)';c.fillRect(g.rex.x-g.rex.dir*170-150,-330,520,330);a.sprite(c,'fx/es/ice-block',g.rex.x+g.rex.dir*30,-160,560);c.restore()}
+    // Duri es
+    for(const s of g.spikes||[]){const age=t-s.at;if(age<0)continue;const k=Math.min(spikeFrames.length-1,Math.floor(age/.13));
+      c.save();c.globalAlpha=clamp((.9-age)/.2,0,1);a.sprite(c,'fx/es/frames/spike-'+spikeFrames[k],s.x,4,330,s.dir);c.restore()}
     // Sambaran ke Rex
     const hit=(t-g.struckAt)/.8;
     if(hit>=0&&hit<1)for(let i=0;i<3;i++)bolt(c,g.rex.x+(i-1)*90,-floor-20,g.rex.x+(i-1)*30,-200,(i+3)/7,1.8-i*.4,1-hit);
@@ -544,7 +583,10 @@ export class Renderer {
       a.sprite(c,'characters/soldiers/motor',m.x,m.lane+(reduced?0:Math.sin(t*28+m.phase)*1.5),motorWidth,m.dir);
     }
     // Proyektil
-    for(const s of g.shots){const path=s.type==='net'?'net-capsule':s.type;a.sprite(c,'fx/projectiles/frames/'+path,s.x,s.y,s.type==='bullet'?37:72,1,Math.atan2(s.vy,s.vx))}
+    for(const s of g.shots){
+      if(s.type==='coin'){a.sprite(c,'fx/koin/frames/spin-'+'abcd'[Math.floor(t*12+s.spin)%4],s.x,s.y,46);continue}
+      const own=shotSprites[s.type];if(own){a.sprite(c,own[0],s.x,s.y,own[1]*(s.big?1.9:1),1,s.type==='sack'?t*8:0);continue}
+      const path=s.type==='net'?'net-capsule':s.type;a.sprite(c,'fx/projectiles/frames/'+path,s.x,s.y,s.type==='bullet'?37:72,1,Math.atan2(s.vy,s.vx))}
     // Efek
     for(const f of g.effects){
       if(!visible(f.x,f.size))continue;
@@ -593,6 +635,7 @@ export class Renderer {
     this.ultimateOverlay(c,g,view,logicalH,reduced);
     this.heroOverlay(c,g,view,logicalH,reduced);
     if(g.weather==='rain')this.rain(c,g,view,logicalH,reduced,floor);
+    if(g.weather==='snow')this.snow(c,g,view,logicalH,reduced);
     this.exitOverlay(c,g,view,logicalH,reduced,floor);
   }
   // Efek ulti
@@ -641,7 +684,7 @@ export class Renderer {
       for(let i=0;i<9;i++){const y=(i+.5)*height/9,x=((i*173+(reduced?0:age*900))%(width+300)+width+300)%(width+300)-150;
         c.beginPath();c.moveTo(x,y);c.lineTo(x+150+i%3*60,y);c.stroke()}
       // Potret menghadap kiri
-      const path='characters/heroes/'+cast.type+'/portrait',im=this.art.images.get(path),wide=this.art.images.get('characters/heroes/'+cast.type+'/cutin');
+      const dir=this.art.bosses[cast.type]?this.art.bossDir(cast.type):'characters/heroes/'+cast.type,im=this.art.images.get(dir+'/portrait'),wide=this.art.images.get(dir+'/cutin');
       // Cut-in robot
       if(wide){const s=Math.max((width+lean)/wide.width,height/wide.height),bump=reduced?0:(1-smooth(age/.3))*40;c.drawImage(wide,(width+lean-wide.width*s)/2+bump,(height-wide.height*s)/2,wide.width*s,wide.height*s)}
       else if(im){const size=height*1.12,bump=reduced?0:(1-smooth(age/.3))*40;
@@ -696,6 +739,17 @@ export class Renderer {
       const k=smooth((g.time-g.exitAt-(exitTime-.9))/.9);
       if(k>0){c.fillStyle='rgba(11,23,25,'+k+')';c.fillRect(0,0,view,logicalH)}
     }
+  }
+  // Salju turun
+  snow(c,g,view,logicalH,reduced){
+    c.save();c.fillStyle='rgba(220,235,255,.08)';c.fillRect(0,0,view,logicalH);
+    const time=reduced?0:g.time,count=this.art.lite?60:140;c.fillStyle='rgba(255,255,255,.85)';
+    for(let i=0;i<count;i++){
+      const seed=(i*7919)%1000/1000,size=1.5+seed*3.5,speed=40+seed*90,span=logicalH+40,y=(seed*span+time*speed)%span-20;
+      const x=((i*137.5-g.camera*(.05+seed*.25)+Math.sin(time*.8+i)*30)%(view+40)+view+40)%(view+40)-20;
+      c.globalAlpha=.4+seed*.5;c.beginPath();c.arc(x,y,size,0,Math.PI*2);c.fill();
+    }
+    c.restore();
   }
   // Hujan deras
   rain(c,g,view,logicalH,reduced,floor){

@@ -709,7 +709,7 @@ for (const late of [.1, .3, .6]) {
   assert.ok(Object.values(w.rex.cd).every(v => v === 0));
   w.devAction('tank');
   assert.ok(w.enemies.some(e => e.type === 'tank'));
-  assert.equal(w.devAction('robot'), 'Robot hanya ada di Alun-Alun');
+  assert.equal(w.devAction('robot'), 'Bos hanya ada di Alun-Alun dan misi spesial');
   const end = new World(levels[0], 0); end.spawnTime = Infinity; end.devAction('end');
   for (let i = 0; i < 5; i++) end.update(1 / 60, empty);
   assert.equal(end.phase, 'clear', 'skip to end clears the district');
@@ -756,4 +756,52 @@ console.log(JSON.stringify({ attackTiming: 'pass', spriteTransitions: 'pass', la
     for (const bar of song.lead) { assert.equal(bar.trim().split(/\s+/).length, 16, name + ' bars have 16 steps'); for (const n of parseBar(bar)) assert.ok(noteFreq(n.note) > 0, n.note) }
     for (const [root, ...chord] of song.chords) { assert.ok(noteFreq(root) > 0); for (const c of chord) assert.ok(noteFreq(c + 4) > 0, c) }
   }
+}
+
+// Misi spesial
+{
+  const special = await Promise.all(['merdeka', 'salju', 'halloween'].map(async k => JSON.parse(await readFile(new URL(`../web/data/levels/misi-${k}.json`, import.meta.url), 'utf8'))));
+  const make = (i, options = {}) => { const w = new World(special[i], 7, { events: true, ...options }); w.spawnTime = Infinity; return w; };
+  const [merdeka, salju, halloween] = special.map((_, i) => make(i));
+  assert.equal(merdeka.rex.max, 900, 'missions give Rex 900 HP');
+  assert.ok(special.every(l => l.length > 15625 * 1.4), 'mission routes are longer than districts');
+  assert.ok(merdeka.civilians.some(c => c.type === 'pawai') && merdeka.props.some(p => p.type === 'panjat-pinang'), 'the parade belongs to the Independence mission');
+  assert.ok(merdeka.civilians.some(c => c.type === 'balap-karung'), 'sack racers join the Independence mission');
+  for (let i = 0; i < 6; i++) { const plain = new World(levels[i], i, { events: true }); assert.ok(!plain.civilians.some(c => c.type === 'pawai'), 'no parade in regular districts') }
+  assert.equal(salju.weather, 'snow');
+  // Terbang
+  const fly = make(0, { skill: 'terbang' }); fly.update(1 / 60, new Set(['special']));
+  for (let i = 0; i < 40; i++) fly.update(1 / 60, empty);
+  assert.ok(fly.rex.lift > 150 && fly.rex.fly > 0, 'Terbang lifts Rex off the ground');
+  const hp = fly.rex.hp; fly.hurt(50, 0); assert.equal(fly.rex.hp, hp, 'melee cannot reach a flying Rex');
+  fly.hurt(10, 0, true); assert.ok(fly.rex.hp < hp, 'projectiles still hit a flying Rex');
+  for (let i = 0; i < 260; i++) fly.update(1 / 60, empty);
+  assert.equal(fly.rex.lift, 0, 'Rex lands after the flight');
+  assert.ok(fly.rex.cd.special > 0, 'Terbang has a cooldown');
+  // Duri es
+  const ice = make(1, { skill: 'duri' }); const foe = ice.spawn('infantry', ice.rex.x + 500); const boss = ice.spawn('boneka-salju', ice.rex.x + 800);
+  ice.update(1 / 60, new Set(['special'])); for (let i = 0; i < 60; i++) ice.update(1 / 60, empty);
+  assert.ok(foe.hp <= 0 || foe.hp < foe.max, 'ice spikes pierce soldiers');
+  assert.ok(boss.hp < boss.max, 'ice spikes pierce bosses');
+  // Bangkit
+  const bone = make(2, { skill: 'bangkit' }); bone.rex.hp = 0; bone.update(1 / 60, empty);
+  assert.ok(bone.rex.reviving > 0 && bone.phase === 'fight', 'Rex Tulang collapses instead of dying');
+  for (let i = 0; i < 160; i++) bone.update(1 / 60, empty);
+  assert.equal(bone.rex.hp, 50, 'Rex Tulang rises again with 50 HP');
+  bone.rex.hp = 0; bone.update(1 / 60, empty); assert.equal(bone.phase, 'dying', 'the revival works once');
+  // Bos
+  const rat = make(0); const r = rat.spawn('tikus', rat.rex.x + 600); r.timer = 0;
+  const before = rat.rex.hp; for (let i = 0; i < 400; i++) rat.update(1 / 60, empty);
+  assert.ok(rat.rex.hp < before, 'the giant rat attacks Rex');
+  rat.cast = null; rat.lastCast = -99; rat.startCast(r); rat.cast.age = rat.cast.windup; rat.update(1 / 60, empty);
+  for (let i = 0; i < 120; i++) rat.update(1 / 60, empty);
+  assert.ok(rat.rex.slow > 0, 'gold coin rain slows Rex');
+  const snow = make(1); const sm = snow.spawn('boneka-salju', snow.rex.x + 500); snow.startCast(sm); snow.cast.age = snow.cast.windup; snow.update(1 / 60, empty);
+  for (let i = 0; i < 90 && !(snow.rex.frozen > 0); i++) snow.update(1 / 60, empty);
+  assert.ok(snow.rex.frozen > 0, 'the freeze cannon freezes Rex');
+  const thaw = snow.rex.frozen; snow.update(1 / 60, new Set(['bite'])); assert.ok(snow.rex.frozen < thaw - .15, 'mashing breaks the ice faster');
+  const hall = make(2); const witch = hall.spawn('penyihir', hall.rex.x + 600); witch.timer = 0;
+  for (let i = 0; i < 120; i++) hall.update(1 / 60, empty);
+  assert.ok(hall.enemies.some(e => e.type === 'tengkorak'), 'the witch summons skeletons');
+  assert.ok(witch.y < -100 || witch.mode === 'summon', 'the witch flies between summons');
 }

@@ -1,3 +1,5 @@
+import { freshSpecial, readSpecial } from './special.js';
+
 // Kunci simpanan
 const KEY = 'rex.progress';
 export const DISTRICTS = 8;
@@ -8,7 +10,7 @@ const OLD = [0, 2, 4, 7];
 
 // Progres kosong
 function fresh() {
-  return { version: VERSION, unlocked: 1, cleared: Array(DISTRICTS).fill(false), best: Array(DISTRICTS).fill(0), stars: Array.from({ length: DISTRICTS }, () => [false, false, false]), endless: 0 };
+  return { version: VERSION, unlocked: 1, cleared: Array(DISTRICTS).fill(false), best: Array(DISTRICTS).fill(0), stars: Array.from({ length: DISTRICTS }, () => [false, false, false]), endless: 0, special: freshSpecial() };
 }
 
 // Baca progres
@@ -30,7 +32,8 @@ export function loadProgress(storage = globalThis.localStorage) {
       cleared: base.cleared.map((_, i) => data.cleared?.[i] === true),
       best: base.best.map((_, i) => Math.max(0, Math.floor(Number(data.best?.[i])) || 0)),
       stars: base.stars.map((row, i) => row.map((_, j) => data.stars?.[i]?.[j] === true)),
-      endless: Math.max(0, Math.floor(Number(data.endless)) || 0)
+      endless: Math.max(0, Math.floor(Number(data.endless)) || 0),
+      special: readSpecial(data.special)
     };
   } catch {
     return fresh();
@@ -50,6 +53,14 @@ export function recordDistrict(progress, index, score, won, stars = []) {
     progress.cleared[index] = true;
     progress.unlocked = Math.max(progress.unlocked, Math.min(DISTRICTS, index + 2));
   }
+  return progress;
+}
+
+// Catat misi spesial
+export function recordMission(progress, key, score, won) {
+  const row = progress.special[key];
+  row.best = Math.max(row.best, Math.floor(score));
+  if (won) row.cleared = true;
   return progress;
 }
 
