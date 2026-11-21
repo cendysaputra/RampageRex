@@ -5,7 +5,7 @@ import { rexFramePath, rexPose } from './rex-animation.js';
 
 const propWidths={'lapak-sayur':247,'becak':170,'tumpukan-karung':234,'gerbong':551,'bangku-peron':178,'menara-sinyal':494,'gerbang-tol':283,'truk-kontainer':352,'pembatas-beton':149,'perahu-nelayan':255,'pohon-kelapa':452,'warung-pantai':319,'spbu':412,'warung-makan':370,'mobil-sppg':313,'street-lamp':136,'electric-pole':410,angkot:235,tree:150,'food-cart':145,'tent-stall':218,billboard:180};
 // Ukuran sprite
-const people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15;
+const people={civilian:85,infantry:86,bazooka:94,firefighter:86},vehicles={jeep:180,helicopter:285,tank:230,firetruck:250,drone:95},heroScale=.64,samples=1.6,liteSamples=1.15,fetchTimeout=20000;
 const drawnWidths=[['buildings/',560],['characters/civilians/',people.civilian],
   ['characters/soldiers/jeep',vehicles.jeep],['characters/soldiers/helicopter',vehicles.helicopter],['characters/soldiers/tank',vehicles.tank],['characters/soldiers/firetruck',vehicles.firetruck],['characters/soldiers/drone',vehicles.drone],['characters/soldiers/',people.bazooka],
   ['fx/dust/',155],['fx/explosion/',130],['fx/debris/',65],['fx/projectiles/',72],['fx/steel-net',235],['fx/ulti-cutin',760],
@@ -47,25 +47,29 @@ export class Art {
   // Muat gambar
   load(path){
     if(this.loading.has(path))return this.loading.get(path);
-    const task=this.decode(path);this.loading.set(path,task);return task;
+    const task=this.decode(path);this.loading.set(path,task);task.catch(()=>{if(this.loading.get(path)===task)this.loading.delete(path)});return task;
   }
   // Dekode gambar
   async decode(path){
     const url='./assets/'+path+'.'+this.extension,m=this.meta[path+'.png'],crop=this.crops.get(path);
     const scale=bitmapWidth(path,m.width,m.scale||1,this.lite?liteSamples:samples)/m.width,width=Math.max(1,Math.ceil(crop.width*scale)),height=Math.max(1,Math.ceil(crop.height*scale));
-    let picture;
+    // Unduh ulang
+    let blob,picture;
+    for(let attempt=0;attempt<3&&!blob;attempt++){
+      const stop=new AbortController(),timer=setTimeout(()=>stop.abort(),fetchTimeout);
+      try{const response=await fetch(url,{signal:stop.signal});if(response.ok)blob=await response.blob()}catch{}
+      clearTimeout(timer);if(!blob&&attempt<2)await new Promise(r=>setTimeout(r,800*(attempt+1)));
+    }
+    if(!blob)throw new Error(path);
     if(typeof createImageBitmap==='function'){
-      try{
-        const response=await fetch(url);if(!response.ok)throw new Error(path);
-        picture=await createImageBitmap(await response.blob(),crop.x,crop.y,crop.width,crop.height,
-          {resizeWidth:width,resizeHeight:height,resizeQuality:'high'});
-      }catch{}
+      try{picture=await createImageBitmap(blob,crop.x,crop.y,crop.width,crop.height,{resizeWidth:width,resizeHeight:height,resizeQuality:'high'})}catch{}
     }
     // Jalur cadangan
     if(!picture){
+      const link=URL.createObjectURL(blob);
       const img=await new Promise((resolve,reject)=>{
-        const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error(path));img.src=url;
-      });
+        const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error(path));img.src=link;
+      }).finally(()=>URL.revokeObjectURL(link));
       picture=document.createElement('canvas');picture.width=width;picture.height=height;
       const c=picture.getContext('2d');c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
       c.drawImage(img,crop.x,crop.y,crop.width,crop.height,0,0,width,height);
@@ -130,10 +134,19 @@ export class Art {
     }
     this.skin=skin;this.cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin';this.rexFramesReady=null;
   }
+  // Ganti skin langsung
+  swapSkin(skin=''){
+    this.swapping=(this.swapping||Promise.resolve()).catch(()=>{}).then(async()=>{
+      if(skin===this.skin)return;this.useSkin(skin);
+      await Promise.all([...Object.values(this.rexAnimations.atlases).map(d=>d.path),this.cutin].map(path=>this.load(path)));
+      await(this.rexFramesReady??=this.prepareRexFrames());
+    });
+    return this.swapping;
+  }
   // Potong atlas
   async prepareRexFrames(){
     for(const [atlas,definition] of Object.entries(this.rexAnimations.atlases)){
-      const source=this.images.get(definition.path);
+      const source=this.images.get(definition.path);if(!source)continue;
       for(const [index,[x,y,width,height,px,py]] of definition.frames.entries()){
         let picture;
         if(typeof createImageBitmap==='function'){
@@ -226,12 +239,19 @@ function rexRig(c,a,p,t,reduced,down=-1,thunder=false){
   // Aura petir
   if(thunder&&down<0){
     c.save();c.globalCompositeOperation='lighter';
-    // Cahaya biru
-    const pulse=reduced?.5:.5+.5*Math.sin(t*9),glow=c.createRadialGradient(60,-170,40,60,-170,330);
-    glow.addColorStop(0,'rgba(95,216,255,'+(.22+.12*pulse).toFixed(3)+')');glow.addColorStop(1,'rgba(95,216,255,0)');
-    c.fillStyle=glow;c.beginPath();c.ellipse(60,-170,340,230,0,0,Math.PI*2);c.fill();
-    const flick=reduced?0:Math.floor(t*16);
-    for(let i=0;i<5;i++){const sd=(flick*5+i)%97/97,x=-260+sd*620,y=-60-((sd*7)%1)*260;bolt(c,x,y,x+80-sd*160,y-90-sd*70,sd,.55,reduced?.4:.9)}
+    // Cahaya tubuh
+    for(const [x,y,r,f] of [[-150,-120,150,1.3],[60,-160,190,1],[250,-260,140,1.7]]){
+      const pulse=reduced?.5:.5+.25*Math.sin(t*f*2.1+x)+.25*Math.sin(t*f*3.7+y),glow=c.createRadialGradient(x,y,0,x,y,r*(.9+pulse*.2));
+      glow.addColorStop(0,'rgba(95,216,255,'+(.08+.08*pulse).toFixed(3)+')');glow.addColorStop(1,'rgba(95,216,255,0)');
+      c.fillStyle=glow;c.fillRect(x-r*1.2,y-r*1.2,r*2.4,r*2.4);
+    }
+    // Percik kecil
+    if(!reduced)for(let i=0;i<3;i++){
+      const life=(t*2.6+i*.37)%1,n=Math.floor(t*2.6+i*.37)*3+i,sd=(n*7919)%997/997;
+      if(life>.35)continue;
+      const x=-220+sd*500,y=-90-((sd*13)%1)*190,len=30+sd*30,angle=sd*6.28;
+      bolt(c,x,y,x+Math.cos(angle)*len,y+Math.sin(angle)*len,sd,.22,1-life/.35);
+    }
     c.restore();
   }
   // Bintang pusing
@@ -544,7 +564,7 @@ export class Renderer {
     c.restore();
     this.ultimateOverlay(c,g,view,logicalH,reduced);
     this.heroOverlay(c,g,view,logicalH,reduced);
-    if(g.weather==='rain')this.rain(c,g,view,logicalH,reduced);
+    if(g.weather==='rain')this.rain(c,g,view,logicalH,reduced,floor);
     this.exitOverlay(c,g,view,logicalH,reduced,floor);
   }
   // Efek ulti
@@ -650,14 +670,31 @@ export class Renderer {
     }
   }
   // Hujan deras
-  rain(c,g,view,logicalH,reduced){
+  rain(c,g,view,logicalH,reduced,floor){
     c.save();c.fillStyle='rgba(20,36,48,.14)';c.fillRect(0,0,view,logicalH);
-    const drops=this.art.lite?70:150,t=reduced?0:g.time;
-    c.strokeStyle='rgba(200,225,240,.55)';c.lineWidth=2;c.beginPath();
-    for(let i=0;i<drops;i++){
-      const seed=(i*7919)%1000/1000,speed=1400+seed*500,x=((i*137.5+g.camera*.15)%(view+200))-100,y=((seed*logicalH+t*speed)%(logicalH+80))-40;
-      c.moveTo(x,y);c.lineTo(x-14,y+38);
+    const t=reduced?0:g.time,lite=this.art.lite,wind=.3+.12*Math.sin(t*.7)+.06*Math.sin(t*2.3);
+    // Lapisan tetes
+    for(const [count,speed,length,width,alpha,drift] of [[lite?60:130,1100,26,1.3,.38,.08],[lite?45:95,1600,42,2,.55,.2],[lite?12:28,2200,64,3,.7,.45]]){
+      c.strokeStyle='rgba(200,225,240,'+alpha+')';c.lineWidth=width;c.beginPath();
+      for(let i=0;i<count;i++){
+        const seed=(i*7919+count*31)%1000/1000,v=speed*(.85+seed*.3),span=logicalH+length+60,fall=(seed*span+t*v)%span-length-30;
+        const x=((i*137.5+seed*90-g.camera*drift-fall*wind)%(view+260)+view+260)%(view+260)-130;
+        c.moveTo(x,fall);c.lineTo(x-length*wind,fall+length);
+      }
+      c.stroke();
     }
-    c.stroke();c.restore();
+    // Percikan tanah
+    if(!reduced){
+      c.strokeStyle='rgba(210,230,245,.5)';c.lineWidth=1.5;c.beginPath();
+      for(let i=0;i<(lite?10:24);i++){
+        const cycle=t*3+i*.618,k=cycle%1,n=Math.floor(cycle),x=((n*421+i*977)%1000)/1000*view,y=floor+6+((n*37+i*13)%40);
+        const r=4+k*14;c.moveTo(x-r,y);c.quadraticCurveTo(x,y-r*.9*(1-k),x+r,y);
+      }
+      c.globalAlpha=1;c.stroke();
+    }
+    // Hembusan angin
+    const gust=Math.max(0,Math.sin(t*.45));
+    if(gust>.85&&!lite&&!reduced){c.fillStyle='rgba(200,220,235,'+((gust-.85)*.6).toFixed(3)+')';c.fillRect(0,0,view,logicalH)}
+    c.restore();
   }
 }

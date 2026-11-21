@@ -1,5 +1,5 @@
 // Versi cache
-const CACHE = 'rex-v1';
+const CACHE = 'rex-v2';
 
 // Pasang
 self.addEventListener('install', event => {

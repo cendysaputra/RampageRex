@@ -18,7 +18,7 @@ const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyW:'b
   KeyJ:'bite',KeyK:'tail',KeyL:'roar'};
 const mouseButtons=['bite',null,'tail'];
 const controls=new Map(),taps=new Set(),input=new Set(),shown=new Map(),snd=new Sound(),panel=el('panel');
-let world=null,art=null,renderer=null,screen='menu',prior=0,previousScore=0,levelIndex=0,boot;
+let slowTimer=0,world=null,art=null,renderer=null,screen='menu',prior=0,previousScore=0,levelIndex=0,boot;
 // Baca simpanan
 function getSaved(key,def){try{return localStorage.getItem(key)??def}catch{return def}}
 // Simpan data
@@ -166,7 +166,7 @@ function openSettings(paused=false){
   // Skin Rex
   const stars=totalStars(progress);
   group('Skin Rex',Object.fromEntries(Object.entries(skins).map(([k,s])=>[k,skinOpen(s)?s.label:s.rare?'??? · '+t('langka'):t(s.label)+' · '+s.stars+'★'])),settings.skin,
-    key=>{settings.skin=key;saveSettings(settings)},t('Bintang terkumpul: {n} dari {total}.',{n:stars,total:missions.length*3})+(paused?' '+t('Berlaku mulai distrik berikutnya.'):''));
+    key=>{settings.skin=key;saveSettings(settings);if(art&&world){art.swapSkin(activeSkin());world.thunder=thunderOn()||world.thunderUnlocked}},t('Bintang terkumpul: {n} dari {total}.',{n:stars,total:missions.length*3}));
   for(const [i,s] of Object.values(skins).entries())form.lastChild.querySelector('.choices').children[i].disabled=!skinOpen(s);
   // Volume efek
   const sound=document.createElement('label'),range=document.createElement('input'),value=document.createElement('output');
@@ -216,7 +216,10 @@ async function start(index=0,carried=0,result='',kept=[]){
   const shownAt=performance.now();text('stage-result',result);stageCard(index);
   try{
     const [manifest,levels]=await levelData();stageCard(index,manifest,levels[index]);art??=new Art(manifest);art.useSkin(activeSkin());art.setLite(useLite(settings));if(renderer)renderer.stale=true;
-    await art.preload(levels[index],ratio=>{el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status',t('Memuat distrik… {n}%',{n:Math.round(ratio*100)}))});
+    // Koneksi lambat
+    let loaded=0,movedAt=performance.now();slowTimer=setInterval(()=>{if(performance.now()-movedAt>5000)text('stage-status',t('Koneksi lambat, masih memuat… {n}%',{n:loaded}))},1000);
+    await art.preload(levels[index],ratio=>{loaded=Math.round(ratio*100);movedAt=performance.now();el('stage-bar').style.transform='scaleX('+ratio.toFixed(3)+')';text('stage-status',t('Memuat distrik… {n}%',{n:loaded}))});
+    clearInterval(slowTimer);
     renderer??=new Renderer(el('world'),art);renderer.adaptive=settings.graphics==='auto';levelIndex=index;previousScore=carried;world=new World(levels[index],Math.min(index,ENDLESS-1),{difficulty:settings.difficulty,lite:useLite(settings),upgrades:picked,events:true,thunder:thunderOn(),god:dev&&getSaved('rex.devgod','1')==='1'});
     world.onGod=on=>save('rex.devgod',on?'1':'');
     guide=index===0&&getSaved('rex.tutorial','')!=='done'?new Tutorial(world):null;guideUntil=0;showGuide();
@@ -227,7 +230,7 @@ async function start(index=0,carried=0,result='',kept=[]){
     if(document.hidden)pause();
   }catch(err){
     boot=null;art=null;renderer=null;el('stage').hidden=true;el('menu').hidden=false;screen='menu';el('load-status').textContent=t('Aset gagal dimuat. Tekan Mulai main untuk mencoba lagi.');console.error(err);
-  }finally{el('start').disabled=el('districts').disabled=el('settings').disabled=false}
+  }finally{clearInterval(slowTimer);el('start').disabled=el('districts').disabled=el('settings').disabled=false}
 }
 // Lanjut main
 function resume(){close();clearInput();screen='playing';el('pause').focus({preventScroll:true})}
