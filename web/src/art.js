@@ -137,9 +137,19 @@ export class Art {
   // Ganti skin langsung
   swapSkin(skin=''){
     this.swapping=(this.swapping||Promise.resolve()).catch(()=>{}).then(async()=>{
-      if(skin===this.skin)return;this.useSkin(skin);
-      await Promise.all([...Object.values(this.rexAnimations.atlases).map(d=>d.path),this.cutin].map(path=>this.load(path)));
-      await(this.rexFramesReady??=this.prepareRexFrames());
+      if(skin===this.skin)return;
+      const paths=Object.fromEntries(Object.entries(this.basePaths).map(([key,base])=>[key,skin?'characters/rex/skins/'+skin+'/'+base.split('/').pop():base]));
+      const cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin',wanted=[...Object.values(paths),cutin];
+      // Muat dulu
+      for(const path of wanted)if(!this.images.has(path))this.loading.delete(path);
+      await Promise.all(wanted.map(path=>this.load(path)));
+      // Baru tukar
+      const oldCutin=this.cutin;
+      for(const [key,path] of Object.entries(paths))this.rexAnimations.atlases[key].path=path;
+      this.skin=skin;this.cutin=cutin;
+      if(oldCutin!==cutin){this.images.get(oldCutin)?.close?.();this.images.delete(oldCutin);this.loading.delete(oldCutin)}
+      this.rexFramesReady=this.prepareRexFrames();await this.rexFramesReady;
+      for(const path of Object.values(paths))this.loading.delete(path);
     });
     return this.swapping;
   }
@@ -158,7 +168,7 @@ export class Art {
         }
         const path=rexFramePath(atlas,index);
         this.meta[path+'.png']={width,height,pivot:[px,py],scale:definition.scale||1,alpha:true};
-        this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
+        this.crops.set(path,{x:0,y:0,width,height});this.images.get(path)?.close?.();this.images.set(path,picture);
       }
       // Lepas atlas
       this.images.delete(definition.path);source.close?.();
@@ -191,6 +201,9 @@ export class Art {
     if(this.lite){this.sprite(c,mix<.5?from:to,x,y,width,dir,angle);return}
     if(from===to||mix<=0){this.sprite(c,from,x,y,width,dir,angle);return}
     if(mix>=1){this.sprite(c,to,x,y,width,dir,angle);return}
+    // Gambar belum siap
+    const fromImage=this.images.get(from),toImage=this.images.get(to);
+    if(!fromImage||!toImage){this.sprite(c,toImage?to:from,x,y,width,dir,angle);return}
     const rect=path=>{
       const m=this.meta[path+'.png'],b=this.crops.get(path),scale=samples*width/m.width*(m.scale||1);
       return {x:(b.x-m.pivot[0])*scale,y:(b.y-m.pivot[1])*scale,w:b.width*scale,h:b.height*scale};
@@ -203,9 +216,9 @@ export class Art {
     buffer.imageSmoothingEnabled=true;buffer.imageSmoothingQuality='low';
     // Campur warna
     buffer.globalCompositeOperation='source-over';buffer.globalAlpha=1-mix;
-    buffer.drawImage(this.images.get(from),a.x-left,a.y-top,a.w,a.h);
+    buffer.drawImage(fromImage,a.x-left,a.y-top,a.w,a.h);
     buffer.globalCompositeOperation='lighter';buffer.globalAlpha=mix;
-    buffer.drawImage(this.images.get(to),b.x-left,b.y-top,b.w,b.h);
+    buffer.drawImage(toImage,b.x-left,b.y-top,b.w,b.h);
     c.save();c.translate(x,y);c.scale(dir,1);c.rotate(angle);
     c.drawImage(canvas,0,0,w,h,left/samples,top/samples,w/samples,h/samples);c.restore();
   }
