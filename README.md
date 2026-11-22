@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="web/assets/characters/rex/master.webp" alt="Rex, dinosaurus merah berpelat punggung oranye" width="620">
+<img src="art/characters/rex/master.webp" alt="Rex, dinosaurus merah berpelat punggung oranye" width="620">
 
 # Rampage Rex
 
@@ -150,8 +150,8 @@ Di **Alun-Alun**, setelah kota rata dan ketiga penjaga kalah, mereka bergabung m
 
 <table>
   <tr>
-    <td align="center"><img src="web/assets/characters/soldiers/infantry/master.webp" alt="Infanteri" height="110"><br><b>Infanteri</b><br>sejak awal</td>
-    <td align="center"><img src="web/assets/characters/soldiers/bazooka/master.webp" alt="Bazooka" height="110"><br><b>Bazooka</b><br>destruksi 30%</td>
+    <td align="center"><img src="art/characters/soldiers/infantry/master.webp" alt="Infanteri" height="110"><br><b>Infanteri</b><br>sejak awal</td>
+    <td align="center"><img src="art/characters/soldiers/bazooka/master.webp" alt="Bazooka" height="110"><br><b>Bazooka</b><br>destruksi 30%</td>
     <td align="center"><img src="web/assets/characters/soldiers/jeep.webp" alt="Jeep" height="110"><br><b>Jeep</b><br>destruksi 50%</td>
     <td align="center"><img src="web/assets/characters/soldiers/helicopter.webp" alt="Helikopter" height="110"><br><b>Helikopter</b><br>destruksi 70%</td>
   </tr>

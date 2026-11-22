@@ -3217,22 +3217,6 @@
       ],
       "alpha": true
     },
-    "characters/rex/master.png": {
-      "width": 1728,
-      "height": 910,
-      "bounds": {
-        "x": 0,
-        "y": 15,
-        "width": 1696,
-        "height": 871
-      },
-      "pivot": [
-        864,
-        886
-      ],
-      "alpha": true,
-      "logicalHeight": 938
-    },
     "characters/heroes/perisai/parts/head.png": {
       "width": 68,
       "height": 68,
@@ -6263,15 +6247,6 @@
       ],
       "alpha": true
     },
-    "characters/heroes/robot/master.png": {
-      "width": 969,
-      "height": 1514,
-      "pivot": [
-        0,
-        0
-      ],
-      "alpha": true
-    },
     "characters/rex/skins/thunder/walk.png": {
       "width": 1254,
       "height": 1254,
@@ -7556,15 +7531,6 @@
       ],
       "alpha": true
     },
-    "characters/bosses/tikus/master.png": {
-      "width": 1000,
-      "height": 1500,
-      "pivot": [
-        0,
-        0
-      ],
-      "alpha": true
-    },
     "characters/bosses/boneka-salju/atlas.png": {
       "width": 1280,
       "height": 2048,
@@ -7592,15 +7558,6 @@
       ],
       "alpha": true
     },
-    "characters/bosses/boneka-salju/master.png": {
-      "width": 1000,
-      "height": 1500,
-      "pivot": [
-        0,
-        0
-      ],
-      "alpha": true
-    },
     "characters/bosses/penyihir/atlas.png": {
       "width": 1280,
       "height": 2048,
@@ -7622,15 +7579,6 @@
     "characters/bosses/penyihir/portrait.png": {
       "width": 400,
       "height": 400,
-      "pivot": [
-        0,
-        0
-      ],
-      "alpha": true
-    },
-    "characters/bosses/penyihir/master.png": {
-      "width": 1000,
-      "height": 1500,
       "pivot": [
         0,
         0

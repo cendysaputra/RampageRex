@@ -35,7 +35,7 @@ mobile/
 | 6 | Area aman untuk layar berponi (`env(safe-area-inset-*)`) pada HUD dan tombol sentuh | Selesai |
 | 7 | Mode grafik Otomatis dan resolusi adaptif sudah ada. Tes di 1 HP murah (RAM 3–4 GB) dan 1 HP menengah | Belum |
 | 8 | Ukuran unduhan: aset sekarang sekitar 29 MB, aman di bawah batas AAB | Aman |
-| 9 | Ikon, ikon adaptif, feature graphic di `web/assets/ui/app/` | Selesai |
+| 9 | Ikon dan ikon adaptif di `web/assets/ui/app/`, feature graphic di `mobile/store/` | Selesai |
 | 10 | Musik chiptune dibuat lewat kode | Selesai |
 
 ## APK demo

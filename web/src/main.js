@@ -374,7 +374,7 @@ function updateHud(){
   for(const e of world.enemies)if(e.hero){next+=e.type+Math.ceil(e.hp)+'|';names+=(names?', ':'')+t(heroNames[e.type])}
   text('objective',world.phase==='clear'||world.phase==='exit'?t('Jalan ke ujung distrik →'):names?t('Kalahkan {names}',{names}):t(world.triggered.size?'Penuhi target destruksi':'Hancurkan bangunan'));
   if(next!==bossKey){bossKey=next;el('bosses').replaceChildren(...world.enemies.filter(e=>e.hero).map(e=>{
-    const card=document.createElement('div');card.innerHTML='<img src="./assets/'+(art.bosses[e.type]&&e.type!=='robot'?art.bossDir(e.type)+'/portrait':'characters/heroes/'+e.type+'/'+(e.type==='robot'?'master':'portrait'))+'.webp" alt="" width="40" height="40"><strong>'+t(heroNames[e.type])+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
+    const card=document.createElement('div');card.innerHTML='<img src="./assets/'+(art.bosses[e.type]&&e.type!=='robot'?art.bossDir(e.type)+'/portrait':'characters/heroes/'+e.type+'/portrait')+'.webp" alt="" width="40" height="40"><strong>'+t(heroNames[e.type])+'</strong><div class="meter segmented"><i style="width:'+Math.ceil(100*e.hp/e.max)+'%"></i></div>';return card;
   }))}
   text('notice',world.time<world.messageUntil?world.message:'');
   // Indikator cooldown
