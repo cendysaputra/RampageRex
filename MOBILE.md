@@ -47,7 +47,7 @@ Untuk uji coba di HP sendiri, tanpa Play Store dan tanpa tanda versi di dalam ga
 3. Pindahkan APK ke HP Android (minimal Android 7), lalu buka. Izinkan **Instal aplikasi tidak dikenal** untuk aplikasi pembuka file bila diminta.
 4. Kalau versi lama sudah terpasang, APK baru langsung menimpanya dan progres tetap tersimpan.
 
-APK demo ditandatangani dengan kunci debug, jadi hanya untuk uji coba, bukan untuk diunggah ke Play.
+APK demo ditandatangani dengan kunci demo tetap (`mobile/android/app/demo.keystore`), supaya APK baru bisa dipasang di atas yang lama. Kunci ini sengaja disimpan di repo dan hanya untuk uji coba. Untuk Play Store perlu kunci upload sendiri yang disimpan di luar repo.
 
 ## Google Play
 
