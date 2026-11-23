@@ -201,7 +201,7 @@ Simpan di `web/assets/characters/bosses/<nama-bos>/`:
 | `cutin.webp` | 1600×900 | Wajah tiga perempat, boleh terpotong hanya di tepi bawah dan kiri, area kiri bawah tenang |
 | `portrait.webp` | 400×400 | Kepala dan bahu, untuk HUD |
 
-Ukuran tubuh bos setinggi Rex. Referensi skala: `web/assets/characters/heroes/robot/master.webp`.
+Ukuran tubuh bos setinggi Rex. Referensi skala: `art/characters/heroes/robot/master.webp`.
 
 Template atlas:
 

@@ -20,6 +20,10 @@ const robotWidth=544,bossWidths={tikus:800,'boneka-salju':650,penyihir:680},boss
 const shotSprites={sack:['fx/koin/sack',78],snow:['fx/es/snowball',46],orb:['fx/sihir/orb',74],freeze:['fx/es/freeze-ball',76]};
 // Hiasan per misi
 const overlayRule={merdeka:()=>true,halloween:()=>true,salju:(type,color)=>type==='roof'||color==='blue'};
+// Aset khusus misi
+const levelOnly=[['characters/civilians/pawai/',l=>l.mission==='merdeka'],['characters/civilians/balap-karung/',l=>l.mission==='merdeka'],['props/panjat-pinang',l=>l.mission==='merdeka'],
+  ['characters/soldiers/tengkorak/',l=>l.mission==='halloween'],['fx/koin/',l=>l.mission==='merdeka'],['fx/sihir/',l=>l.mission==='halloween'],
+  ['fx/es/frames/',(l,skin)=>l.mission==='salju'||skin==='es'],['fx/es/',l=>l.mission==='salju']];
 // Frame skill
 const spikeFrames=['a','b','c','c','c','c','d'];
 const backdropLayers=['sky','far-city','mid-city','street'];
@@ -103,15 +107,21 @@ export class Art {
     if(!this.rexFramesReady)for(const path of rexPaths)if(!this.images.has(path))this.loading.delete(path);
     // Aset terpakai
     const colors=[...new Set(level.buildings.map(b=>b.color))],props=[...new Set((level.props||[]).map(p=>p.type))];
-    // Lepas latar
-    for(const [path,image] of this.images)if(path.startsWith('backgrounds/')&&!backdrops.includes(path)){
-      image.close?.();this.images.delete(path);this.loading.delete(path);
+    // Dipakai di level ini
+    const fits=k=>{for(const [prefix,need] of levelOnly)if(k.startsWith(prefix))return need(level,this.skin);return true};
+    const bossFrames=level.boss?this.bossDir(level.boss)+'/frame-':'';
+    // Lepas aset lama
+    for(const [path,image] of this.images){
+      const stale=path.startsWith('backgrounds/')?!backdrops.includes(path):path.includes('/frame-')&&!path.startsWith('characters/rex/')?!bossFrames||!path.startsWith(bossFrames):!fits(path);
+      if(stale){image.close?.();this.images.delete(path);this.loading.delete(path)}
     }
+    // Bos lain disiapkan ulang
+    for(const type of Object.keys(this.bossReady))if(type!==level.boss)delete this.bossReady[type];
     const paths=Object.keys(this.meta).map(k=>k.slice(0,-4)).filter(k=>
       backdrops.includes(k)||k.startsWith('buildings/ruko-01/damage/')||colors.some(c=>k.startsWith('buildings/ruko-01/colors/')&&k.endsWith('-'+c))
       ||props.some(t=>k==='props/'+t||k==='props/'+t+'-damaged'||k==='props/'+t+'-wreck')
-      ||rexPaths.includes(k)||k.startsWith('props/panjat-pinang')||k.startsWith('characters/soldiers/motor')
-      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','characters/soldiers/tank','characters/soldiers/firetruck','characters/soldiers/drone','fx/steel-net'].includes(k));
+      ||rexPaths.includes(k)||(level.mission==='merdeka'&&k.startsWith('props/panjat-pinang'))||k.startsWith('characters/soldiers/motor')
+      ||heroes.some(h=>k.startsWith(h))||(k.includes('/frames/')&&!k.startsWith('ui/'))||(k.startsWith('characters/civilians/')&&k.endsWith('/master'))||['characters/soldiers/helicopter','characters/soldiers/jeep','characters/soldiers/tank','characters/soldiers/firetruck','characters/soldiers/drone','fx/steel-net'].includes(k)).filter(fits);
     let cursor=0,done=0;onProgress(0);
     await Promise.all(Array.from({length:8},async()=>{while(cursor<paths.length){await this.load(paths[cursor++]);onProgress(++done/paths.length)}}));
     await(this.rexFramesReady??=this.prepareRexFrames());
@@ -134,7 +144,7 @@ export class Art {
       const path=this.bossFrame(type,index);
       this.meta[path+'.png']={width,height,pivot:[px,py],alpha:true};this.crops.set(path,{x:0,y:0,width,height});this.images.set(path,picture);
     }
-    this.images.delete(def.path);source.close?.();
+    this.images.delete(def.path);this.loading.delete(def.path);source.close?.();
   }
   // Mode grafis
   setLite(lite){this.lite=!!lite}
@@ -160,6 +170,8 @@ export class Art {
       if(skin===this.skin)return;
       const paths=Object.fromEntries(Object.entries(this.basePaths).map(([key,base])=>[key,skin?'characters/rex/skins/'+skin+'/'+base.split('/').pop():base]));
       const cutin=skin?'characters/rex/skins/'+skin+'/ulti-cutin':'fx/ulti-cutin',wanted=[...Object.values(paths),...this.extraPaths(skin),cutin];
+      // Duri es skin
+      if(skin==='es')for(const k of Object.keys(this.meta))if(k.startsWith('fx/es/frames/'))await this.load(k.slice(0,-4));
       // Muat dulu
       for(const path of wanted)if(!this.images.has(path))this.loading.delete(path);
       await Promise.all(wanted.map(path=>this.load(path)));
